@@ -1,0 +1,13 @@
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/state*/
+**/mlruns/
+**/.ipynb_checkpoints/
+**/dist/
+**/*.egg-info/
+**/.env
+**/.env.*
+**/execution-report.json
+.DS_Store

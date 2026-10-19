@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "campus-mlops"
+version = "0.1.1"
+description = "Inspectable Module A training, tracking and registry scaffold"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "mlflow==3.5.1",
+    "scikit-learn==1.7.2",
+    "pandas==2.3.3",
+    "numpy==2.3.3",
+    "sqlalchemy==2.0.44",
+    "fastapi==0.119.0",
+    "uvicorn==0.37.0",
+    "pydantic==2.12.3",
+]
+
+[dependency-groups]
+dev = ["pytest==8.4.2", "nbformat==5.10.4", "nbclient==0.10.2", "ipykernel==6.30.1", "cairosvg==2.8.2", "pillow==11.3.0"]
+
+[project.scripts]
+campus-mlops = "campus_mlops.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
