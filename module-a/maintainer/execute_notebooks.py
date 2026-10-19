@@ -4,7 +4,7 @@ import json, sys, tempfile, os
 import nbformat
 from nbclient import NotebookClient
 from jupyter_client.kernelspec import KernelSpecManager
-root=Path(__file__).resolve().parent
+root=Path(__file__).resolve().parents[1]/'notebooks'
 with tempfile.TemporaryDirectory(prefix='campus-kernel-') as kernel_dir:
     folder=Path(kernel_dir)/'campus-helper'; folder.mkdir()
     (folder/'kernel.json').write_text(json.dumps({'argv':[sys.executable,'-m','ipykernel_launcher','-f','{connection_file}'],'display_name':'Campus helper','language':'python'}))

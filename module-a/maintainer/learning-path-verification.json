@@ -1,0 +1,212 @@
+{
+  "passed": true,
+  "lessons": [
+    {
+      "id": "A-S1-01",
+      "type": "Concept Note",
+      "words": 741,
+      "exact_outcome": true,
+      "notebook_section": "stage-map"
+    },
+    {
+      "id": "A-S1-02",
+      "type": "Practical Walkthrough",
+      "words": 415,
+      "exact_outcome": true,
+      "notebook_section": "raw-to-features"
+    },
+    {
+      "id": "A-S1-03",
+      "type": "Practical Walkthrough",
+      "words": 462,
+      "exact_outcome": true,
+      "notebook_section": "stage-edit"
+    },
+    {
+      "id": "A-S1-04",
+      "type": "Independent Practice",
+      "words": 448,
+      "exact_outcome": true,
+      "notebook_section": "stage-work"
+    },
+    {
+      "id": "A-S1-05",
+      "type": "Concept Note",
+      "words": 758,
+      "exact_outcome": true,
+      "notebook_section": "batch-proof"
+    },
+    {
+      "id": "A-S1-06",
+      "type": "Assessment Lesson",
+      "words": 411,
+      "exact_outcome": true,
+      "notebook_section": "checkpoint-work"
+    },
+    {
+      "id": "A-S2-01",
+      "type": "Concept Note",
+      "words": 628,
+      "exact_outcome": true,
+      "notebook_section": "tracking-records"
+    },
+    {
+      "id": "A-S2-02",
+      "type": "Concept Note",
+      "words": 701,
+      "exact_outcome": true,
+      "notebook_section": "metric-reasoning"
+    },
+    {
+      "id": "A-S2-03",
+      "type": "Independent Practice",
+      "words": 493,
+      "exact_outcome": true,
+      "notebook_section": "experiment-plan"
+    },
+    {
+      "id": "A-S2-04",
+      "type": "Practical Walkthrough",
+      "words": 475,
+      "exact_outcome": true,
+      "notebook_section": "tracking-records"
+    },
+    {
+      "id": "A-S2-05",
+      "type": "Independent Practice",
+      "words": 459,
+      "exact_outcome": true,
+      "notebook_section": "experiment-work"
+    },
+    {
+      "id": "A-S2-06",
+      "type": "Independent Practice",
+      "words": 392,
+      "exact_outcome": true,
+      "notebook_section": "experiment-work"
+    },
+    {
+      "id": "A-S2-07",
+      "type": "Practical Walkthrough",
+      "words": 445,
+      "exact_outcome": true,
+      "notebook_section": "assistant-review"
+    },
+    {
+      "id": "A-S2-08",
+      "type": "Assessment Lesson",
+      "words": 426,
+      "exact_outcome": true,
+      "notebook_section": "checkpoint-work"
+    },
+    {
+      "id": "A-S3-01",
+      "type": "Concept Note",
+      "words": 681,
+      "exact_outcome": true,
+      "notebook_section": "registry-identities"
+    },
+    {
+      "id": "A-S3-02",
+      "type": "Practical Walkthrough",
+      "words": 436,
+      "exact_outcome": true,
+      "notebook_section": "register-pending"
+    },
+    {
+      "id": "A-S3-03",
+      "type": "Concept Note",
+      "words": 604,
+      "exact_outcome": true,
+      "notebook_section": "reproduce-reference"
+    },
+    {
+      "id": "A-S3-04",
+      "type": "Independent Practice",
+      "words": 450,
+      "exact_outcome": true,
+      "notebook_section": "registry-work"
+    },
+    {
+      "id": "A-S3-05",
+      "type": "Independent Practice",
+      "words": 496,
+      "exact_outcome": true,
+      "notebook_section": "registry-work"
+    },
+    {
+      "id": "A-S3-06",
+      "type": "Assessment Lesson",
+      "words": 473,
+      "exact_outcome": true,
+      "notebook_section": "checkpoint-work"
+    },
+    {
+      "id": "A-S4-01",
+      "type": "Independent Practice",
+      "words": 472,
+      "exact_outcome": true,
+      "notebook_section": "handoff-work"
+    },
+    {
+      "id": "A-S4-02",
+      "type": "Independent Practice",
+      "words": 430,
+      "exact_outcome": true,
+      "notebook_section": "handoff-work"
+    },
+    {
+      "id": "A-S4-03",
+      "type": "Independent Practice",
+      "words": 442,
+      "exact_outcome": true,
+      "notebook_section": "handoff-work"
+    },
+    {
+      "id": "A-S4-04",
+      "type": "Independent Practice",
+      "words": 436,
+      "exact_outcome": true,
+      "notebook_section": "handoff-work"
+    },
+    {
+      "id": "A-S4-05",
+      "type": "Independent Practice",
+      "words": 406,
+      "exact_outcome": true,
+      "notebook_section": "handoff-work"
+    },
+    {
+      "id": "A-S4-06",
+      "type": "Assessment Lesson",
+      "words": 422,
+      "exact_outcome": true,
+      "notebook_section": "checkpoint-work"
+    }
+  ],
+  "notebooks": [
+    {
+      "name": "01-pipeline-and-extension.ipynb",
+      "executed_code_cells": 11,
+      "errors": 0
+    },
+    {
+      "name": "02-tracking-and-evidence.ipynb",
+      "executed_code_cells": 8,
+      "errors": 0
+    },
+    {
+      "name": "03-registry-and-reproduction.ipynb",
+      "executed_code_cells": 8,
+      "errors": 0
+    },
+    {
+      "name": "04-cumulative-handoff.ipynb",
+      "executed_code_cells": 8,
+      "errors": 0
+    }
+  ],
+  "markdown_files_checked": 49,
+  "broken_resource_links": [],
+  "quality_gate": "Source/route/execution synchronization only; lesson-specific instructional review is separate."
+}

@@ -3,19 +3,7 @@
 
 Linden Facilities has five model results copied into a spreadsheet. Two rows say “best”, one notebook was rerun, and the planner cannot connect either recommendation to the model that produced it. More rows have made the record harder to trust.
 
-## Your route through this lesson
-
-Reconstruct a recommendation and diagnose the context missing from manual records. Read the worked reasoning, use the tables/diagram to test your mental model, then attempt the applied check before opening its solution. No runtime is required for the reading; the linked notebook lets you inspect the implementation afterward.
-
-**Finish with:** Three distinct failure diagnoses and the records needed to inspect each.
-
-Use the [setup and execution guide](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/learning-guide.md) and [Colab guided notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/02-tracking-and-evidence.ipynb#scrollTo=tracking-records). The [pipeline source](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/src/campus_mlops/pipeline.py) and [tracking/registry source](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/src/campus_mlops/lifecycle.py) are the code you will inspect.
-
-## Reconstruct a decision from the receiver's side
-
-Picture yourself taking over the planner's result sheet. It lists five alpha settings, five scores and a highlighted row. Your first question is not whether the highlight looks reasonable. It is whether the numbers answer the same question. Your next question is which fitted artifact belongs to the highlighted result. Finally, you need to know how to recover its recipe.
-
-A manually maintained table can answer these questions when it retains exact identities and links. It becomes fragile when the author copies the latest printout into a reused row, changes a split without changing the label, or renames an artifact without keeping its source run. These are different failures. Adding another score column fixes none of them by itself.
+**Continue here:** [Sprint 2 · continue in the same notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/02-tracking-and-evidence.ipynb#scrollTo=tracking-records). Keep your code and answers in the same sprint notebook. [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md).
 
 ## A score needs its context
 
@@ -31,12 +19,6 @@ An **experiment run** is one execution with a unique identifier and recorded inp
 
 A spreadsheet can be a useful evidence view. The problem is depending on manual copying as the only connection between an execution and its context. Tracking integrated into the pipeline records that connection when the work happens.
 
-## Why repeated work makes omissions expensive
-
-With one run, you may remember its configuration. With five configurations, retries and a colleague's experiment, a name such as `baseline` may appear several times. A retry is another execution even when its settings match. If you overwrite the earlier row, you lose the ability to explain whether the change came from a parameter, source edit or a different environment.
-
-Systematic tracking records the execution when it occurs. A run ID identifies that execution, while parameters describe what it used and metrics describe what was measured. An artifact stores something larger than a scalar, such as the fitted model or the archived source. These distinctions let a receiving engineer navigate from a reported score to recoverable material instead of guessing from a filename.
-
 ## Follow one claim through its supporting records
 
 Take the claim “we recommend this configuration because it has the lowest validation RMSE among the controlled runs”. To inspect it, follow this chain:
@@ -48,12 +30,6 @@ Take the claim “we recommend this configuration because it has the lowest vali
 5. The model URI and reproduction artifacts connect that execution to its fitted result and recipe.
 
 This is **auditability** in practical terms: another person can inspect how the recommendation was reached. It is stronger than a chart with no source records. It is still limited by what was actually recorded and whether the content remains available.
-
-## Understand what tracking cannot recover
-
-Suppose you log a score today but the dataset used yesterday has already been replaced. Recording today's filename cannot restore yesterday's bytes. Likewise, a tag saying `approved` cannot recreate a missing validation test. Tracking makes retained context searchable; it cannot retrospectively invent evidence.
-
-For Linden, the useful habit is to create the record inside the pipeline, retain the source/data/configuration/environment package and carry the returned identities into later decisions. You will inspect those records directly. The lesson's broken handoff check asks you to identify the missing links first, so you can explain why each logged field has a job.
 
 ## Tracking still needs judgment
 

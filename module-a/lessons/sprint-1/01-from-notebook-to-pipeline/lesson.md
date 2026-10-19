@@ -3,19 +3,7 @@
 
 Linden Facilities can fit an energy-demand model in a notebook, but the planner needs the same 24-row prediction job tomorrow. A cell run out of order can silently use yesterday's features or a model fitted on different rows. A successful printout does not explain how to rebuild it.
 
-## Your route through this lesson
-
-Explain two paths—historical fitting/evaluation and planned prediction—and locate the five stage boundaries. Read the worked reasoning, use the tables/diagram to test your mental model, then attempt the applied check before opening its solution. No runtime is required for the reading; the linked notebook lets you inspect the implementation afterward.
-
-**Finish with:** A five-stage sketch with the target and fitted preprocessing placed correctly.
-
-Use the [setup and execution guide](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/learning-guide.md) and [Colab guided notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/01-pipeline-and-extension.ipynb#scrollTo=stage-map). The [pipeline source](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/src/campus_mlops/pipeline.py) and [tracking/registry source](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/src/campus_mlops/lifecycle.py) are the code you will inspect.
-
-## Start with the job, not the notebook cells
-
-Imagine the planner asks you to rerun yesterday's estimate after a colleague changes the occupancy plan. You can still see a fitted model in memory, but you cannot tell whether the temperature column was scaled before or after that model was fitted. Running the prediction cell again may produce numbers. It does not resolve which preparation those numbers depend on.
-
-The useful question is: **what must another person supply to get the same job done?** In Linden's case, that includes the planned inputs, the fitted preprocessing and estimator, and the rules connecting them. A pipeline moves those dependencies from the author's memory into an inspectable execution path. A notebook may remain the interface; a terminal command can call the same functions.
+**Continue here:** [Sprint 1 · continue in the same notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/01-pipeline-and-extension.ipynb#scrollTo=stage-map). Keep your code and answers in the same sprint notebook. [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md).
 
 ## A pipeline makes dependencies explicit
 
@@ -49,18 +37,6 @@ A planned record may have the same three feature values but no known demand yet.
 A **contract** names what a stage accepts and guarantees. Training sees known demand values; inference sees only planned features. Both need the same column order and transformations. Fitting another scaler on tomorrow's batch changes the meaning of its inputs even if the code runs.
 
 The helper stores a `StandardScaler` and a Ridge regressor together. Ridge is a linear model with a penalty that limits coefficient size. Evaluation happens on the snapshot's fixed validation rows; the separate final rows are reserved until configuration selection is complete.
-
-## Why the boundaries catch different mistakes
-
-Suppose a supplier duplicates a record. That is an ingestion problem because the identity of the input table is wrong before any model work. Suppose the planned table includes `hour=24`. That is a feature-contract problem: the number is finite, but outside the accepted domain. Suppose a colleague fits the scaler using validation rows. The table may be well formed, yet learned preprocessing has used held-out information. A single final score cannot tell you which of these went wrong.
-
-A stage boundary gives you a smaller question to test: did the input meet the contract, and did this function return the promised object? This makes investigation manageable. It does not automatically supply scheduling, retries or monitoring; those are additional concerns around the sequence.
-
-## Put the five stages back together
-
-Before opening code, sketch two paths on paper: historical data through fitting and evaluation; planned features through a fitted model to a CSV. Mark the target's location and the point where fitting stops. Compare your sketch with the stage table and diagram. If your inference path fits a scaler, or your evaluation path uses training rows as its held-out check, revise the sketch and explain the failure that would result.
-
-The repository's `pipeline.py` implements the first four stages; `batch_predict` in `lifecycle.py` owns inference. You will inspect those boundaries in the guided execution. For now, the goal is to explain why the boundaries exist, not memorize function names.
 
 ## Check for Understanding
 

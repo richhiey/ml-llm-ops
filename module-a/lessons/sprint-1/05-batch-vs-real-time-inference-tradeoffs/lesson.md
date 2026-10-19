@@ -3,13 +3,7 @@
 
 Linden Facilities receives all 24 planned hourly inputs together. The planner needs one complete file within `60` seconds; nobody is waiting on individual HTTP responses. The inference pattern should follow that use case.
 
-## Your route through this lesson
-
-Connect input arrival, latency, throughput and resource obligations to a serving choice. Read the worked reasoning, use the tables/diagram to test your mental model, then attempt the applied check before opening its solution. No runtime is required for the reading; the linked notebook lets you inspect the implementation afterward.
-
-**Finish with:** A bounded batch recommendation and its acceptance measurements.
-
-Use the [setup and execution guide](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/learning-guide.md) and [Colab guided notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/01-pipeline-and-extension.ipynb#scrollTo=batch-proof). The [pipeline source](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/src/campus_mlops/pipeline.py) and [tracking/registry source](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/src/campus_mlops/lifecycle.py) are the code you will inspect.
+**Continue here:** [Sprint 1 · continue in the same notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/01-pipeline-and-extension.ipynb#scrollTo=batch-proof). Keep your code and answers in the same sprint notebook. [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md).
 
 ## Which latency matters?
 
@@ -24,12 +18,6 @@ Use the comparison below to connect each pattern to the waiting time and resourc
 | Linden fit | Matches the supplied planning brief | Adds an availability obligation the brief does not need |
 
 The [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/inference-brief.md) selects batch. Request serving remains a prepared architectural comparison, not a measured endpoint in this scaffold. Neither pattern is universally cheaper or faster; hardware, workload and availability needs matter.
-
-## Separate waiting time from work completed
-
-A planner who needs the whole file cannot use “the first prediction is ready” as a success condition. If 23 rows arrive quickly and the last row never arrives, the planning job has failed. The relevant latency therefore ends when the complete output is available, including model loading and file writing.
-
-Throughput answers a different question: how many rows were completed per second? In an illustrative job with 24 rows and 6 seconds elapsed, throughput is `24 / 6 = 4` rows/second. This arithmetic is not a measurement of our helper. It also does not mean every independent request would return in `0.25` seconds: the job may spend most of its time loading the model and then predict all rows together.
 
 ## What a permanent service adds
 
@@ -55,12 +43,6 @@ A busy service can use hardware efficiently. An infrequent batch can avoid keepi
 `batch.json` records the row count, elapsed seconds, rows per second, source run and resolved model version. Timing includes loading the model and writing the CSV. We check completion against `60` seconds, not against one author's exact observed time.
 
 The active alias is resolved once at job start. The job then loads the corresponding version URI. An alias change during a job should not mix versions across its rows; the next job resolves again. That is a small but meaningful serving contract.
-
-## Write the decision a planner could accept
-
-A useful decision contains four connected statements: the arrival pattern, the needed delivery time, the chosen pattern and the evidence that will show it worked. For Linden: inputs are available together; the planner needs one complete 24-row file within 60 seconds; choose batch; verify row alignment, version identity and whole-job completion.
-
-Now change only one requirement: a caller needs an answer for each new reading within 200 ms. That is an illustrative alternative, not the implemented brief. The existing batch measurement cannot establish that request budget. You would need a serving design and a load test that includes queuing and network work. Keep the actual Linden recommendation separate from that hypothetical redesign.
 
 ## Check for Understanding
 

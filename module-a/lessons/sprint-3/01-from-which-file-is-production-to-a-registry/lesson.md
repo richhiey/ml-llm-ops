@@ -3,19 +3,7 @@
 
 Linden Facilities has `model-final.pkl` and `model-final-new.pkl`. The planner cannot tell which is active, which passed validation or which run created either file. A filesystem name is carrying three different meanings badly.
 
-## Your route through this lesson
-
-Separate artifact identity, validation, active selection and retained change evidence. Read the worked reasoning, use the tables/diagram to test your mental model, then attempt the applied check before opening its solution. No runtime is required for the reading; the linked notebook lets you inspect the implementation afterward.
-
-**Finish with:** An explanation of three registry benefits and correct interpretation of old stage vocabulary.
-
-Use the [setup and execution guide](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/learning-guide.md) and [Colab guided notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/03-registry-and-reproduction.ipynb#scrollTo=registry-identities). The [pipeline source](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/src/campus_mlops/pipeline.py) and [tracking/registry source](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/src/campus_mlops/lifecycle.py) are the code you will inspect.
-
-## Separate four questions a filename cannot answer
-
-Imagine two engineers hand you files both called `model-final.pkl`. They may contain different fitted objects. You cannot tell which was trained with which source, whether either passed the team's checks, or which one the batch job should load next. Renaming one `production` combines identity, validation and selection into a label without creating their supporting records.
-
-A registry gives those questions separate places. The registered model name groups related versions. A version identifies an artifact associated with a source run. Tags record descriptive metadata, such as a validation decision and its rationale. An alias selects a version under a meaningful name such as `active`. The alias is allowed to move precisely because the version identities remain available for comparison.
+**Continue here:** [Sprint 3 · continue in the same notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/03-registry-and-reproduction.ipynb#scrollTo=registry-identities). Keep your code and answers in the same sprint notebook. [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md).
 
 ## Give model identity and selection separate places
 
@@ -28,19 +16,6 @@ A **model registry** groups stable version identifiers under a registered model 
 | Cannot explain the deployed artifact | Source run and artifact lineage | Version → run → source/data/config |
 
 A registered version is not a training run. One run logs a model; registration creates a lifecycle identity for that artifact. The alias points to a version, not to a score.
-
-## Follow an artifact into a selection
-
-Consider an illustrative sequence; version counters depend on the actual store. A training run logs a fitted scaler and estimator under a model URI. Registration creates version 1 pointing to that logged artifact and records the source run. After validation, the team selects version 1 with `active`. A later run becomes version 2. Registering version 2 alone does not change the alias; the next batch should still resolve version 1 until a selection is explicitly made.
-
-| State after an action | What is now true | What is not implied |
-|---|---|---|
-| Model logged | An artifact belongs to a run | It has a registered lifecycle version |
-| Version registered | The registry can identify it | It passed validation |
-| Validation tags recorded | A decision and rationale are visible | The tests necessarily ran |
-| `active` assigned | Future alias resolution selects it | A job already in progress reloads it |
-
-These distinctions are useful during failure. A candidate can remain registered and inspectable even when it is rejected. A rollback can move `active` back without retraining or deleting either artifact.
 
 ## Approval is a policy, not a magic label
 
@@ -59,12 +34,6 @@ Our registered name `dev.linden-demand` expresses a local teaching convention. A
 A registry lookup can tell you what `active` points to now. After a rollback, that same lookup cannot explain what it pointed to earlier or why it changed. Linden's helper therefore writes an application event containing the prior version, selected version, source run, time and reason.
 
 That event is evidence of a helper-mediated change. A direct registry edit can bypass it, and the local JSONL file can be modified. The lesson is to connect current selection, source lineage and retained change evidence, while describing the limits honestly. A registry solves organization and traceability problems; it does not make every operational guarantee automatic.
-
-## Separate identity from integrity
-
-A stable version number helps identify an artifact; it does not make your local artifact storage immutable. Registry metadata can change and versions can be deleted. Keep the source run, recoverable artifact and validation record together. The name `dev.linden-demand` expresses this course's environment convention; a name alone does not create access isolation.
-
-Compare the meanings: a run ID identifies an execution; `models:/m-...` identifies an MLflow 3 logged model; `models:/dev.linden-demand/2` identifies a registered version; `models:/dev.linden-demand@active` asks for the current alias selection. Do not substitute these identifiers in a handoff.
 
 ## Check for Understanding
 

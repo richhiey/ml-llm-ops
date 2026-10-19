@@ -1,0 +1,262 @@
+[
+  {
+    "id": "A-S1-01",
+    "sprint": 1,
+    "title": "From notebook to pipeline",
+    "outcome": "Explain why a reproducible training/inference pipeline replaces a one-off notebook workflow, and identify the 5 stages a production ML pipeline must cover - ingestion, preprocessing, training, evaluation, inference.",
+    "type": "Concept Note",
+    "public_path": "lessons/sprint-1/01-from-notebook-to-pipeline/lesson.md",
+    "notebook": "01-pipeline-and-extension.ipynb",
+    "notebook_anchor": "stage-map"
+  },
+  {
+    "id": "A-S1-02",
+    "sprint": 1,
+    "title": "Reading the provided pipeline scaffold",
+    "outcome": "Trace how data moves through the provided training/inference pipeline scaffold from raw input to served prediction, and label each stage's purpose.",
+    "type": "Practical Walkthrough",
+    "public_path": "lessons/sprint-1/02-reading-the-provided-pipeline-scaffold/lesson.md",
+    "notebook": "01-pipeline-and-extension.ipynb",
+    "notebook_anchor": "raw-to-features"
+  },
+  {
+    "id": "A-S1-03",
+    "sprint": 1,
+    "title": "Adding and validating a bounded pipeline stage",
+    "outcome": "Follow an expert adding one preprocessing or validation stage to the provided pipeline, then verify its input/output contract and confirm that the unchanged stages still run.",
+    "type": "Practical Walkthrough",
+    "public_path": "lessons/sprint-1/03-adding-and-validating-a-bounded-pipeline-stage/lesson.md",
+    "notebook": "01-pipeline-and-extension.ipynb",
+    "notebook_anchor": "stage-edit"
+  },
+  {
+    "id": "A-S1-04",
+    "sprint": 1,
+    "title": "Explain-the-code checkpoint",
+    "outcome": "Given an AI-generated addition to the pipeline, explain line by line what it does, test its input/output contract, and identify any part that needs correction before merging.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-1/04-explain-the-code-checkpoint/lesson.md",
+    "notebook": "01-pipeline-and-extension.ipynb",
+    "notebook_anchor": "stage-work"
+  },
+  {
+    "id": "A-S1-05",
+    "sprint": 1,
+    "title": "Batch vs real-time inference tradeoffs",
+    "outcome": "Compare batch and real-time inference patterns - latency, cost, throughput - and justify which pattern the provided inference brief requires.",
+    "type": "Concept Note",
+    "public_path": "lessons/sprint-1/05-batch-vs-real-time-inference-tradeoffs/lesson.md",
+    "notebook": "01-pipeline-and-extension.ipynb",
+    "notebook_anchor": "batch-proof"
+  },
+  {
+    "id": "A-S1-06",
+    "sprint": 1,
+    "title": "Pipeline extension deliverable",
+    "outcome": "Deliverable: the provided pipeline scaffold extended with at least 1 validated stage, a line-by-line explanation of the changed logic, and a justified batch-vs-real-time recommendation for the inference brief.",
+    "type": "Assessment Lesson",
+    "public_path": "lessons/sprint-1/06-pipeline-extension-deliverable/lesson.md",
+    "notebook": "01-pipeline-and-extension.ipynb",
+    "notebook_anchor": "checkpoint-work"
+  },
+  {
+    "id": "A-S2-01",
+    "sprint": 2,
+    "title": "Why ad hoc tracking breaks down at scale",
+    "outcome": "Identify 3+ failure modes of tracking experiments manually (spreadsheets, notebook print statements) once a team runs many models, and explain why systematic tracking matters for auditability.",
+    "type": "Concept Note",
+    "public_path": "lessons/sprint-2/01-why-ad-hoc-tracking-breaks-down-at-scale/lesson.md",
+    "notebook": "02-tracking-and-evidence.ipynb",
+    "notebook_anchor": "tracking-records"
+  },
+  {
+    "id": "A-S2-02",
+    "sprint": 2,
+    "title": "Controls, confounders, and decision metrics",
+    "outcome": "Explain why a run comparison is invalid when dataset split, evaluation conditions, or multiple uncontrolled factors change, and distinguish a primary decision metric from diagnostic metrics.",
+    "type": "Concept Note",
+    "public_path": "lessons/sprint-2/02-controls-confounders-and-decision-metrics/lesson.md",
+    "notebook": "02-tracking-and-evidence.ipynb",
+    "notebook_anchor": "metric-reasoning"
+  },
+  {
+    "id": "A-S2-03",
+    "sprint": 2,
+    "title": "Building the five-run experiment matrix",
+    "outcome": "Define a five-run experiment matrix for the provided training and inference pipeline starter that holds the dataset split and evaluation conditions constant, names the factor varied in each comparison, selects a primary metric tied to the inference brief, and labels any run that is not directly comparable.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-2/03-building-the-five-run-experiment-matrix/lesson.md",
+    "notebook": "02-tracking-and-evidence.ipynb",
+    "notebook_anchor": "experiment-plan"
+  },
+  {
+    "id": "A-S2-04",
+    "sprint": 2,
+    "title": "Revisiting MLflow in a pipeline context",
+    "outcome": "Use the provided MLflow setup to log parameters, metrics, and artifacts automatically as part of the cumulative pipeline, building on basic experiment logging from T4 (AI track).",
+    "type": "Practical Walkthrough",
+    "public_path": "lessons/sprint-2/04-revisiting-mlflow-in-a-pipeline-context/lesson.md",
+    "notebook": "02-tracking-and-evidence.ipynb",
+    "notebook_anchor": "tracking-records"
+  },
+  {
+    "id": "A-S2-05",
+    "sprint": 2,
+    "title": "Comparing multiple runs systematically",
+    "outcome": "Use the MLflow UI to compare 5+ experiment runs against each other and identify the best-performing configuration for a given metric.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-2/05-comparing-multiple-runs-systematically/lesson.md",
+    "notebook": "02-tracking-and-evidence.ipynb",
+    "notebook_anchor": "experiment-work"
+  },
+  {
+    "id": "A-S2-06",
+    "sprint": 2,
+    "title": "Autologging and reducing manual tracking overhead",
+    "outcome": "Configure autologging for the pipeline and explain the tradeoff between autologging convenience and control over what gets logged.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-2/06-autologging-and-reducing-manual-tracking-overhead/lesson.md",
+    "notebook": "02-tracking-and-evidence.ipynb",
+    "notebook_anchor": "experiment-work"
+  },
+  {
+    "id": "A-S2-07",
+    "sprint": 2,
+    "title": "Validating an assistant-generated experiment summary",
+    "outcome": "Direct an approved assistant to generate a summary comparison across logged experiment runs, validate every recommendation against the raw MLflow data and the declared primary metric, and flag any inaccuracy or invalid comparison.",
+    "type": "Practical Walkthrough",
+    "public_path": "lessons/sprint-2/07-validating-an-assistant-generated-experiment-summary/lesson.md",
+    "notebook": "02-tracking-and-evidence.ipynb",
+    "notebook_anchor": "assistant-review"
+  },
+  {
+    "id": "A-S2-08",
+    "sprint": 2,
+    "title": "Experiment tracking deliverable",
+    "outcome": "Deliverable: at least 5 experiment configurations logged and compared in MLflow, an autologging setup, and an AI-assisted summary recommending which configuration to promote - with the summary validated against raw data.",
+    "type": "Assessment Lesson",
+    "public_path": "lessons/sprint-2/08-experiment-tracking-deliverable/lesson.md",
+    "notebook": "02-tracking-and-evidence.ipynb",
+    "notebook_anchor": "checkpoint-work"
+  },
+  {
+    "id": "A-S3-01",
+    "sprint": 3,
+    "title": "From \"which file is production?\" to a registry",
+    "outcome": "Explain 3 problems a model registry solves that ad hoc file-saving does not - versioning, alias/tag-based lifecycle control, and auditability - and recognise staging, production, and archived as superseded stage vocabulary replaced by aliases, tags, and environment-specific registered models.",
+    "type": "Concept Note",
+    "public_path": "lessons/sprint-3/01-from-which-file-is-production-to-a-registry/lesson.md",
+    "notebook": "03-registry-and-reproduction.ipynb",
+    "notebook_anchor": "registry-identities"
+  },
+  {
+    "id": "A-S3-02",
+    "sprint": 3,
+    "title": "Registering and promoting a model",
+    "outcome": "Use the provided model registry scaffold to register a new model version, record its validation status with tags, and promote it by assigning the scaffold's active-model alias.",
+    "type": "Practical Walkthrough",
+    "public_path": "lessons/sprint-3/02-registering-and-promoting-a-model/lesson.md",
+    "notebook": "03-registry-and-reproduction.ipynb",
+    "notebook_anchor": "register-pending"
+  },
+  {
+    "id": "A-S3-03",
+    "sprint": 3,
+    "title": "What full reproducibility requires",
+    "outcome": "Identify the code version, data snapshot, parameters/configuration, environment, and model artifact that must be traceable together for a training run to be reproducible.",
+    "type": "Concept Note",
+    "public_path": "lessons/sprint-3/03-what-full-reproducibility-requires/lesson.md",
+    "notebook": "03-registry-and-reproduction.ipynb",
+    "notebook_anchor": "reproduce-reference"
+  },
+  {
+    "id": "A-S3-04",
+    "sprint": 3,
+    "title": "Reproducing a past training run",
+    "outcome": "Given a past experiment logged in MLflow, use its recorded code, data, configuration, environment, and registry lineage to reproduce the evaluation result within the tolerance declared in the clean-state verification specification.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-3/04-reproducing-a-past-training-run/lesson.md",
+    "notebook": "03-registry-and-reproduction.ipynb",
+    "notebook_anchor": "registry-work"
+  },
+  {
+    "id": "A-S3-05",
+    "sprint": 3,
+    "title": "Rolling back a bad model version",
+    "outcome": "Reassign the active-model alias from a bad version to the previous approved version, and document what the registry audit evidence captured during the rollback.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-3/05-rolling-back-a-bad-model-version/lesson.md",
+    "notebook": "03-registry-and-reproduction.ipynb",
+    "notebook_anchor": "registry-work"
+  },
+  {
+    "id": "A-S3-06",
+    "sprint": 3,
+    "title": "Registry lifecycle deliverable",
+    "outcome": "Deliverable: a model registered, tagged with validation evidence, assigned the active-model alias, then rolled back by alias reassignment - with a documented audit trail and the lineage needed to reproduce the approved run within the tolerance declared in the clean-state verification specification.",
+    "type": "Assessment Lesson",
+    "public_path": "lessons/sprint-3/06-registry-lifecycle-deliverable/lesson.md",
+    "notebook": "03-registry-and-reproduction.ipynb",
+    "notebook_anchor": "checkpoint-work"
+  },
+  {
+    "id": "A-S4-01",
+    "sprint": 4,
+    "title": "Scoping the cumulative pipeline for production-grade reproducibility",
+    "outcome": "Continue the pipeline built across Sprints 1-3 and scope the remaining work needed to meet the final criteria. A T4 (AI track) model may replace the baseline model only as a deliberate transfer test inside the same scaffold.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-4/01-scoping-the-cumulative-pipeline-for-production-grade-reproducibility/lesson.md",
+    "notebook": "04-cumulative-handoff.ipynb",
+    "notebook_anchor": "handoff-work"
+  },
+  {
+    "id": "A-S4-02",
+    "sprint": 4,
+    "title": "Integrating pipeline, tracking, and registry",
+    "outcome": "Integrate the existing pipeline stages, MLflow tracking, registry aliases/tags, and inference-mode decision into one end-to-end run that trains, evaluates, logs, and registers a model version.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-4/02-integrating-pipeline-tracking-and-registry/lesson.md",
+    "notebook": "04-cumulative-handoff.ipynb",
+    "notebook_anchor": "handoff-work"
+  },
+  {
+    "id": "A-S4-03",
+    "sprint": 4,
+    "title": "Proving the selected serving path uses the active version",
+    "outcome": "Exercise the selected batch or real-time inference path with a representative input, verify that it resolves to the intended active model version, and capture the output plus the latency, throughput, or completion evidence named in the inference decision brief.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-4/03-proving-the-selected-serving-path-uses-the-active-version/lesson.md",
+    "notebook": "04-cumulative-handoff.ipynb",
+    "notebook_anchor": "handoff-work"
+  },
+  {
+    "id": "A-S4-04",
+    "sprint": 4,
+    "title": "Setup, run, and expected-evidence instructions",
+    "outcome": "Produce environment/setup and run instructions that start from the clean-state verification specification's declared clean state, name the data snapshot and exact execution command, and state the expected lineage fields, inference evidence, and result tolerance a second engineer must verify.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-4/04-setup-run-and-expected-evidence-instructions/lesson.md",
+    "notebook": "04-cumulative-handoff.ipynb",
+    "notebook_anchor": "handoff-work"
+  },
+  {
+    "id": "A-S4-05",
+    "sprint": 4,
+    "title": "Proving the pipeline reproduces",
+    "outcome": "Re-run the completed pipeline from the declared clean state, verify its lineage and result against the tolerance declared in the clean-state verification specification, and document and diagnose any divergence.",
+    "type": "Independent Practice",
+    "public_path": "lessons/sprint-4/05-proving-the-pipeline-reproduces/lesson.md",
+    "notebook": "04-cumulative-handoff.ipynb",
+    "notebook_anchor": "handoff-work"
+  },
+  {
+    "id": "A-S4-06",
+    "sprint": 4,
+    "title": "Reproducible pipeline deliverable",
+    "outcome": "Deliverable: the cumulative end-to-end pipeline (train -> track -> register -> select active version -> exercise the selected inference path) reproduced from the declared clean state, with traceable code/data/configuration/environment lineage, reproducible setup/run instructions, inference evidence, and at least one non-trivial extension documented and explained.",
+    "type": "Assessment Lesson",
+    "public_path": "lessons/sprint-4/06-reproducible-pipeline-deliverable/lesson.md",
+    "notebook": "04-cumulative-handoff.ipynb",
+    "notebook_anchor": "checkpoint-work"
+  }
+]
