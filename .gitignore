@@ -11,3 +11,4 @@
 **/.env.*
 **/execution-report.json
 .DS_Store
+/project-helper/

@@ -7,7 +7,7 @@ if target.exists():raise SystemExit('Destination already exists; choose a new di
 target.mkdir(parents=True)
 for file in source.rglob('*'):
  relative=file.relative_to(source)
- if file.is_file() and (relative.parts[0] in {'docs','examples','tests','src'} or str(relative) in {'.gitignore','.gitattributes','README.md','pyproject.toml','uv.lock'}):
+ if file.is_file() and (relative.parts[0] in {'docs','examples','tests','src','exercises'} or str(relative) in {'.gitignore','.gitattributes','README.md','pyproject.toml','uv.lock'}):
   if '__pycache__' in relative.parts:continue
   copied=target/relative;copied.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(file,copied)
 p=target/'src/campus_mlops/pipeline.py';solved=p.read_text();start=solved.index('def validate_ranges(');end=solved.index('\n\ndef preprocess(',start)
