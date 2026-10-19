@@ -3,7 +3,7 @@
 
 Linden Facilities can fit an energy-demand model in a notebook, but the planner needs the same 24-row prediction job tomorrow. A cell run out of order can silently use yesterday's features or a model fitted on different rows. A successful printout does not explain how to rebuild it.
 
-**Continue here:** [Sprint 1 · continue in the same notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/01-pipeline-and-extension.ipynb#scrollTo=stage-map). Keep your code and answers in the same sprint notebook. [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md).
+**Notebook section:** **1 · Understand the five stages** in your [existing Sprint 1 notebook](../../../notebooks/01-pipeline-and-extension.ipynb). Read this page, then work through that section once. Keep answers in the same notebook. [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md) · [Optional Colab section](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/01-pipeline-and-extension.ipynb#scrollTo=stage-map).
 
 ## A pipeline makes dependencies explicit
 
@@ -16,6 +16,8 @@ A **pipeline** connects stages through declared inputs and outputs. Reproducibil
 | Training | Train features and target → fitted model | Fitting on held-out rows |
 | Evaluation | Held-out features and target → RMSE/MAE | Scoring different rows across comparisons |
 | Inference | Active fitted model and planned inputs → predictions | Loading a different version than intended |
+
+RMSE means root mean squared error; MAE means mean absolute error. Both describe prediction error in kWh; neither is a prediction for a future row.
 
 The target is `demand_kwh`. The inputs are `temperature_c`, `hour`, and `occupancy`. `row_id` aligns records; `partition` fixes their evaluation role. Neither belongs among the model features. A **fitted model** includes learned preprocessing: Linden's scaler stores training means and scales alongside the regression coefficients.
 
@@ -40,13 +42,18 @@ The helper stores a `StandardScaler` and a Ridge regressor together. Ridge is a 
 
 ## Check for Understanding
 
+Use this diagnosis as part of your notebook stage-map answer; it is not another report.
+
 Linden's teammate fits a new scaler on the planned batch and says the model is unchanged because the regression coefficients came from yesterday's file. Diagnose the resulting contract failure and specify the artifact that must be handed over.
 
-▶️ **Solution** *(toggle)*
+<details>
+<summary>Check your answer after attempting the diagnosis</summary>
 
 > **Result you should get:** the batch is transformed with different learned statistics, so the regression receives a different feature representation. Hand over the fitted scaler and regressor together.
 >
 > **How:** trace which object learned means/scales during training. Inference must reuse that fitted object; it may validate/extract planned features but must not fit on the batch.
+
+</details>
 
 ![From notebook to pipeline: evidence path](assets/from-notebook-to-pipeline__01__en.png)
 

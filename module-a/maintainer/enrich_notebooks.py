@@ -10,26 +10,17 @@ def pair(title, text, code, anchor):
     return [md,cell]
 
 
-def enrich(module, pin, setup):
+def enrich(module, pin, setup, sprint=None):
     paths=json.loads((module/'maintainer/learning-path.json').read_text())
     for notebook in sorted((module/'notebooks').glob('0[1-4]-*.ipynb')):
+        if sprint and not notebook.name.startswith(f'{sprint:02}-'):continue
+        if notebook.name.startswith('01'):continue
         nb=n.read(notebook,as_version=4)
         matching=[x for x in paths if x['notebook']==notebook.name]
         links='\n'.join('- ['+x['title']+'](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/'+x['public_path']+')' for x in matching)
         nb.cells[0].source += '\n\nUse this one notebook throughout the sprint: predict → run the guided cells → add your answers in **Your turn** → finish the checkpoint. Campus notes explain the same work; you do not repeat it in a second notebook.\n\n<details><summary>Campus notes for this sprint</summary>\n\n'+links+'\n\n</details>'
         nb.cells[1].metadata['tags']=['setup'];nb.cells[1].id='setup';nb.cells[1].metadata['id']='setup'
-        if notebook.name.startswith('01'):
-            nb.cells[2].id='stage-map';nb.cells[2].metadata['id']='stage-map'
-            nb.cells[2].source+='\n\nMap the returned DataFrame to ingestion, feature extraction, fitting and evaluation. `partition` selects rows; it never becomes a feature. Predict whether selecting features across all rows fits any statistics, then inspect `preprocess` in the linked source.'
-            index=next(i for i,c in enumerate(nb.cells) if c.cell_type=='markdown' and 'Trace preparation' in c.source)
-            nb.cells[index].id='raw-to-features';nb.cells[index].metadata['id']='raw-to-features'
-            nb.cells[index].source+='\n\n`features.loc[train_rows]` selects fitting inputs, and the matching target uses the same mask. The scaler learns only from those fitting rows. `evaluate` calls `predict` on held-out features; it does not fit again. Read the masks before treating the metric as a validation result.'
-            nb.cells[index+2:index+2]=pair('Inspect fitted state and row roles','Predict the three printed observations before running: fitting/validation counts, named fitted steps, and number of input features. Distinguish a configured alpha from statistics learned by fitting.',"print(int(train_rows.sum()), int(valid_rows.sum()))\nprint(list(model.named_steps))\nprint(model.named_steps['scale'].n_features_in_)\nassert not (train_rows & valid_rows).any()\nassert features.index.equals(frame.index)",'fitted-state')
-            index=next(i for i,c in enumerate(nb.cells) if c.cell_type=='markdown' and 'Complete the inference' in c.source)
-            nb.cells[index].id='batch-proof';nb.cells[index].metadata['id']='batch-proof'
-            nb.cells[index].source+='\n\nRegistration/selection here are prepared infrastructure so you can trace the fifth stage. Later lifecycle work explains those decisions. The input has no known target, so this job cannot establish prediction error for tomorrow.'
-            nb.cells+=pair('Check the delivered rows','Compare identifiers and finite outputs, then connect the returned source run to the logged execution. A matching row count alone could hide incorrect alignment.',"from campus_mlops.pipeline import DATA\nimport numpy as np\nplanned=pd.read_csv(DATA/'batch-v1.csv')\nassert planned.row_id.tolist()==predictions.row_id.tolist()\nassert np.isfinite(predictions.prediction_kwh).all()\nassert evidence['run_id']==record['run_id']\nprint('Aligned rows:',len(predictions),'complete within deadline:',evidence['complete_within_60s'])",'delivered-rows')
-        elif notebook.name.startswith('02'):
+        if notebook.name.startswith('02'):
             nb.cells[2:2]=pair('Calculate the metric distinction','Illustrative errors A=[2,2,8] and B=[4,4,4] have the same average absolute error. Predict which has larger RMSE and why before calculating. These are teaching values, not experimental scores.',"import numpy as np\nfor label, errors in [('A',[2,2,8]),('B',[4,4,4])]:\n    errors=np.asarray(errors,dtype=float)\n    print(label,'MAE',np.abs(errors).mean(),'RMSE',np.sqrt((errors**2).mean()))",'metric-reasoning')
             index=next(i for i,c in enumerate(nb.cells) if c.cell_type=='markdown' and 'Run the declared matrix' in c.source)
             nb.cells[index].id='tracking-records';nb.cells[index].metadata['id']='tracking-records'
@@ -69,22 +60,7 @@ def add_practice(nb, sprint, module):
     def note(title, text, anchor):
         cell=n.v4.new_markdown_cell('## '+title+'\n\n'+text)
         cell.id=anchor; cell.metadata['id']=anchor; nb.cells.append(cell)
-    if sprint==1:
-        nb.cells += pair('Edit the validation stage',
-            'Make an actual source change in a new project. First predict what the finite-only starter does with `hour=24`. The focused test below intentionally fails (`DID NOT RAISE`); ordinary valid-data RMSE cannot reveal this missing rule. The original reference remains available.',
-            "project=make_project('stage-project')\nproject_tests(project,'tests/test_spine.py::test_contract_extension_and_unchanged_pipeline','-q',expected_returncode=1)\nprint('Edit target:',project/'src/campus_mlops/pipeline.py')", 'stage-edit')
-        nb.cells += pair('Apply the explained expert change',
-            'Read the reference function printed earlier. It checks finite values, inclusive ranges and integer hours, then returns an unchanged copy. `.all()` requires every row to pass; placing `return` inside the loop would skip later fields. This cell replaces only that function in your project and prints the real diff. Explain each changed statement before running.',
-            "import inspect,difflib\ntarget=project/'src/campus_mlops/pipeline.py'\nbefore=target.read_text()\nstart=before.index('def validate_ranges(')\nend=before.index('\\n\\ndef preprocess(',start)\nafter=before[:start]+inspect.getsource(validate_ranges).rstrip()+before[end:]\ntarget.write_text(after)\nprint(''.join(difflib.unified_diff(before.splitlines(True),after.splitlines(True),fromfile='starter',tofile='edited')))", 'stage-change')
-        nb.cells += pair('Check the edited project',
-            'Execute the project in fresh processes so the notebook cannot reuse an earlier imported reference function. Expect the full suite to pass, unchanged valid-data metrics and a complete batch. Keep the printed project path: continue with this same source in later sprints.',
-            "project_tests(project,'-q')\nproject_python(project, \"from campus_mlops import Config,run_pipeline; assert run_pipeline(Config())[1]==run_pipeline(Config(range_guard=True))[1]; print('Valid-data metrics unchanged')\")\nimport contextlib,io\nwith contextlib.redirect_stdout(io.StringIO()):\n    result=course_cli('bootstrap','--state',str(state/'edited-batch'),project=project)\ncompleted=json.loads(result.stdout)\nprint('Edited-project batch:',completed['inference'])\nprint('Saved project:',project)", 'stage-check')
-        note('Your turn: explain and challenge the stage',
-            'Load `PACKAGE/exercises/generated-stage-candidate.py` as exercise material. Explain its statements and predict its behavior on a negative hour, fractional hour and a valid table. Run probes, check mutation, and correct the proposal in your project. Use the Campus practice hints only if stuck. In this notebook, justify batch inference for 24 planned hourly rows and the 60-second completion requirement; a request service is a comparison, not another build. Keep one short decision table with your code and observations.', 'stage-work')
-        loader=n.v4.new_code_cell("import runpy\nproposed_guard=runpy.run_path(str(PACKAGE/'exercises/generated-stage-candidate.py'))['proposed_guard']\nsupplier=pd.read_csv(PACKAGE/'exercises/harbor-intake.csv')\ndisplay(supplier)\nprint('Candidate loaded for your probes; source data has not been changed.')")
-        loader.id='practice-inputs';loader.metadata['id']=loader.id;nb.cells.append(loader)
-        checkpoint='Use `PACKAGE/exercises/harbor-intake.csv` with your edited guard. Classify the supplier rows, preserve the raw file, test valid/invalid cases and confirm unchanged downstream behavior. Explain the stage and justify the chosen serving path. Complete the Campus client brief here; link the actual batch and test results. Do not create another notebook or a separate evidence report.'
-    elif sprint==2:
+    if sprint==2:
         note('Your turn: plan, compare and review',
             'Use the matrix plan you wrote before execution. If you choose different values, replace the fixture call with five `ws.run(Config(...))` calls and rank your results. Then: (1) inspect those IDs in the local MLflow UI; (2) reuse the logging-on/off pair to explain which keys autologging adds; (3) obtain an actual approved-assistant response and audit its claims against your table. Reuse these outputs throughout the sprint. The supplied fixture is one valid plan; your chosen values may have a different winner.', 'experiment-work')
         checkpoint='Harbor needs a justified selection from five controlled runs. Reuse your matrix, UI comparison, logging pair and assistant claim table. Include an actually observed training metric as an excluded observation, keeping it out of validation ranking. Explain comparability, the selected run ID and any unsupported assistant recommendation. Keep the final holdout closed. Complete the Campus client brief in this notebook.'

@@ -51,7 +51,10 @@ def verify():
         cells=[c for c in nb.cells if c.cell_type=='code']
         assert all(c.execution_count is not None for c in cells)
         assert not any(o.output_type=='error' for c in cells for o in c.outputs)
-        notebooks.append({'name':file.name,'executed_code_cells':len(cells),'errors':0})
+        templates=sum('student-work' in c.metadata.get('tags',[]) for c in cells)
+        notebooks.append({'name':file.name,'executed_code_cells':len(cells),
+                          'guided_code_cells':len(cells)-templates,
+                          'student_work_templates':templates,'errors':0})
     assert not errors,errors
     return {'passed':True,'lessons':observations,'notebooks':notebooks,'markdown_files_checked':len(md_files),'broken_resource_links':errors,'quality_gate':'Source/route/execution synchronization only; lesson-specific instructional review is separate.'}
 

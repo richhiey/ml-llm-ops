@@ -47,7 +47,7 @@
     "type": "Concept Note",
     "public_path": "lessons/sprint-1/05-batch-vs-real-time-inference-tradeoffs/lesson.md",
     "notebook": "01-pipeline-and-extension.ipynb",
-    "notebook_anchor": "batch-proof"
+    "notebook_anchor": "inference-choice"
   },
   {
     "id": "A-S1-06",

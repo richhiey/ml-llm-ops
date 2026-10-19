@@ -5,7 +5,9 @@ import nbformat as n
 from campus_mlops import __version__
 from campus_mlops.lifecycle import code_revision
 M=Path(__file__).resolve().parents[1]; N=M/'notebooks'
-parser=argparse.ArgumentParser(); parser.add_argument('--source-commit', default='HEAD'); args=parser.parse_args()
+parser=argparse.ArgumentParser(); parser.add_argument('--source-commit', default='HEAD')
+parser.add_argument('--sprint', type=int, choices=range(1,5), help='Regenerate only this sprint')
+args=parser.parse_args()
 source_commit=subprocess.check_output(['git','rev-parse',args.source_commit],cwd=M,text=True).strip()
 subprocess.run(['git','diff','--exit-code',source_commit,'--','module-a/src','module-a/pyproject.toml','module-a/uv.lock'],cwd=M.parent,check=True)
 pin={'package':'campus-mlops','version':__version__,'code_revision':code_revision(),
@@ -50,16 +52,12 @@ print('Helper', campus_mlops.__version__, 'source commit:', PIN['source_commit']
 '''.replace('PIN_LITERAL', repr(pin))
 
 def save(name,title,intro,parts):
+ if args.sprint and not name.startswith(f'{args.sprint:02}-'):return
  nb=n.v4.new_notebook(); nb.cells=[n.v4.new_markdown_cell('# '+title+'\n\n'+intro+ '\n\n**Local:** [set up once](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md), select the module `.venv` kernel, then run cells in order. **Colab:** CPU, runtime version **2026.07** (Python 3.12). If setup asks for a restart after installing dependencies, use **Restart session**, then run again. No API key is needed. Setup prints a new temporary output folder; save your work before ending the session.'),n.v4.new_code_cell(setup)]
  for text,code in parts:
   nb.cells.extend([n.v4.new_markdown_cell(text),n.v4.new_code_cell(code)])
  nb.metadata.colab={'name':name,'provenance':[]}; nb.metadata.kernelspec={'display_name':'Campus helper Python 3.12','language':'python','name':'python3'}
  n.write(nb,N/name)
-save('01-pipeline-and-extension.ipynb','Trace and validate the pipeline','Linden Facilities needs 24 hourly estimates. Follow the five stage contracts before making a bounded validation change.',[
-('## Inspect the stage boundaries\n`ingest` reads the fixed snapshot. Features exclude target and partition. Expect 168 train, 48 validation and 24 final rows.',"frame=ingest()\nprint(frame.groupby('partition').size())\ndisplay(frame.head())"),
-('## Trace preparation, fitting and evaluation\nThe scaler belongs to the fitted model, so it sees training rows only. RMSE measures larger errors more strongly; MAE is diagnostic. Expect baseline validation RMSE about 1.443003925 kWh.',"from campus_mlops.pipeline import TARGET\nconfig=Config()\nfeatures=preprocess(frame,config)\ntrain_rows=frame.partition=='train'\nvalid_rows=frame.partition=='validation'\nmodel=train(features.loc[train_rows],frame.loc[train_rows,TARGET],config)\nmetrics=evaluate(model,features.loc[valid_rows],frame.loc[valid_rows,TARGET])\nprint(features.columns.tolist(), metrics)\nassert abs(metrics['rmse_kwh']-1.4430039250255964)<1e-6"),
-('## Read the extension, then test both branches\nThis is the worked reference. Explain every line before using it. It rejects invalid values and copies valid inputs. Enabling it must preserve valid outputs.',"import inspect\nprint(inspect.getsource(validate_ranges))\nimport pandas as pd\npd.testing.assert_frame_equal(validate_ranges(frame),frame)\nbroken=frame.copy(); broken.loc[0,'hour']=24\ntry:\n    validate_ranges(broken)\nexcept ValueError as error:\n    print('Expected rejection:', error)\nelse:\n    raise AssertionError('Invalid hour was accepted')\nassert run_pipeline(Config(range_guard=True))[1]==metrics"),
-('## Complete the inference stage\nThe prepared bootstrap uses the same pipeline, logs it, registers and activates an approved model. Expect 24 finite output rows tied to the resolved registry version. Timing is observed, not a fixed benchmark.',"ws=Workspace(state/'tracking')\nrecord=ws.run(Config(range_guard=True),name='guarded-baseline')\nversion=register(ws,record['run_id'])\napprove(ws,version,'Valid/rejected input checks and RMSE <= 5')\nactivate(ws,version,'Baseline for batch demonstration')\npredictions,evidence=batch_predict(ws)\ndisplay(predictions.head()); print(evidence)\nassert len(predictions)==24 and evidence['resolved_version']==version\nassert evidence['complete_within_60s']")])
 save('02-tracking-and-evidence.ipynb','Compare controlled runs and check recommendations','Linden needs a defensible choice rather than five unrelated scores. The fixture holds data, split, scaling, solver and guard fixed while changing alpha.',[
 ('## Run the declared matrix\nAutologging hooks model fitting. We disable automatic model logging inside the helper so the explicit named model remains unambiguous. The helper still logs the primary held-out metric itself.',"ws=Workspace(state/'tracking')\nrecords=run_matrix(ws,autolog=True)\nselected_ids=[record['run_id'] for record in records]\n(ws.path/'matrix-run-ids.json').write_text(json.dumps(selected_ids,indent=2))\nall_rows=export_runs(ws)\nrows=all_rows[all_rows.run_id.isin(selected_ids)].copy()\nrows.to_csv(ws.path/'runs.csv',index=False)\ndisplay(rows[['run_id','alpha','range_guard','evaluation_partition','rmse_kwh','mae_kwh']].sort_values('rmse_kwh'))\nassert len(rows)==5"),
 ('## Inspect raw MLflow evidence\nAuto-generated training metrics are useful diagnostics, not the declared decision metric. Inspect a raw run and artifact list instead of trusting a summary.',"best=rows.sort_values('rmse_kwh').iloc[0]\nraw=ws.client.get_run(best.run_id)\nprint('alpha:',best.alpha,'validation RMSE:',best.rmse_kwh)\nprint('Autolog parameter:',raw.data.params['ridge__alpha'])\nprint('Training metric:',raw.data.metrics['training_mean_squared_error'])\nprint([a.path for a in ws.client.list_artifacts(best.run_id,'reproduction')])\nassert best.rmse_kwh==rows.rmse_kwh.min()"),
@@ -77,5 +75,8 @@ save('04-cumulative-handoff.ipynb','Prove the cumulative handoff','Use the selec
 ('## Write a verifiable handoff index\nThe complete submission also includes your explained extension diff and setup instructions. Check each named file exists; an index is a locator, not proof by itself.',"handoff={'version':version,'run_id':record['run_id'],'code_revision':record['code_revision'],\n'data_sha256':record['data_sha256'],'config':record['config'],'environment':record['environment'],\n'model_uri':record['model_uri'],'inference':inference,'reproduction':report,\n'exact_training_command':record['command'],'tolerance_rmse_kwh':1e-6}\n(state/'handoff.json').write_text(json.dumps(handoff,indent=2))\nprint('Saved handoff index:',state/'handoff.json'); print('Selected version:',version,'reproduction passed:',report['passed'])\nassert (ws.path/'batch.csv').exists() and (ws.path/'audit.jsonl').exists()")])
 
 # Keep the four sprint journeys synchronized with Campus.
+from sprint_one import build
+if args.sprint in (None,1):
+ n.write(build(M,pin,setup),N/'01-pipeline-and-extension.ipynb')
 from enrich_notebooks import enrich
-enrich(M,pin,setup)
+enrich(M,pin,setup,sprint=args.sprint)

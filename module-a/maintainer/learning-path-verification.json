@@ -4,42 +4,42 @@
     {
       "id": "A-S1-01",
       "type": "Concept Note",
-      "words": 741,
+      "words": 800,
       "exact_outcome": true,
       "notebook_section": "stage-map"
     },
     {
       "id": "A-S1-02",
       "type": "Practical Walkthrough",
-      "words": 415,
+      "words": 561,
       "exact_outcome": true,
       "notebook_section": "raw-to-features"
     },
     {
       "id": "A-S1-03",
       "type": "Practical Walkthrough",
-      "words": 462,
+      "words": 570,
       "exact_outcome": true,
       "notebook_section": "stage-edit"
     },
     {
       "id": "A-S1-04",
       "type": "Independent Practice",
-      "words": 448,
+      "words": 527,
       "exact_outcome": true,
       "notebook_section": "stage-work"
     },
     {
       "id": "A-S1-05",
       "type": "Concept Note",
-      "words": 758,
+      "words": 804,
       "exact_outcome": true,
-      "notebook_section": "batch-proof"
+      "notebook_section": "inference-choice"
     },
     {
       "id": "A-S1-06",
       "type": "Assessment Lesson",
-      "words": 411,
+      "words": 516,
       "exact_outcome": true,
       "notebook_section": "checkpoint-work"
     },
@@ -187,22 +187,30 @@
   "notebooks": [
     {
       "name": "01-pipeline-and-extension.ipynb",
-      "executed_code_cells": 11,
+      "executed_code_cells": 13,
+      "guided_code_cells": 11,
+      "student_work_templates": 2,
       "errors": 0
     },
     {
       "name": "02-tracking-and-evidence.ipynb",
       "executed_code_cells": 8,
+      "guided_code_cells": 8,
+      "student_work_templates": 0,
       "errors": 0
     },
     {
       "name": "03-registry-and-reproduction.ipynb",
       "executed_code_cells": 8,
+      "guided_code_cells": 8,
+      "student_work_templates": 0,
       "errors": 0
     },
     {
       "name": "04-cumulative-handoff.ipynb",
       "executed_code_cells": 8,
+      "guided_code_cells": 8,
+      "student_work_templates": 0,
       "errors": 0
     }
   ],

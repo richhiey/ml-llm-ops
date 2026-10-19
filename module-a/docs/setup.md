@@ -16,11 +16,11 @@ Open the sprint notebook in VS Code or your notebook editor. Select `module-a/.v
 
 ## 2. Learn and keep your work
 
-Start at [the four sprint notebooks](../README.md). Predict each result, execute the guided example, then complete **Your turn** and **Sprint checkpoint**. Each sprint builds one project; reuse earlier outputs instead of repeating them for every Campus page.
+Start at [the four sprint notebooks](../README.md). In Sprint 1, follow its six numbered sections in order; the code-review and supplier cells are for your own attempt. The other sprint notebooks use guided examples followed by **Your turn** and **Sprint checkpoint**. Each sprint builds one project; reuse earlier outputs instead of repeating them for every Campus page.
 
-Setup prints a new temporary output folder. Save your notebook **and** the project/output files you want to keep. Sprint 1 creates an editable project with an intentionally incomplete guard; its first focused test should fail. The guided edit fixes it and the full suite should pass. Keep the printed project path for later work.
+Sprint 1 setup creates a retained local session under the printed `module-a/work/` folder, with `project/` and `outputs/` inside it. Later reference notebooks currently use temporary output folders. Save your notebook **and** its project/output folder. Sprint 1 creates an editable project with an intentionally incomplete guard; its first focused test should fail. The guided edit fixes it; the same focused test and complete batch path should then pass. Keep the printed project path for later work.
 
-The reference package is pinned. Run edited project code through `project_python`, `project_tests` or `course_cli(..., project=project)`, which use a fresh process and your project's source. This avoids stale notebook imports. For example:
+The reference package is pinned. The validation walkthrough loads the saved guard as `project_guard` for direct input probes; reload that cell after changing the source. Run edited project integration code through `project_python`, `project_tests` or `course_cli(..., project=project)`, which use a fresh process and your project's source. This avoids stale notebook imports. For example:
 
 ```python
 project_tests(project, '-q')

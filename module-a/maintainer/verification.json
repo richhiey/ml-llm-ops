@@ -1,6 +1,6 @@
 {
   "review_date": "2026-10-19",
-  "scope": "Four sprint notebooks and synchronized Campus resources",
+  "scope": "Four sprint notebooks; Sprint 1 student-route revision locally verified",
   "helper_pin": {
     "package": "campus-mlops",
     "version": "0.1.1",
@@ -16,23 +16,31 @@
   },
   "notebooks": [
     {
-      "notebook": "01-pipeline-and-extension.ipynb",
-      "executed_code_cells": 11,
+      "name": "01-pipeline-and-extension.ipynb",
+      "executed_code_cells": 13,
+      "guided_code_cells": 11,
+      "student_work_templates": 2,
       "errors": 0
     },
     {
-      "notebook": "02-tracking-and-evidence.ipynb",
+      "name": "02-tracking-and-evidence.ipynb",
       "executed_code_cells": 8,
+      "guided_code_cells": 8,
+      "student_work_templates": 0,
       "errors": 0
     },
     {
-      "notebook": "03-registry-and-reproduction.ipynb",
+      "name": "03-registry-and-reproduction.ipynb",
       "executed_code_cells": 8,
+      "guided_code_cells": 8,
+      "student_work_templates": 0,
       "errors": 0
     },
     {
-      "notebook": "04-cumulative-handoff.ipynb",
+      "name": "04-cumulative-handoff.ipynb",
       "executed_code_cells": 8,
+      "guided_code_cells": 8,
+      "student_work_templates": 0,
       "errors": 0
     }
   ],
@@ -56,5 +64,15 @@
     "Hosted Colab browser execution of the consolidated notebooks",
     "Independent student submissions and learner trials",
     "Cross-platform numerical equivalence"
-  ]
+  ],
+  "execution_scope": "Sprint 1 freshly rerun; unchanged Sprints 2\u20134 retain prior local execution records",
+  "sprint_1_student_rehearsal": {
+    "guided_code_cells": 11,
+    "unsolved_student_work_templates": 2,
+    "private_practice_rehearsal_passed": true,
+    "private_checkpoint_rehearsal_passed": true,
+    "raw_supplier_preserved": true,
+    "one_notebook_one_project": true,
+    "hosted_upload_or_execution": false
+  }
 }

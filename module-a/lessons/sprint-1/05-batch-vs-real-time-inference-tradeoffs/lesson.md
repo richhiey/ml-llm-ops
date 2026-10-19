@@ -3,7 +3,7 @@
 
 Linden Facilities receives all 24 planned hourly inputs together. The planner needs one complete file within `60` seconds; nobody is waiting on individual HTTP responses. The inference pattern should follow that use case.
 
-**Continue here:** [Sprint 1 · continue in the same notebook](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/01-pipeline-and-extension.ipynb#scrollTo=batch-proof). Keep your code and answers in the same sprint notebook. [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md).
+**Notebook section:** **5 · Decide how to deliver predictions** in your [existing Sprint 1 notebook](../../../notebooks/01-pipeline-and-extension.ipynb). Read this page, then work through that section once. Keep answers in the same notebook. [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/module-a/docs/setup.md) · [Optional Colab section](https://colab.research.google.com/github/richhiey/ml-llm-ops/blob/main/module-a/notebooks/01-pipeline-and-extension.ipynb#scrollTo=inference-choice).
 
 ## Which latency matters?
 
@@ -40,19 +40,24 @@ A busy service can use hardware efficiently. An infrequent batch can avoid keepi
 
 ## What our evidence can establish
 
-`batch.json` records the row count, elapsed seconds, rows per second, source run and resolved model version. Timing includes loading the model and writing the CSV. We check completion against `60` seconds, not against one author's exact observed time.
+Reuse the edited-project batch already produced by the walkthrough; do not execute another job for this page. `completed['inference']` in the notebook and its `batch.json` record the row count, elapsed seconds, rows per second, source run and resolved model version. Timing includes loading the model and writing the CSV. We check completion against `60` seconds, not against one author's exact observed time.
 
-The active alias is resolved once at job start. The job then loads the corresponding version URI. An alias change during a job should not mix versions across its rows; the next job resolves again. That is a small but meaningful serving contract.
+The supplied delivery wrapper records which fitted model produced the batch. Interpreting that identity is enough here; configuring model selection is later work.
 
 ## Check for Understanding
 
+Use your answer in the same short notebook recommendation, addressing latency, throughput and resource obligations. There is no extra endpoint build or benchmark.
+
 A teammate recommends a permanent endpoint because one local batch row takes little compute. Identify the missing evidence and decide which completion measure Linden should accept now.
 
-▶️ **Solution** *(toggle)*
+<details>
+<summary>Check your answer after attempting the diagnosis</summary>
 
 > **Result you should get:** choose batch completion for all `24` rows within `60` seconds. One row's compute time does not establish request latency or justify a permanent service.
 >
 > **How:** map the input arrival pattern and planner deadline to the measured job. For an endpoint, request arrival rate, network/queue latency and availability costs would still need evidence.
+
+</details>
 
 ![Batch vs real-time inference tradeoffs: evidence path](assets/batch-vs-real-time-inference-tradeoffs__01__en.png)
 
