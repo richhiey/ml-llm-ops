@@ -1,0 +1,2 @@
+# Preserve the exact snapshot bytes across Git checkouts, including CSV CRLF.
+src/linden_mlops/data/*.csv -text whitespace=cr-at-eol

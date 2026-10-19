@@ -1,0 +1,1 @@
+{"alphas": [0.01, 0.1, 1.0, 10.0, 100.0], "primary_metric": "rmse_kwh", "direction": "minimize", "partition": "validation"}
