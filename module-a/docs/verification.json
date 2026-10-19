@@ -1,11 +1,12 @@
 {
   "review_date": "2026-10-19",
+  "scope": "Expanded complete Campus learning path",
   "helper_pin": {
     "package": "campus-mlops",
     "version": "0.1.1",
     "code_revision": "sha256:a7a3061850f1f1eaa158754e719262b26a000af73019ada402be743c6f66e6c2",
     "repository": "https://github.com/richhiey/ml-llm-ops.git",
-    "source_commit": "eec754e0b1379fe8bb01e23543b92e036b4c6b62",
+    "source_commit": "f1ae85914f49a4f1c4bdd6a0ca62c4c4076158ea",
     "package_path": "module-a"
   },
   "platform": "macOS ARM64, Python 3.12.13",
@@ -15,60 +16,71 @@
   },
   "notebooks": [
     {
+      "notebook": "00-learner-workspace.ipynb",
+      "executed_code_cells": 2,
+      "errors": 0
+    },
+    {
       "notebook": "01-pipeline-and-extension.ipynb",
-      "executed_code_cells": 5,
+      "executed_code_cells": 7,
       "errors": 0
     },
     {
       "notebook": "02-tracking-and-evidence.ipynb",
-      "executed_code_cells": 5,
+      "executed_code_cells": 8,
       "errors": 0
     },
     {
       "notebook": "03-registry-and-reproduction.ipynb",
-      "executed_code_cells": 5,
+      "executed_code_cells": 8,
       "errors": 0
     },
     {
       "notebook": "04-cumulative-handoff.ipynb",
-      "executed_code_cells": 5,
+      "executed_code_cells": 8,
       "errors": 0
     }
   ],
-  "github_install_rehearsal": [
+  "walkthrough_python_blocks": [
     {
-      "notebook": "01-pipeline-and-extension.ipynb",
-      "exit_code": 0,
-      "seconds": 38.75881004333496,
-      "platform": "macOS ARM64",
-      "hosted_colab": false,
-      "setup_branch": "google.colab marker injected; /content redirected; all remaining setup and exercise code unchanged"
+      "id": "A-S1-02",
+      "python_blocks": 6,
+      "passed": true,
+      "note": "Exact lesson Python with temporary state-path substitutions"
     },
     {
-      "notebook": "02-tracking-and-evidence.ipynb",
-      "exit_code": 0,
-      "seconds": 7.905052900314331,
-      "platform": "macOS ARM64",
-      "hosted_colab": false,
-      "setup_branch": "google.colab marker injected; /content redirected; all remaining setup and exercise code unchanged"
+      "id": "A-S2-04",
+      "python_blocks": 5,
+      "passed": true,
+      "note": "Exact lesson Python with temporary state-path substitutions"
     },
     {
-      "notebook": "03-registry-and-reproduction.ipynb",
-      "exit_code": 0,
-      "seconds": 3.5842747688293457,
-      "platform": "macOS ARM64",
-      "hosted_colab": false,
-      "setup_branch": "google.colab marker injected; /content redirected; all remaining setup and exercise code unchanged"
+      "id": "A-S3-02",
+      "python_blocks": 6,
+      "passed": true,
+      "note": "Exact lesson Python with temporary state-path substitutions"
     },
     {
-      "notebook": "04-cumulative-handoff.ipynb",
-      "exit_code": 0,
-      "seconds": 3.933314085006714,
-      "platform": "macOS ARM64",
-      "hosted_colab": false,
-      "setup_branch": "google.colab marker injected; /content redirected; all remaining setup and exercise code unchanged"
+      "id": "A-S2-07",
+      "python_blocks": 4,
+      "passed": true,
+      "note": "Interactive input field substituted from actual fixture only; no external assistant call claimed"
+    },
+    {
+      "id": "A-S1-03",
+      "python_blocks": 2,
+      "passed": true,
+      "note": "Expert function AST matches the edited project; probe block executed in a new project process; before/after tests and bootstrap separately passed"
     }
   ],
+  "edited_project": {
+    "intended_before_failure": true,
+    "after_tests": 6,
+    "child_imports_edited_project": true,
+    "reference_import_unchanged": true,
+    "actual_batch_rows": 24,
+    "completion_passed": true
+  },
   "clean_environment": {
     "new_source_and_venv": true,
     "invariants": {
@@ -82,5 +94,6 @@
     "rows": 24,
     "complete_within_60s": true
   },
-  "hosted_colab_browser_execution": false
+  "hosted_colab_browser_execution": false,
+  "github_install_rehearsal": "Current pinned source to be checked after publication; prior release evidence is separate."
 }
