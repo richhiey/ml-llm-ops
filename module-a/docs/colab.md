@@ -10,7 +10,7 @@ Start in a fresh runtime. If you imported a different NumPy, pandas, scikit-lear
 
 Each notebook creates a new temporary tracking directory and prints its path. Runtime deletion removes that directory and its artifacts. Download your evidence and source/model artifacts before deleting the runtime; notebook outputs alone are not a recovery package. Never paste keys into a notebook. These exercises do not require a provider key.
 
-The four notebooks are complete worked references. Your independent stage edit happens in a project copy, and the rollback practice starts before the rollback. Do not submit reference outputs as your own investigation.
+Four notebooks are complete worked references; `00-learner-workspace.ipynb` is the separate unsolved start. Your independent stage edit happens in a project copy, and the rollback practice starts before the rollback. Do not submit reference outputs as your own investigation.
 
 ## Reproduction and the UI
 
@@ -26,4 +26,4 @@ Change package code and tests first, sync `uv.lock`, and export runtime requirem
 uv export --locked --no-dev --no-emit-project --no-hashes --format requirements-txt --output-file requirements-colab.txt
 ```
 
-Commit the source, update the notebook's immutable commit plus helper-content pin, and execute all four notebooks before publishing their update. Keep outputs from an actual execution as verification evidence; do not invent hosted results. Local kernel execution and a fresh clone/install check are separate from a hosted Colab browser test.
+Commit the source, update the notebook's immutable commit plus helper-content pin, and execute all five notebooks before publishing their update. Keep outputs from an actual execution as verification evidence; do not invent hosted results. Local kernel execution and a fresh clone/install check are separate from a hosted Colab browser test.

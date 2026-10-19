@@ -1,6 +1,6 @@
 # Campus MLOps helper 0.1.1
 
-Linden Facilities is a fictional team preparing 24 hourly energy-demand estimates for a planning handoff. This repository is the reusable source of truth for Module A. The Campus lessons are authored separately. The reusable code, exercises and notebooks live together here in the shared Modules A/B GitHub repository.
+Linden Facilities is a fictional team preparing 24 hourly energy-demand estimates for a planning handoff. This repository is the reusable source of truth for Module A. The [Campus learning path](lessons/README.md) versions learner Markdown and assets here; instructor support remains in the authoring workspace. The reusable code, exercises and notebooks live together here in the shared Modules A/B GitHub repository.
 
 ## Supported local setup
 
@@ -36,7 +36,7 @@ Within the chosen state directory: `mlflow.db`, `artifacts/`, `evidence/<run_id>
 
 ## Notebook workflow
 
-From this repository, run `uv run python notebooks/execute_notebooks.py` to execute the four notebooks with this interpreter. For interactive work start Jupyter in your preferred editor and select this `.venv/bin/python`. Notebook setup checks helper `0.1.1` and the content revision in `notebooks/helper-pin.json`. Relative paths resolve from the notebook folder or this repository; do not copy helper functions into cells. See the notebook README for release synchronization.
+From this repository, run `uv run python notebooks/execute_notebooks.py` to execute the five notebooks with this interpreter. For interactive work start Jupyter in your preferred editor and select this `.venv/bin/python`. Notebook setup checks helper `0.1.1` and the content revision in `notebooks/helper-pin.json`. Relative paths resolve from the notebook folder or this repository; do not copy helper functions into cells. See the notebook README for release synchronization.
 
 ## Versioned code and recovery
 
@@ -51,6 +51,10 @@ This is a single-user local teaching scaffold. SQLite and JSONL audit evidence d
 
 ## Learner project versus reference notebooks
 
-The four notebooks are complete guided/instructor references. Keep them on the exact published helper pin. For an editable cumulative project, from this helper folder run `uv run python exercises/make-stage-lab.py --destination ../project-helper`, then enter that folder and run `uv sync --locked`. The starter has a deliberately finite-only validation stage: its contract test fails until the learner implements domain checks. Follow the stage walkthrough. Track your changed source revision using project CLI/tests; do not disable the reference notebook's pin assertion. The project uses the same public API and snapshot.
+Four notebooks are complete guided references. `00-learner-workspace.ipynb` is an unsolved start for independent work. Keep them on the exact published helper pin. For an editable cumulative project, from this helper folder run `uv run python exercises/make-stage-lab.py --destination ../project-helper`, then enter that folder and run `uv sync --locked`. The starter has a deliberately finite-only validation stage: its contract test fails until the learner implements domain checks. Follow the stage walkthrough. Track your changed source revision using project CLI/tests; do not disable the reference notebook's pin assertion. The project uses the same public API and snapshot.
 
 Prepared states are available from the project/helper root with `uv run python exercises/prepare-practice.py CASE --state NEW_PATH` for `matrix`, `past-run`, `rollback` and `registry-assessment`. Each stops before the target learner operation. The matrix writes `matrix-run-ids.json`; keep these IDs and pass only those rows to the numeric recommendation check. The file is replaced by a subsequent matrix CLI invocation, so copy it with submitted evidence.
+
+## Learn through the complete path
+
+The [26 Campus lessons](lessons/README.md) explain the concepts and mechanisms, then distinguish guided execution, independent investigation and client checkpoints. Each lesson links the code and its appropriate Colab section. The [execution guide](docs/learning-guide.md) explains local/Colab equivalents and keeps changed project code separate from notebook imports.
