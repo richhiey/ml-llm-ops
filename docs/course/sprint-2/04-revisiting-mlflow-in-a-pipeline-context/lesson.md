@@ -4,6 +4,10 @@
 You have logged parameters and metrics in MLflow before. Linden now needs that record to be created whenever the pipeline runs, including from a terminal. We will trace where the run starts, which calls record its results, and how its model and recovery files stay connected.
 
 
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) in your local project environment. Find the section for **Revisiting MLflow in a pipeline context** using its Campus activity ID **A-S2-04**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Work in the repository
 
 Use the plan you already declared:
@@ -16,7 +20,6 @@ uv run linden-mlops ui
 
 Expect five actual IDs saved in `work/project.json` and raw rows in `work/runs.csv`. Repeating `matrix` reopens these IDs. Open `http://127.0.0.1:5050`, select `linden-demand`, find one saved ID and open its parameters, metrics and artifacts. Expand `reproduction` to inspect the manifest/config/source archive. Compare those fields with `Workspace.run` in `src/linden_mlops/lifecycle.py`. The table's `rmse_kwh` is the explicit held-out metric. Keep this UI open for the comparison task.
 
-The [optional sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) offers the same concepts for exploration. Keep one set of work; no notebook is required for this activity.
 
 ## Follow one tracked execution
 
@@ -29,7 +32,7 @@ Use the commands above to run the declared matrix and inspect its raw evidence. 
 
 ## Watch out for
 
-Another successful execution may already be in the store. Select by the five returned IDs rather than every row displayed. A hosted Colab `localhost` URL does not open a server on your laptop; the UI activity uses local execution.
+Another successful execution may already be in the store. Select by the five returned IDs rather than every row displayed. Open the UI from your local project environment.
 
 ## Quick reference
 
@@ -45,6 +48,17 @@ Another successful execution may already be in the store. Select by the five ret
 Choose one actual run and locate its `alpha`, validation RMSE and recovery manifest in both saved output and MLflow. Explain why the run name alone is insufficient to identify it.
 
 ![Revisiting MLflow in a pipeline context: evidence path](assets/revisiting-mlflow-in-a-pipeline-context__01__en.png)
+
+## Check your work after attempting the task
+
+<details>
+<summary>Compare your result after the attempt</summary>
+
+**Result you should get:** One actual run ID links the configured alpha, explicit validation rmse_kwh/mae_kwh, fitted model and reproduction files in both the raw record and MLflow. Automatically logged training scores are separate observations.
+
+**How:** Find the calls in Workspace.run responsible for each field and inspect that same ID in the UI. If the fields appear to disagree, check the tracking-store path and run ID before rerunning. A matching display name is insufficient.
+
+</details>
 
 ## Learning outcome
 

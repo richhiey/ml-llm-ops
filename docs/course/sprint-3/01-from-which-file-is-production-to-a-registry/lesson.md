@@ -6,6 +6,11 @@ Linden Facilities has `model-final.pkl` and `model-final-new.pkl`. The planner c
 
 Read this explanation alongside the [repository setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Use your existing project evidence for the checks; no new model execution is needed.
 
+
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) in your local project environment. Find the section for **From "which file is production?" to a registry** using its Campus activity ID **A-S3-01**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Give model identity and selection separate places
 
 A **model registry** groups stable version identifiers under a registered model name. A **version** identifies a particular logged artifact and source run. An **alias** is a mutable name for a selected version. A **tag** is metadata describing a model or version, such as validation status.

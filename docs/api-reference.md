@@ -25,4 +25,19 @@ Lookup reminder: `get_model_version` and `get_model_version_by_alias` are method
 
 `Project` from `linden_mlops.project` persists decisions in `work/project.json`. `plan(alphas)` records the five configurations; `record_matrix(ws, records)` saves their actual IDs; `matrix(ws)` reopens only those runs; `select(ws, run_id)` checks your explicit choice against the declared metric; `selected()` checks its source/data identity. Use `Project(work_dir=...)` for a deliberate separate project.
 
-`export_run(ws, run_id, destination)`, `verify_bundle(bundle)`, `restore_source(bundle, destination)` and `reproduce_bundle(bundle, destination)` are in `linden_mlops.recovery`. Exports include a checksum index, recorded recipe, source and fitted model. See [recovery](recovery.md) for the complete receiving procedure.
+`export_run(ws, run_id, destination)`, `verify_bundle(bundle)`, `restore_source(bundle, destination)` and `reproduce_bundle(bundle, destination)` are in `linden_mlops.recovery`. Exports include a checksum index, recorded recipe, source and fitted model. See [recovery](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md) for the complete receiving procedure.
+
+## Shared exercise and visualization modules
+
+The notebooks reuse these core modules rather than duplicate pipeline or lifecycle logic.
+
+| Need | Core interface | Evidence boundary |
+|---|---|---|
+| Prepare an investigation | `prepare(case, destination, work_dir=None, bundle=None)` from `linden_mlops.course_evidence` | Reads retained records; creates a new exercise copy. Cases are comparison, integration and receiving. Original project evidence remains unchanged. |
+| Inspect input roles/contract | `plot_contract(frame)` from `linden_mlops.visuals` | Counts partitions and executes separate feature probes; does not inspect final targets. |
+| Compare controlled results | `plot_experiments(rows)` | Exactly five comparable validation records; rejects incompatible controls. |
+| Trace a batch artifact | `plot_identity(run_id, model_version, registered_run_id, inference)` | Requires the selected, registered and resolved run/version chain to agree. |
+| Check receiving proof | `plot_recovery(report, planned, predictions)` | Explicit recorded acceptance plus independently checked output identity/finiteness and numeric tolerance. |
+| Export a figure | `save_figure(fig, destination_base)` | Writes SVG and PNG from the same figure layout to the caller's path. |
+
+Each plot returns a Figure with inspectable `linden_data`. See [figure interpretation](https://github.com/richhiey/ml-llm-ops/blob/main/docs/visualizations.md) and [exercise provenance](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/README.md). The core modules are included in portable source exports; a receiving environment does not need the documentation wrapper script.

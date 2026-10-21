@@ -4,11 +4,14 @@
 Linden Facilities has received an assistant's proposed input check. It appears to fix invalid hours, but the planner cannot accept hidden edits to planned inputs.
 
 
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) in your local project environment. Find the section for **Explain-the-code checkpoint** using its Campus activity ID **A-S1-04**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Work in the repository
 
 Open `docs/course/exercises/generated-stage-candidate.py`. Load the candidate in your own local probe script using `runpy.run_path(path)['proposed_guard']`; import the correct guard with `from linden_mlops.pipeline import validate_ranges`. Use pandas tables and fresh `.copy(deep=True)` inputs to investigate the mission below. Run your script with `uv run python your_script.py`. Keep the unsafe candidate separate from `src/`.
 
-The [optional sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) offers the same concepts for exploration. Keep one set of work; no notebook is required for this activity.
 
 ## Starting point
 
@@ -43,6 +46,17 @@ Probe one valid input plus `hour=24`, a negative hour and a fractional hour, usi
 ## Checkpoints
 
 Before accepting the proposal, demonstrate one failure that would be invisible if you tested only `hour=12`. Point to the existing guard line that addresses each required correction. Keep the observed candidate failure and correct-guard contrast beside your review; no second implementation or separate report is required.
+
+## Check your work after attempting the task
+
+<details>
+<summary>Open the self-check after recording your own result</summary>
+
+**Result you should get:** `hour=24` becomes `23` without an exception, while a negative or fractional hour is accepted unchanged. For accepted inputs the proposal returns the caller's very same frame; a valid hour alone therefore misses the copy-contract failure. The existing `validate_ranges` rejects all three invalid hours and returns a separate deep copy for a valid frame. No candidate code belongs in `src/`.
+
+**How to check:** the empty check only covers zero rows. The assignment writes into `frame`, `clip(upper=23)` repairs upper violations, and `return frame` exposes the same object. Compare both values and `returned is input_frame`; one cannot replace the other. If your review says “all valid values are mutated”, narrow that claim: the assignment targets the caller's object, but values already in range can remain equal. If you missed a failure, add that fresh-input probe and correct the corresponding line explanation before proposing a merge.
+
+</details>
 
 ## Learning outcome
 

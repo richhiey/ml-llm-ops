@@ -4,6 +4,10 @@
 Linden Facilities has selected a guarded run. We will give its artifact a registered version, attach validation evidence and make it the version used by the next batch.
 
 
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) in your local project environment. Find the section for **Registering and promoting a model** using its Campus activity ID **A-S3-02**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Work in the repository
 
 Carry forward the actual selected validation run:
@@ -27,7 +31,6 @@ uv run linden-mlops inspect
 
 Expect the saved selected run → returned version → `batch.json` source run/version to match. Inspect actual tags with `inspect`; replace rationale if your checks differ. Approval records your reason and a metric policy; it does not execute tests.
 
-The [optional sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) offers the same concepts for exploration. Keep one set of work; no notebook is required for this activity.
 
 ## Follow the artifact into active selection
 
@@ -56,6 +59,25 @@ Version counters are local to a registered model/store. Reuse actual returned id
 Explain the difference between “registered,” “approved” and “selected.” Point to the run → version → batch chain and the rejected pending-selection output in your working notes.
 
 ![Registering and promoting a model: evidence path](assets/registering-and-promoting-a-model__01__en.png)
+
+## Check your work after attempting the task
+
+<details>
+<summary>Compare your result after the attempt</summary>
+
+**Result you should get:** The selected run's model is registered pending; pending activation rejects. After observed contract checks and valid approval, the active alias and next batch resolve to that same version/source run. Reopening saved evidence need not create another pending attempt.
+
+**How:** Match the returned identities rather than assume a counter. Approval records rationale and checks the teaching gate; it does not run tests. If registration alone seemed to deploy a model, compare version identity, tags, alias and the next job's own metadata.
+
+</details>
+
+## Read the notebook figure
+
+![Selected run, registered version and the actual batch source form one consistent chain](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/sprint-3/02-registering-and-promoting-a-model/assets/model-identity__02__en.png)
+
+This diagram is derived from the verified reference records, rather than a UI screenshot. The full selected run ID agrees with the registered version's source and the new batch's recorded source; the batch resolved version 1. Compare your own full IDs and recorded batch resolution. A later alias lookup alone does not prove what an earlier batch loaded.
+
+Regenerate this figure from your actual records in the sprint notebook. The [editable SVG](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/02-registering-and-promoting-a-model/assets/model-identity__02__en.svg) and [reference observations](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/figures/reference-observations.json) make this author example inspectable.
 
 ## Learning outcome
 

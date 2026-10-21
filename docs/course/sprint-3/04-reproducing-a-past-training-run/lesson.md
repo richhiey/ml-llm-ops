@@ -4,6 +4,10 @@
 Linden Facilities asks you to rebuild a previously approved result rather than train something that happens to score similarly. **Reproduction** requires matching the recorded lineage before checking the numeric result.
 
 
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) in your local project environment. Find the section for **Reproducing a past training run** using its Campus activity ID **A-S3-04**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Work in the repository
 
 Inspect the selected run's `reproduction/manifest.json` in MLflow, then use the API/CLI reference to replay that recorded recipe into a new store. The terminal route is:
@@ -14,7 +18,6 @@ uv run linden-mlops reproduce --destination work/past-replay
 
 Inspect `work/past-replay/reproduction-check.json`. The new run ID must differ; lineage must agree and absolute validation RMSE delta must be at most `1e-6` kWh. Keep this result rather than rerun for each question. This task reuses the environment; the fresh-source/environment proof follows in the handoff work.
 
-The [optional sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) offers the same concepts for exploration. Keep one set of work; no notebook is required for this activity.
 
 ## Starting point
 
@@ -49,7 +52,18 @@ Do not replace the original run with a fresh “best” run. A new registry vers
 
 ## Checkpoints
 
-First show recoverable files, not only hash strings. Then show the new execution and metric difference. If either lineage or tolerance fails, diagnose and retain both records. A matching score alone does not pass.
+First show recoverable files, not only hash strings. Then show the new execution and metric difference. If either lineage or tolerance fails, diagnose and retain both records. A matching score alone does not pass. Before opening the self-check, decide whether an identical score with a different data hash is a reproduction, and whether a new run ID with matching lineage is a failure. Explain both decisions using the contract rather than executing additional runs.
+
+## Check your work after attempting the task
+
+<details>
+<summary>Open the self-check after recording your own result</summary>
+
+**Result you should get:** a different reproduced run ID, matched source/data/config/partition/environment, and an absolute validation RMSE difference no greater than `0.000001` kWh. Your inventory also connects the original registered version to its source run and recoverable model artifact. A new ID is expected; an equal score with different data fails the lineage requirement.
+
+**How to check:** read the original manifest before the receiving report and compare the underlying values, not filenames. `reproduce` checks source/data/environment before executing and refuses an existing destination. If it refuses, retain the error and restore the mismatched prerequisite; do not change the original manifest. This new-store replay reuses the environment and cannot establish the later fresh-source/environment claim. If your note calls it a clean installation, correct the scope of that claim.
+
+</details>
 
 ## Learning outcome
 

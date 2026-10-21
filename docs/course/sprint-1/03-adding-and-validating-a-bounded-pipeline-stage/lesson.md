@@ -4,6 +4,10 @@
 Linden Facilities receives `hour=24`, which is numeric but outside its planning contract. We will edit a starting validation stage, observe its missing behavior, add explicit rejection rules, and prove that valid predictions still work.
 
 
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) in your local project environment. Find the section for **Adding and validating a bounded pipeline stage** using its Campus activity ID **A-S1-03**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Work in the repository
 
 Use the existing repository's `src/linden_mlops/pipeline.py`. Save the complete `validate_ranges` function in `work/validation-reference.txt` before editing; keep any unrelated edits safe. Temporarily replace only that function with this deliberately incomplete starting stage:
@@ -27,7 +31,6 @@ uv run linden-mlops bootstrap --config configs/baseline.json --state work/edited
 
 Inspect your actual source diff and the `24`-row batch. Keep the restored full implementation for later experiments. If interrupted, restore the saved function before continuing. This activity edits this repository; it creates no second project.
 
-The [optional sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) offers the same concepts for exploration. Keep one set of work; no notebook is required for this activity.
 
 ## Make one bounded change
 
@@ -56,6 +59,26 @@ Clipping `24` to `23` hides supplier errors. An early `return` can skip occupanc
 Before restoring the reference function, predict outcomes for `hour=0`, `23`, `1.5` and `24`. Compare the predictions with your probe results. Load the saved function in a fresh process after edits. The fresh-process contract test and bootstrap confirm which saved source actually runs. Keep your explained diff and results together; no separate report is needed.
 
 ![Bounded stage evidence](assets/adding-and-validating-a-bounded-pipeline-stage__01__en.png)
+
+## Check your work after attempting the task
+
+<details>
+<summary>Compare your result after the attempt</summary>
+
+**Result you should get:** The finite-only starter fails the domain contract; the completed guard accepts exact bounds and rejects fractional or out-of-range hours. Valid values, index and row order remain unchanged. The focused test and complete batch pass after the saved-source edit.
+
+**How:** Match each changed statement to one distinguishing input, then compare guarded and unguarded valid-data metrics. A passing score on ordinary data cannot detect silent clipping or an early return. Reload saved source in a fresh process if the probe disagrees with the file.
+
+</details>
+
+
+## Read the notebook figure
+
+![Partition counts and actual bounded-hour guard decisions](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/sprint-1/03-adding-and-validating-a-bounded-pipeline-stage/assets/validation-contract__02__en.png)
+
+The fixed dataset contains 168 training, 48 validation and 24 reserved final rows. This plot counts partition membership only; it does not inspect final targets or scores. The right panel tests separate hour inputs: 0 and 23 pass, while -1, 1.5 and 24 reject. These observed guard decisions test domain validity; a model error score cannot replace them.
+
+Regenerate this figure from your actual records in the sprint notebook. The [editable SVG](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-1/03-adding-and-validating-a-bounded-pipeline-stage/assets/validation-contract__02__en.svg) and [reference observations](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/figures/reference-observations.json) make this author example inspectable.
 
 ## Learning outcome
 

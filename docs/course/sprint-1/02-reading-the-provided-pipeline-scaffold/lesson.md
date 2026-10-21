@@ -4,6 +4,10 @@
 Linden Facilities has a runnable helper, but a planner's CSV passes through several objects before predictions appear. We will follow that path and match each stage to an observable result.
 
 
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) in your local project environment. Find the section for **Reading the provided pipeline scaffold** using its Campus activity ID **A-S1-02**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Work in the repository
 
 After [setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md), run this once from the repository root:
@@ -15,13 +19,16 @@ uv run linden-mlops bootstrap --config configs/baseline.json --state work/baseli
 Inspect `pipeline.py` and run the trace below as a local script with `uv run python your_script.py`:
 
 ```python
+from pathlib import Path
+import json
 from linden_mlops import ingest, preprocess, train, evaluate, Config
 from linden_mlops.pipeline import TARGET
+config = Config(**json.loads(Path('configs/baseline.json').read_text()))
 f = ingest()
-x = preprocess(f, Config(range_guard=True))
+x = preprocess(f, config)
 t = f.partition.eq('train')
 v = f.partition.eq('validation')
-m = train(x.loc[t], f.loc[t, TARGET], Config())
+m = train(x.loc[t], f.loc[t, TARGET], config)
 print(f.groupby('partition').size())
 print(x.columns.tolist(), m.named_steps)
 print(evaluate(m, x.loc[v], f.loc[v, TARGET]))
@@ -29,7 +36,6 @@ print(evaluate(m, x.loc[v], f.loc[v, TARGET]))
 
 Inspect `work/baseline/batch.csv` and `batch.json`; compare its identifiers with `src/linden_mlops/data/batch-v1.csv`. Keep these outputs for the inference decision.
 
-The [optional sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) offers the same concepts for exploration. Keep one set of work; no notebook is required for this activity.
 
 ## Starting and finished state
 
@@ -55,7 +61,7 @@ A matching row count can hide reordered records. Compare identifiers as well as 
 | `ingest()` | Read and check historical rows |
 | `preprocess()` | Validate and select ordered features |
 | `train()` / `evaluate()` | Fit on training rows / score held-out rows |
-| `course_cli("bootstrap", ...)` | Provided full-path wrapper; inspect its batch file and metadata |
+| `linden-mlops bootstrap` | Provided full-path wrapper; inspect its batch file and metadata |
 | `batch_predict()` | Inference function used inside that wrapper |
 
 ## Check your trace
@@ -63,6 +69,17 @@ A matching row count can hide reordered records. Compare identifiers as well as 
 Choose one historical row and one planned row. Explain which has a known target, where fitting occurs, and which fitted object reaches inference. Point to the saved output that checks row alignment. Stop after the trace notes; the stage edit is the next activity.
 
 ![Reading the provided pipeline scaffold: evidence path](assets/reading-the-provided-pipeline-scaffold__01__en.png)
+
+## Check your work after attempting the task
+
+<details>
+<summary>Compare your result after the attempt</summary>
+
+**Result you should get:** Your trace separates the 168 fitting rows, 48 validation rows and 24 untouched final rows. The planned file has 24 aligned finite predictions and no known target. Its validation RMSE is about 1.443 kWh, not a measure of tomorrow's observed error.
+
+**How:** Inspect the actual masks, fitted scale/ridge object and batch identifiers. If you equated completion with predictive accuracy, locate which dataset supplies a known target before interpreting a metric. Compare input/output row IDs as well as counts.
+
+</details>
 
 ## Learning outcome
 

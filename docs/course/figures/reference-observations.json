@@ -1,0 +1,148 @@
+{
+  "reference_kind": "Locally executed author reference; learner IDs, chosen matrix and timing may differ",
+  "source_revision": "sha256:76ea3db250d29684cddaf3ec45af17c0ca9c40315cbde0ca7ea4748a4389bc67",
+  "lock_sha256": "ba27bb07af2c216dfcc76c170aa103c7e734671ed5041999bff75e4b12fb6f78",
+  "figures": [
+    {
+      "lesson": "sprint-1/03-adding-and-validating-a-bounded-pipeline-stage",
+      "stem": "validation-contract__02__en",
+      "sha256": {
+        "png": "c857e3e99ddb7ba616aaaf9d5147d999e0ded0a1fc54b022c1df3350df649233",
+        "svg": "92fdf64f2e6e834390e446825d5385db7578a9ddf7706f3f9cc1521239512c12"
+      },
+      "observations": {
+        "partition_counts": {
+          "train": 168,
+          "validation": 48,
+          "final": 24
+        },
+        "hour_probes": [
+          {
+            "hour": -1,
+            "accepted": false
+          },
+          {
+            "hour": 0,
+            "accepted": true
+          },
+          {
+            "hour": 1.5,
+            "accepted": false
+          },
+          {
+            "hour": 23,
+            "accepted": true
+          },
+          {
+            "hour": 24,
+            "accepted": false
+          }
+        ]
+      },
+      "original_svg_sha256": "11ac0c1812aaee23e626ff4cbf669bb7d85f1a85908b3a595df81f308f96cbed"
+    },
+    {
+      "lesson": "sprint-2/05-comparing-multiple-runs-systematically",
+      "stem": "experiment-comparison__01__en",
+      "sha256": {
+        "png": "9fe05ee51a8cf6cb6d18511dc07483200c4252d18e260e3013467649d07ddc7f",
+        "svg": "73c31f29d805abc9b129ecaf6ce47b9ae09d06ec342f01b28c10bc9289f5ef15"
+      },
+      "observations": {
+        "winner_run_id": "df333bf5f62a41cfab86a7ce388c334e",
+        "records": [
+          {
+            "run_id": "df333bf5f62a41cfab86a7ce388c334e",
+            "alpha": 0.2,
+            "rmse_kwh": 1.4354294072766183,
+            "mae_kwh": 1.2060428855281489
+          },
+          {
+            "run_id": "ba5064cc86ea4b829064f1af957125ee",
+            "alpha": 0.4,
+            "rmse_kwh": 1.4369102896132988,
+            "mae_kwh": 1.2104035025048587
+          },
+          {
+            "run_id": "5bf57ad4e9004e39b46409e5dc5b231c",
+            "alpha": 1.0,
+            "rmse_kwh": 1.4430039250255964,
+            "mae_kwh": 1.2234272153578762
+          },
+          {
+            "run_id": "d9e1ff5e58ee4c309f38beec3251320e",
+            "alpha": 5.0,
+            "rmse_kwh": 1.540519673261788,
+            "mae_kwh": 1.3080824371703947
+          },
+          {
+            "run_id": "01387ddf53824cf4843b0b418138107e",
+            "alpha": 20.0,
+            "rmse_kwh": 2.374985025447734,
+            "mae_kwh": 1.964563810844347
+          }
+        ]
+      },
+      "original_svg_sha256": "a535d5afcf5f103957cb34a7f3cc60fd60354b5ee4ac32344cb02f133ffb778d"
+    },
+    {
+      "lesson": "sprint-3/02-registering-and-promoting-a-model",
+      "stem": "model-identity__02__en",
+      "sha256": {
+        "png": "8629eeb65767879981cd0290c636edef6b8bcc4e3955dfecc2e3d4584c5f2a52",
+        "svg": "6ca7a5e53e15b1d2ee8a82e578bb3a916f5cb744ee509d8a621e017c6b4ff84e"
+      },
+      "observations": {
+        "selected_run_id": "df333bf5f62a41cfab86a7ce388c334e",
+        "registered_run_id": "df333bf5f62a41cfab86a7ce388c334e",
+        "registered_version": "1",
+        "inference": {
+          "complete_within_60s": true,
+          "elapsed_seconds": 0.008634124998934567,
+          "input_sha256": "5b74deb237ea9a085666ab0b3f865db8c7c996b935b38b24e829567d89142ee6",
+          "model": "dev.linden-demand",
+          "resolved_version": "1",
+          "rows": 24,
+          "rows_per_second": 2779.667887940185,
+          "run_id": "df333bf5f62a41cfab86a7ce388c334e"
+        },
+        "chain_matches": true
+      },
+      "original_svg_sha256": "cf6295b97d71126620a4f727999a05e35b7141080f351680df3e2a824081ebbd"
+    },
+    {
+      "lesson": "sprint-4/05-proving-the-pipeline-reproduces",
+      "stem": "recovery-checks__01__en",
+      "sha256": {
+        "png": "368ca4bf5fa32e440d51c686b68063997d1c22bfb7e5e05155be2ee2c38fba44",
+        "svg": "7694567dd0673d26917ca27d685abfbe5adce8dd883ac268d337e9f0a6d20543"
+      },
+      "observations": {
+        "checks": {
+          "Recipe: config": true,
+          "Recipe: data": true,
+          "Recipe: environment": true,
+          "Recipe: partition": true,
+          "Recipe: source": true,
+          "Report: overall recovery accepted": true,
+          "Report: batch deadline accepted": true,
+          "Lineage: batch uses reproduced run": true,
+          "Lineage: batch resolves recovered version": true,
+          "Output: recorded row count matches returned rows": true,
+          "Output: row ID order and uniqueness": true,
+          "Output: 24 planned and 24 returned rows": true,
+          "Output: finite predictions (kWh)": true,
+          "Batch: 0.007443 seconds \u2264 60 seconds": true,
+          "Validation: RMSE delta within tolerance": true
+        },
+        "passed": true,
+        "absolute_rmse_delta": 0.0,
+        "tolerance": 1e-06,
+        "planned_rows": 24,
+        "prediction_rows": 24
+      },
+      "original_svg_sha256": "d1498d3c0396ba3b3cb7bdff5daf91747fd1b724580eba470e8d4067f239da8d"
+    }
+  ],
+  "published_svg_formatting": "Trailing line whitespace normalized after export; XML structure, normalized attribute values and text unchanged."
+}

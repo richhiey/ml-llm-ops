@@ -16,4 +16,4 @@ planned CSV -> same feature contract -> saved active model -> prediction CSV
 
 `scenarios.py` creates isolated client incidents for practice; it never changes the main project's selection. `dev.py` runs saved-source probes in fresh processes for notebook exploration. The CLI is an entry point to these same APIs, which you can inspect and use in your own scripts.
 
-The SQLite store, validation policy and mutable JSONL alias log are single-user local infrastructure. See [contracts](contracts.md) for limits. Completing this project is practice in traceability and recovery, not a claim that a local alias is a secured production deployment.
+The SQLite store, validation policy and mutable JSONL alias log are single-user local infrastructure. See [contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) for limits. Completing this project is practice in traceability and recovery, not a claim that a local alias is a secured production deployment.

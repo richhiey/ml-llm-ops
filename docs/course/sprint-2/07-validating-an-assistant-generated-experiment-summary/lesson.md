@@ -4,11 +4,14 @@
 Linden Facilities has a useful result table, but an assistant can still misread metric direction or compare incompatible runs. We will ask for a recommendation and check every claim before it influences promotion.
 
 
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) in your local project environment. Find the section for **Validating an assistant-generated experiment summary** using its Campus activity ID **A-S2-07**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Work in the repository
 
 Use `work/runs.csv` and your saved matrix IDs. Request the actual response from your approved assistant using the prompt below. In a local script, open `Project()` and `Workspace(p.tracking)`, then call `verify_summary(p.matrix(ws), proposed_run_id)` from `linden_mlops`. The result's `recommendation_matches_metric` must agree with your manual/UI inspection. Test the numerically worst run once as a deliberately wrong recommendation; expect `False`. Keep your claim checks in one local note or optional notebook, not a second report.
 
-The [optional sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) offers the same concepts for exploration. Keep one set of work; no notebook is required for this activity.
 
 ## Review a recommendation against the runs
 
@@ -36,6 +39,17 @@ Do not relabel training error as validation error. A close winning margin suppor
 Keep one compact table in your working notes: claim → supporting field → accepted/corrected/unsupported. Include one supported numeric claim and any actual overclaim you corrected; if none occurred, state that the reviewed claims were supported. Reuse the table at the sprint checkpoint.
 
 ![Validating an assistant-generated experiment summary: evidence path](assets/validating-an-assistant-generated-experiment-summary__01__en.png)
+
+## Check your work after attempting the task
+
+<details>
+<summary>Compare your result after the attempt</summary>
+
+**Result you should get:** The nominated ID either matches the minimum comparable validation RMSE or fails that numeric rule. Your claim table separately checks controls and unsupported operational claims. The deliberately worst recommendation returns False.
+
+**How:** Compare full IDs and unrounded fields, then evaluate each prose claim. A correct rank cannot prove serving cost or readiness. If the actual response is accurate, retain it as supported; do not manufacture a correction. If assistant access is unavailable, practice on the labeled fixture, but record the actual-request outcome as incomplete.
+
+</details>
 
 ## Learning outcome
 

@@ -14,11 +14,11 @@ Tests must cover exact lower/upper bounds, outside each bound, NaN/inf, fraction
 
 | alpha | Comparison |
 |---:|---|
-| 0.01 | Anchor |
-| 0.1 | Alpha only versus anchor |
-| 1 | Alpha only versus anchor |
-| 10 | Alpha only versus anchor |
-| 100 | Alpha only versus anchor |
+| 0.01 | Weak-regularization candidate |
+| 0.1 | Alpha only versus alpha 1 |
+| 1 | Logging/comparison anchor |
+| 10 | Alpha only versus alpha 1 |
+| 100 | Alpha only versus alpha 1 |
 
 All use the same source revision, snapshot, feature order, train/validation partition, scaling, solver and `range_guard=True`. Autologging can be enabled for all five; it changes logging, not the estimator. Changing the guard or partition requires a separately declared comparison. The helper labels the evaluation partition in its comparison_group tag; that tag alone is not proof that every control matches. `verify_summary` requires explicitly selected unique IDs and at least five distinct alpha configurations; it rejects missing fields, mixed groups, non-finite RMSE and changed data/code/guard/partition instead of silently excluding rows. It ranks RMSE; it cannot validate semantic claims such as deployment readiness.
 

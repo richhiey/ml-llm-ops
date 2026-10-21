@@ -6,6 +6,11 @@ Linden Facilities sees a smaller error after a teammate changed both regularizat
 
 Read this explanation alongside the [repository setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Use your existing project evidence for the checks; no new model execution is needed.
 
+
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) in your local project environment. Find the section for **Controls, confounders, and decision metrics** using its Campus activity ID **A-S2-02**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Hold the question steady
 
 A **control** is a condition held fixed across a comparison. A **factor** is the setting deliberately varied. A **confounder** is another changed condition that could explain the observed difference. To compare `alpha`, hold the data snapshot, split, features, scaling, solver, guard and evaluation metric fixed.
@@ -39,16 +44,24 @@ Keep three statements separate in your explanation: which candidate ranks first,
 
 ## Check for Understanding
 
-A run on `final` scores better than all five validation runs. Linden's assistant recommends it as the winner. Identify the invalid comparison and specify the evidence needed to rank the five configurations.
+These are explicitly illustrative comparison cards, not new executions on the reserved final rows. Candidate C has validation errors `[0, 0, 9]` kWh; D has `[3, 3, 3]` kWh under identical controls. Another card reports final-partition RMSE `2` kWh. Produce the MAE and RMSE for C and D, rank the comparable candidates under Linden's declared rule, and explain which card must stay out of that ranking.
 
 <details>
-<summary>Check your diagnosis after attempting it</summary>
+<summary>Check the numbers after committing to a ranking</summary>
 
-> **Result you should get:** exclude the final-partition score from the validation ranking. Require the same snapshot, partition, source, features, solver and guard, then sort validation RMSE ascending.
->
-> **How:** inspect `evaluation_partition`, `data_sha256` and the declared matrix, not just the score column. Keep the final result as a separate post-selection report.
+**Result you should get:** C and D both have MAE `3` kWh. C has RMSE `sqrt(27) ≈ 5.196` kWh; D has RMSE `3` kWh. D wins the comparable validation ranking. The final-partition card is excluded, even though its number is lower.
 
-![Controls, confounders, and decision metrics: evidence path](assets/controls-confounders-and-decision-metrics__01__en.png)
+**How:**
+
+```python
+import numpy as np
+for name, errors in {"C": [0, 0, 9], "D": [3, 3, 3]}.items():
+    errors = np.asarray(errors, dtype=float)
+    print(name, "MAE", np.abs(errors).mean(),
+          "RMSE", np.sqrt(np.square(errors).mean()))
+```
+
+Equal average absolute error does not imply equal squared-error penalty. If you chose the final card, inspect evaluation basis before sorting: it answers a different question. These cards do not authorize opening the actual final holdout.
 
 </details>
 

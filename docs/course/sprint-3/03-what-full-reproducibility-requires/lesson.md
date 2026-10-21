@@ -6,6 +6,11 @@ Linden Facilities has a model artifact and its RMSE, yet another engineer cannot
 
 Read this explanation alongside the [repository setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Use your existing project evidence for the checks; no new model execution is needed.
 
+
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) in your local project environment. Find the section for **What full reproducibility requires** using its Campus activity ID **A-S3-03**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## Record a connected set, not five isolated labels
 
 **Lineage** is the connection from a result to the inputs and transformations that produced it. A reproducible training run needs both identifiers and recoverable content. A file hash helps detect differences; it cannot recreate a missing file.

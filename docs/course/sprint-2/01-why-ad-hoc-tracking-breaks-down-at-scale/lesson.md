@@ -6,6 +6,11 @@ Linden Facilities has five model results copied into a spreadsheet. Two rows say
 
 Read this explanation alongside the [repository setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Use your existing project evidence for the checks; no new model execution is needed.
 
+
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) in your local project environment. Find the section for **Why ad hoc tracking breaks down at scale** using its Campus activity ID **A-S2-01**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## A score needs its context
 
 An **experiment run** is one execution with a unique identifier and recorded inputs, settings and results. MLflow stores runs with parameters, metrics and artifacts. A **parameter** describes a setting such as `alpha`; a **metric** measures a result such as validation RMSE; an **artifact** is a file such as the fitted model or source bundle.

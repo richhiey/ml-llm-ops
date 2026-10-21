@@ -1,6 +1,6 @@
 # Example assistant response
 
-Read this saved response alongside the [frozen example table](observed-five-runs.csv). Its IDs and source hash belong to that historical example, not your current tracking store. Use it to practise checking a claim against raw fields. For the actual activity, request a response about your own five runs from your approved assistant.
+Read this saved response alongside the [frozen example table](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/observed-five-runs.csv). Its IDs and source hash belong to that historical example, not your current tracking store. Use it to practise checking a claim against raw fields. For the actual activity, request a response about your own five runs from your approved assistant.
 
 ## Response to inspect
 

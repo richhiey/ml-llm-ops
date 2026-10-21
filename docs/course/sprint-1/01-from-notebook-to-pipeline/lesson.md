@@ -6,6 +6,11 @@ Linden Facilities can fit an energy-demand model in a notebook, but the planner 
 
 Read this explanation alongside the [repository setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Use your existing project evidence for the checks; no new model execution is needed.
 
+
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) in your local project environment. Find the section for **From notebook to pipeline** using its Campus activity ID **A-S1-01**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+
 ## A pipeline makes dependencies explicit
 
 A **pipeline** connects stages through declared inputs and outputs. Reproducibility means another engineer can recover the source, data, configuration and environment and obtain an agreed result. Neither requires a large orchestration framework: our Python functions already expose the boundaries.

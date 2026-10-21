@@ -1,8 +1,12 @@
 ✂️
 # Rolling back a bad model version
 
-Linden Facilities trialed a version that met the original RMSE gate of `5` kWh. A revised acceptance review now requires validation RMSE <= `1.6` kWh. The alpha `10` trial fails that requirement, while the previously approved alpha `1` version satisfies it. Preserve both artifacts while restoring the approved selection.
+Linden Facilities trialed a version that met the original RMSE gate of `5` kWh. A revised acceptance review now requires validation RMSE <= `1.6` kWh. Inspect the trial and prior approval evidence to decide what can remain active. Preserve both artifacts while restoring a qualifying selection.
 
+
+## Notebook workspace
+
+Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) in your local project environment. Find the section for **Rolling back a bad model version** using its Campus activity ID **A-S3-05**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
 
 ## Work in the repository
 
@@ -15,7 +19,6 @@ uv run linden-mlops inspect --state work/rollback
 
 Read `work/rollback/case.json`. Choose the qualifying prior version from actual tags and source metrics. Use `activate --state work/rollback --version ACTUAL_VERSION --reason 'YOUR OBSERVED INCIDENT REASON'`, then `batch --state work/rollback`. Use the registry client to tag the trial's incident. Keep both models and the before/after event in `work/rollback/audit.jsonl`. No rollback is performed by preparation, and the main project is unchanged.
 
-The [optional sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) offers the same concepts for exploration. Keep one set of work; no notebook is required for this activity.
 
 ## Starting point
 
@@ -29,7 +32,7 @@ Create the isolated incident described above. Read `work/rollback/case.json`, th
 
 ## Your task
 
-Record the active version and source run before the rollback. Find the previous approved version by its actual validation evidence. Confirm the revised RMSE requirement against both raw runs. Reassign `active` to that previous version using the helper, with a reason that names the acceptance failure.
+Record the active version and source run before the rollback. Find the previous approved version by its actual validation evidence. Record your target version, score, approval status and reason before changing the alias; a low version number alone does not establish suitability. Confirm the revised RMSE requirement against both raw runs. Reassign `active` to that previous version using the helper, with a reason that names the acceptance failure.
 
 Run a new representative batch and prove its resolved version/source run match the restored version. Save the before/after alias evidence, application audit event and batch output. Mark the trial's incident using a version tag; do not delete it to make the history look cleaner.
 
@@ -48,6 +51,17 @@ Use the [MLflow alias API example](https://mlflow.org/docs/3.5.1/ml/model-regist
 ## Checkpoints
 
 Both versions remain inspectable. The event's previous version is the trial and new version is the approved version. A new batch records the restored version. If registry and log disagree, report the inconsistency and reconcile it rather than claiming a complete audit.
+
+## Check your work after attempting the task
+
+<details>
+<summary>Open the self-check after recording your own result</summary>
+
+**Result you should get:** the trial's source run has validation RMSE about `1.766063` kWh and fails the revised `1.6` requirement; the prior approved run has about `1.443004` kWh and qualifies. In this prepared case those runs use alpha `10` and `1` respectively. Use the actual version IDs in your store. The final alias and new batch must identify the restored prior version; both model artifacts remain available.
+
+**How to check:** read version tags and source-run metrics, then reconcile `previous_version`, `new_version`, `run_id` and reason in the helper audit with your before/after record. The original `approved` tag only proves the old `5` kWh policy; it does not automatically satisfy the revised rule. An older batch cannot prove post-rollback serving. If you chose by age or reused the old batch, correct that evidence, invoke one new batch after the restored selection, and retain the failed reasoning as an incident note.
+
+</details>
 
 ## Learning outcome
 
