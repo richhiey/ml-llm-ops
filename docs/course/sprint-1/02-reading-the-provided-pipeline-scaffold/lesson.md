@@ -13,7 +13,7 @@ Open [pipeline.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_m
 
 A **feature** is a model input; the **target** is known demand used for fitting or evaluation. `row_id` and `partition` describe a record's identity and role; they are not features. The illustration maps the interfaces, not additional commands you must execute.
 
-Create `work/inspect-pipeline.py` in VS Code with this code. The script is your inspection of the application; it does not edit source or install an exercise state.
+Create `work/inspect-pipeline.py` in VS Code with this code. The script is your inspection of the application; it does not edit source or install an exercise state. In the supplied configuration, `alpha=1` sets Ridge regularization strength, the restraint on learned regression weights; keep it fixed for this trace. `range_guard=True` enables the existing feature-domain checks. `autolog=True` records library training diagnostics in addition to the application's explicit validation and model records. You will inspect those logging roles later; no logging-policy choice is required here.
 
 ```python
 from pathlib import Path

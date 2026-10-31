@@ -13,7 +13,7 @@ The separate registry intake is supplied at `work/harbor-registry`. Read `case.j
 
 Before executing a response, inspect the declared policy, cohort sizes and available labels. Record the expected signal, threshold and action. Verify an unlabeled observation first, then evaluate the independent labeled feedback. Retain hashes and the version used for both distributions. Explain why input change, output change and measured degradation support different claims.
 
-When the evidence justifies it, train one candidate. Declare its configuration before comparing it with the incumbent on the same validation IDs. Explain each acceptance criterion using actual errors and improvement. If it fails, retain the incumbent; if it passes, use guarded promotion with your own evidence-based reason. In either case, invoke a new client batch and inspect the actual model/source and delivered predictions. Do not change thresholds or inspect final rows to improve your verdict.
+When the evidence justifies it, train one candidate. Declare its configuration before comparing it with the incumbent on the same validation IDs. Explain each acceptance criterion using actual errors and improvement. If it fails, retain the incumbent and explicitly record the unresolved measured degradation plus a next evidence/containment action; retaining an approved old model is not proof that it now meets the feedback quality bound. If it passes, use guarded promotion with your own evidence-based reason. In either case, invoke a new client batch and inspect the actual model/source and delivered predictions. Do not change thresholds or inspect final rows to improve your verdict.
 
 ## Recover the client's registry selection
 
@@ -29,7 +29,7 @@ Write a short explanation of one harmful feedback loop to avoid and the evidence
 
 <details><summary>Check after attempting the client decisions and recovery</summary>
 
-**Result you should get:** Harbor's unlabeled window supports investigation; its independent degraded labels justify evaluating a candidate. Candidate acceptance depends on your actual comparison. In the registry intake, the previously approved alpha-0.1 version meets `1.45`; the active alpha-10 trial does not, and the alpha-100 decoy is pending. The final recovery output comes from the suitable actual version.
+**Result you should get:** Harbor's unlabeled window supports investigation; its independent degraded labels justify evaluating a candidate. Candidate acceptance depends on your actual comparison. A failed candidate leaves the incumbent selected with an unresolved current-condition quality miss; describe that honestly rather than claiming recovery from a passing batch alone. In the registry intake, the previously approved alpha-0.1 version meets `1.45`; the active alpha-10 trial does not, and the alpha-100 decoy is pending. The final recovery output comes from the suitable actual version.
 
 **How:** join each version to its source run, raw validation error and approval before selection. Inspect the real change event and new client batch. Training on model predictions as if they were true demand labels could reinforce its own errors; use independent targets and disjoint validation instead. If you chose the pending decoy or relied on stale inference, preserve that attempt, repair the selection and repeat the missing verification. Copying Linden's guided conclusion cannot establish Harbor's result.
 

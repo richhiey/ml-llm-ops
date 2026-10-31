@@ -2,14 +2,16 @@
 
 Use one local clone, the [setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md), and reusable core modules. Source/terminal is primary; [four local notebooks](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/README.md) are optional companions. Retain good evidence instead of regenerating completed work.
 
-| Sprint | Evidence carried forward |
-|---|---|
-| 1 | Explained stage extension and tested batch contract |
-| 2 | Declared comparable runs, logging evidence and validated assistant summary |
-| 3 | Registered active version, monitoring policy, candidate decision and isolated recovery evidence |
-| 4 | Intended active recipe, observed operational cycle, short incident and clean receiving proof |
+| Sprint | Evidence carried forward | Check before the next stage |
+|---|---|---|
+| 1 | Your saved `batch_input.py` change, its call in `lifecycle.py`, focused tests and actual named batch output | The complete-plan checks distinguish bad input from valid input; you can explain the source change and the batch’s model/input identity. Installation alone does not establish this work. |
+| 2 | Declared configurations, five controlled run IDs, selected validation run and logging/assistant-claim evidence | Source and data stay fixed across the comparison. `work/project.json` reopens the actual selection; a chart or a copied example ID cannot replace it. |
+| 3 | Approved/active model identity, monitoring policy/observations, candidate decision, observed job/incident and separate client recovery evidence | Record the actual resulting active version and its source run. The original experiment winner and a later accepted feedback model are different decisions. |
+| 4 | Verified `release.json`, canonical export with selected training bytes, supplementary runbook/extension evidence and clean receiving proof | The release names the model actually served. The receiver uses restored source, its own locked environment and new store, with the producer store temporarily unavailable and then restored. |
 
-Keep the original experiment selection distinct from an operationally selected model. Export the intended run explicitly. Isolated client states do not replace the main project. Final holdouts stay closed until selection is fixed.
+This table is a handoff check, not an extra submission. Keep the same completed source branch and main `work/project.json`; retain good records rather than repeating work. If a prerequisite artifact is absent, complete that activity before running a later consumer. A new clone installs the baseline application and does not recreate your source changes or decisions.
+
+Incoming client investigations use separate stores named in their briefs. Their decisions do not replace the main project’s selection or active model. Source changes after an experiment invalidate its fixed-source comparison; preserve the records and deliberately revalidate in a new work directory when necessary. Export the intended active run explicitly through the verified release. Final holdouts stay closed until configuration selection and handoff choices are fixed.
 
 ## Sprint 1 · Build a reliable pipeline
 

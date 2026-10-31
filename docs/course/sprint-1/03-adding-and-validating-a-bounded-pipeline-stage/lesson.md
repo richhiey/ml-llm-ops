@@ -21,7 +21,7 @@ The existing `validate_ranges()` still owns temperature `-30..50`, integer hour 
 
 ## 1. Write the missing acceptance check
 
-Create `tests/test_batch_input.py` with the following integration test. A **fixture** supplies a test's starting objects. This one uses the real application to fit and log a small model in a temporary store, so it has no dependency on your original working store.
+Create `tests/test_batch_input.py` with the following integration test. A **fixture** supplies a test's starting objects. Here, pytest calls the test function and supplies `tmp_path`, a fresh temporary directory reserved for that test. `pytest.raises(ValueError, match=...)` requires the call inside its block to raise that exception with matching text; accepting the input makes the test fail. The test uses the real application to fit and log a small model in its temporary store, so it has no dependency on your original working store.
 
 ```python
 import pandas as pd
@@ -73,10 +73,10 @@ def validate_planned_batch(frame):
 
 The schema comparison rejects missing, extra or reordered fields. The row-count check rejects both incomplete and oversized files. The identifier condition rejects missing, blank and duplicate identifiers without rewriting them. `validate_features()` retains the existing numeric checks. The final deep copy preserves accepted input in a separate table; nothing assigns into the caller's input.
 
-Open [lifecycle.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/lifecycle.py). Add `from .batch_input import validate_planned_batch` with the other imports. Inside `batch_predict()`, replace its input-reading and inline `row_id`-checking block with:
+Open [lifecycle.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/lifecycle.py). Add `from .batch_input import validate_planned_batch` with the other imports. Inside `batch_predict()`, keep its existing `source = Path(input_path or DATA / "batch-v1.csv").resolve()` line. That path is also used later to record input identity. Replace only the following `inputs = pd.read_csv(source)` line and inline `row_id`-checking block with:
 
 ```python
-inputs = validate_planned_batch(pd.read_csv(input_path or DATA / "batch-v1.csv"))
+inputs = validate_planned_batch(pd.read_csv(source))
 features = preprocess(inputs, config)
 ```
 
@@ -90,10 +90,10 @@ This executed private author reference uses the bundled planned inputs and expli
 
 ## 3. Test preservation and the remaining path
 
-Append this unit test to `tests/test_batch_input.py`:
+Append this unit test to `tests/test_batch_input.py`. The `@pytest.mark.parametrize` decorator repeats the same test once for each named `fault`; each run starts with its own valid table before making that one change:
 
 ```python
-@pytest.mark.parametrize("fault", ["short", "long", "duplicate", "blank", "extra"])
+@pytest.mark.parametrize("fault", ["short", "long", "duplicate", "blank", "extra", "reordered"])
 def test_planned_batch_boundary_and_preservation(fault):
     from linden_mlops.batch_input import validate_planned_batch
     valid = pd.read_csv(DATA / "batch-v1.csv")
@@ -116,6 +116,8 @@ def test_planned_batch_boundary_and_preservation(fault):
         broken.loc[123, "row_id"] = broken.loc[100, "row_id"]
     elif fault == "blank":
         broken.loc[123, "row_id"] = " "
+    elif fault == "reordered":
+        broken = broken[["hour", "row_id", "temperature_c", "occupancy"]]
     else:
         broken["unexpected"] = 0
     original = broken.copy(deep=True)
@@ -131,7 +133,7 @@ uv run pytest tests/test_batch_input.py -q > work/intake-after.txt
 uv run pytest tests/test_spine.py::test_contract_extension_and_unchanged_pipeline -q
 ```
 
-Expect six new test cases to pass and the existing feature/pipeline regression test to pass. The first new test proves the public delivery route actually calls the stage; unit tests alone could pass even if integration were forgotten. Add missing-field, non-finite-feature or copy-independence probes if your explanation depends on those guarantees.
+Expect seven new test cases to pass and the existing feature/pipeline regression test to pass. The first new test proves the public delivery route actually calls the stage; unit tests alone could pass even if integration were forgotten. The reordered-column case distinguishes an exact ordered schema from merely having the same set of names. Add missing-field, non-finite-feature or copy-independence probes if your explanation depends on those guarantees.
 
 Use VS Code Source Control to inspect the actual new module, lifecycle call and tests. `git diff -- src/linden_mlops/lifecycle.py` shows the integration change; new untracked files are visible separately in Source Control and `git status --short`. Save the new module and test file with the diff; plain `git diff` does not include untracked files. Explain each added statement before treating the change as ready.
 

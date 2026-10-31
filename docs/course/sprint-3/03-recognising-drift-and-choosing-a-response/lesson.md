@@ -18,13 +18,15 @@ The teaching monitor uses **Wasserstein distance**, the amount of movement betwe
 
 ![Observed drift distances relative to their declared thresholds](assets/operations-drift__01__en.png)
 
-The figure is an actual synthetic reference execution. A ratio of `1` reaches its configured boundary. It does not measure prediction error, causal change or statistical certainty.
+The figure is an actual synthetic reference execution. In these supplied windows, every reference temperature was shifted by `8` °C. The one-dimensional Wasserstein distance is therefore approximately `8` °C: the distribution moved that far, even though its shape did not change. Dividing by the declared `3` °C threshold gives `8 / 3 ≈ 2.67`, the plotted ratio. This ratio has no units; it is not a `267%` probability that the model failed. A ratio of `1` reaches the configured boundary. The chart does not measure prediction error, causal change or statistical certainty.
 
 ## Decide before you execute
 
 A **response policy** joins a signal, threshold and action. The provided policy requires at least `96` observations per monitoring window. Its distance boundaries are `3` °C, `3` hours, `8` occupancy percentage points and `5` kWh. With at least `32` separately labeled validation examples, RMSE above `3` kWh permits training a candidate. A candidate must reach RMSE at most `3` kWh and improve by at least `0.5` kWh on the same validation rows. These are bounded teaching criteria, not universal production thresholds.
 
-Insufficient data means collect more. Drift without sufficient labeled degradation means investigate or re-evaluate. Confirmed degradation permits a candidate; approval and activation are separate decisions. Retain the incumbent if the candidate fails. Roll back only when a version is already active and an approved alternative satisfies the recovery requirement. Avoid training on model-generated predictions as if they were true demand labels: that feedback loop can reinforce the model's errors.
+Check the evidence in order: enough monitoring rows, any distance flags, enough independent labels, then measured error. **RMSE**, root mean squared error, summarizes prediction error in kWh; larger errors receive more weight. No labels means no measured RMSE, even when the distance ratio is large.
+
+Insufficient monitoring data means collect more. Drift without sufficient labeled degradation means investigate or re-evaluate. Confirmed degradation permits a candidate; approval and activation are separate decisions. Retain the incumbent if the candidate fails. Roll back only when a version is already active and an approved alternative satisfies the recovery requirement. Avoid training on model-generated predictions as if they were true demand labels: that feedback loop can reinforce the model's errors.
 
 ## Translate the idea to an LLM system
 

@@ -1,6 +1,16 @@
 # Module A Campus review and verification
 
-## Current application and Campus revision · 31 October 2026
+## Student-perspective follow-up · 31 October 2026
+
+Three critics followed all 26 Campus lessons in order, checking the knowledge and actual artifacts available before each task, then inspecting collapsed feedback separately. Every approved outcome remains verbatim. The review checked each substantive clause against instruction, prior capability, learner action and observable evidence.
+
+The follow-up clarifies the real source integration and direct-artifact identity, makes the complete-file assessment feedback actionable, and explains the supplied testing mechanics. A new reordered-column test rejects an implementation that ignored column order despite passing the earlier tests. The completed source now has seven added-stage test cases. Operational notebooks work when opened from `notebooks/`, expose the incident API they ask learners to use, and render their actual figures. Failed candidates remain inactive; a fresh batch from a retained incumbent does not claim its measured degradation disappeared.
+
+All four notebooks executed from the notebook-directory starting point in one new private cumulative project. Setup APIs were checked before private helpers were loaded, preventing helper imports from masking missing learner imports. The actual failed-candidate lesson/notebook branches and updated supplier-feedback code were executed. A new restored receiver installed its own exact Python `3.12.13` locked environment and passed **33 tests**, including the stronger stage tests, while the producer store was unavailable. It matched all recipe invariants with **0 kWh** validation RMSE difference and delivered **24 ordered finite predictions within 60 seconds**. The producer store was restored intact. The unchanged baseline application and external fixture checks separately passed **29 tests** in fresh source/environment.
+
+Distributed attempt cells remain unsolved. These are critic reviews and authored technical rehearsals, not a human learner trial, an actual approved-assistant request or classroom signoff. Live lessons remain untouched. Current publication availability must still be checked against the exact released files.
+
+## Earlier application and Campus revision · 31 October 2026
 
 This revision supersedes the historical source-reset and lesson-dispatch routes described below. All 26 approved v12 titles, types, sequence and exact learning outcomes are retained. Each outcome was reviewed against its teaching, prerequisite capability, student action and observable evidence.
 

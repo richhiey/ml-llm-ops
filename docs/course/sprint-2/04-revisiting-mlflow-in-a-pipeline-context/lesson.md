@@ -5,7 +5,7 @@ Linden Facilities has a five-configuration plan. The team already knows basic ML
 
 ## Starting point and finished state
 
-Work in the existing VS Code clone and [locked environment](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Your planned-batch stage is integrated and the existing domain guard is enabled and `configs/experiment.json` has been declared with `plan`. Keep the source fixed while the five configurations run.
+Work in the existing VS Code clone and [locked environment](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Your planned-batch stage is integrated, the existing domain guard is enabled, and `configs/experiment.json` has been declared with `plan`. Keep the source fixed while the five configurations run.
 
 You will finish with five full run IDs in `work/project.json`, their exported rows in `work/runs.csv`, and one run whose settings, measurements and artifacts you can locate in both Python and MLflow. A **tracking store** is the local database and file storage holding those records; this project uses `work/tracking`.
 

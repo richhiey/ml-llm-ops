@@ -41,7 +41,7 @@ Open your actual `work/baseline-state/validated-batch.json` and matching CSV, or
 | 24 finite predictions with matching `row_id` order | Complete, aligned output | Does not establish future prediction accuracy |
 | `elapsed_seconds` and `complete_within_60s` | Measured batch met its deadline | Excludes environment setup and training |
 | `rows_per_second` | Observed throughput for that job | Does not establish service throughput under load |
-| Source run and resolved version | Which fitted artifact produced the file | Does not establish price or availability |
+| `run_id` and `model_uri`; registered version when using an alias | Which fitted artifact produced the file | `resolved_version=None` is expected for your direct-artifact job; it does not establish price or availability |
 
 Inspect the actual figures; do not generate another batch just for this page. If the record is missing or source changed, return to the saved-source verification before claiming completion.
 

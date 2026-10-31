@@ -17,7 +17,7 @@ Use your validated application release descriptor to export the exact intended r
 
 ## Diagnose an unfamiliar damaged receiving copy
 
-The exercise intake supplies `work/receiving-review/brief.txt` and a `candidate-bundle/` received copy of your actual release export. The copy has a bounded unfamiliar transport/configuration fault; the canonical export remains intact. Use the [intake setup reference](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/README.md) if the incoming package has not been provisioned. Case preparation belongs to exercise setup, outside the application runtime. Your task begins with inspecting the received package, not manufacturing a failure.
+The exercise intake supplies `work/receiving-review/brief.txt` and a `candidate-bundle/` received copy of your actual release export. The copy has a bounded unfamiliar receiving fault; the canonical export remains intact. Use the [intake setup reference](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/README.md) if the incoming package has not been provisioned. Case preparation belongs to exercise setup, outside the application runtime. Your task begins with inspecting the received package, not manufacturing a failure.
 
 Read the supplied brief and preserve the first failure. Diagnose the earliest failing layer before editing. Repair the copied package from the canonical export without changing its checksum index, model selection, thresholds or tolerance. Explain when earlier receiving evidence remains applicable and when a fresh execution is necessary. Keep the canonical export and original store intact.
 

@@ -46,7 +46,7 @@ Use actual observed values for placeholders. `--state` chooses a store; `--run-i
 
 `monitor`, `train_candidate`, `compare_candidate`, `promote_candidate` and `write_incident` in `linden_mlops.operations` consume explicit file paths and actual candidate versions. See [operations](https://github.com/richhiey/ml-llm-ops/blob/main/docs/operations.md). Input generation and invented incident setup are outside application runtime.
 
-`plot_contract`, `plot_experiments`, `plot_identity`, `plot_recovery`, `save_figure` in `linden_mlops.visuals` return actual Figures with inspectable `linden_data`; monitoring/candidate plots are in `operations`. `save_figure` exports SVG and PNG from one layout. Plots reject missing/incompatible data rather than showing invented passing evidence. See [figure interpretation](https://github.com/richhiey/ml-llm-ops/blob/main/docs/visualizations.md).
+`plot_contract`, `plot_experiments`, `plot_identity` and `plot_recovery` in `linden_mlops.visuals` return Matplotlib Figures with inspectable `linden_data`; monitoring/candidate plots are in `operations`. `save_figure(figure, destination_base)` exports SVG and PNG from one layout and returns a dictionary containing the two output paths. Plots reject missing/incompatible data rather than showing invented passing evidence. See [figure interpretation](https://github.com/richhiey/ml-llm-ops/blob/main/docs/visualizations.md).
 
 ## Source identity at release
 

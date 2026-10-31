@@ -23,7 +23,7 @@ Harbor asks: “Can we clip invalid measurements and still describe them as the 
 
 ## Task A — Demonstrate the validated extension
 
-Complete `check_supplier()` in your existing `work/sprint-1/attempt.py`. If you are joining here, copy the [unsolved starter](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/sprint-1-attempt.py) and use the [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) to restore the required working state. The completed-stage evidence must exist before this acceptance task.
+Complete `check_supplier()` in your existing `work/sprint-1/attempt.py`. If you are resuming, reopen the completed feature branch, new stage and lifecycle call, tests, failing-before/passing-after records, baseline model manifest, validated batch and code-review notes. The [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) installs the environment; it does not recreate that evidence. If a piece is missing, complete the missing guided change or independent review before this acceptance task. The [unsolved starter](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/sprint-1-attempt.py) supplies only a place to write your probes.
 
 Test individual rows and the whole intake using the saved `validate_ranges()` function. Check the original table after accepted and rejected calls, including its index. For accepted rows, check that the returned table is independent. Compare observed decisions with your inventory and explain any mismatch before correcting it.
 
@@ -68,7 +68,29 @@ If source has changed since the saved batch, run your contract/regression tests 
 
 **Result you should get:** Plan A has `24` unique complete identifiers and passes unchanged. Plan B has a duplicated identifier and rejects; plan C has `23` rows and rejects. The accepted plan reaches actual batch inference without changing its identifiers. Separately, `H-201` and `H-203` pass unchanged in separate returned tables. `H-202` rejects its fractional hour `22.5`; `H-204` rejects temperature `51`; `H-205` rejects occupancy `-0.5`. The complete five-row intake raises an error and returns no filtered or repaired result. Its original values and index survive. Clipping would conceal an input-contract violation.
 
-**How:** Compare your predicted inventory with individual probes, then test the mixed intake separately. For example:
+**How:** Check the complete-plan boundary separately from the feature-domain boundary. For the three file cases, compare the returned table and the caller after each decision:
+
+```python
+import pandas as pd
+from linden_mlops.batch_input import validate_planned_batch
+
+for label in ["a", "b", "c"]:
+    plan = pd.read_csv(f"docs/course/exercises/harbor-plan-{label}.csv")
+    before = plan.copy(deep=True)
+    try:
+        checked = validate_planned_batch(plan)
+    except ValueError as error:
+        print(label, "rejected", str(error))
+    else:
+        pd.testing.assert_frame_equal(checked, before)
+        assert checked is not plan
+        print(label, "accepted; independent unchanged table")
+    pd.testing.assert_frame_equal(plan, before)
+```
+
+You should observe A accepted, B rejected for repeated identity, and C rejected for incomplete count. If a direct stage call rejects B/C but the application delivers them, inspect the lifecycle integration and rerun `test_partial_plan_is_rejected`: successful unit checks can coexist with an unused stage. For the accepted client job, inspect the actual saved CSV and JSON from your chosen output name; match every input identifier, the baseline source run, `24` finite predictions and the measured deadline. Reuse that delivery rather than generating another merely to read this solution.
+
+For the separate five-row domain intake, compare your predictions with individual probes and the mixed call:
 
 ```python
 intake = pd.read_csv("docs/course/exercises/harbor-intake.csv")

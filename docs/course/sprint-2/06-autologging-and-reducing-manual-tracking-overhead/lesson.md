@@ -5,7 +5,7 @@ Linden Facilities wants less manual logging work without losing control of its a
 
 ## Starting point
 
-Extend your `work/inspect-run.py` inspection pattern: `Project()` reopens decisions and `Workspace(project.tracking)` opens their runs. Use the [API lookup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md) to choose and connect the calls. Use the tracked pipeline and [MLflow autolog guidance](https://mlflow.org/docs/3.5.1/ml/tracking/autolog/). The helper's `Config(autolog=True)` enables the sklearn hook before fitting and disables automatic model logging; the fitted model is logged explicitly once.
+Extend your `work/inspect-run.py` inspection pattern: `Project()` reopens decisions and `Workspace(project.tracking)` opens their runs. Use the [API lookup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md) to choose and connect the calls. Use the tracked pipeline and [MLflow autolog guidance](https://mlflow.org/docs/3.5.1/ml/tracking/autolog/). When passed to `Workspace.run`, `Config(autolog=True)` enables the scikit-learn hook before fitting. The application disables automatic model logging and explicitly logs the fitted model once.
 
 | Held fixed | Deliberately changed |
 |---|---|

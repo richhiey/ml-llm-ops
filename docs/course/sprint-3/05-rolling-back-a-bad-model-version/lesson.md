@@ -25,7 +25,7 @@ Call `monitor` for each condition with the same incoming model and policy, using
 
 For the observed labeled retraining trigger, deliberately use `alpha=1000000` as an intentionally unsuitable candidate. Use `train_candidate` and `compare_candidate` with that actual report and feedback file. Inspect both model errors and each declared acceptance criterion before deciding whether the candidate may become active. Retain its failed comparison and prove the alias unchanged. Successful fitting is not a successful response.
 
-Your useful output is a defensible retain/change decision with raw evidence. Do not edit a `passed` field, change thresholds after seeing scores or open final rows to make a preferred model win.
+Your useful output is a defensible retain/change decision with raw evidence. When the candidate fails, retaining the incumbent prevents that unsupported replacement; it does not erase the measured degradation. Record that unresolved condition and the next evidence or containment action before calling the response complete. Do not edit a `passed` field, change thresholds after seeing scores or open final rows to make a preferred model win.
 
 ## Recover an already active version
 
@@ -56,7 +56,7 @@ Your five predictions distinguish the situations using actual evidence. The fail
 
 <details><summary>Check after recording your decisions and inspecting actual results</summary>
 
-**Result you should get:** stable data continues monitoring; an unlabeled shift and an accurately predicted shifted cohort support investigation; the degraded labeled cohort permits evaluating a candidate; `24` current rows require more observations. The deliberately over-regularized candidate fails acceptance and remains inactive. In the recovery intake, the alpha-10 trial fails the revised `1.6` gate while the earlier alpha-1 version qualifies.
+**Result you should get:** stable data continues monitoring; an unlabeled shift and an accurately predicted shifted cohort support investigation; the degraded labeled cohort permits evaluating a candidate; `24` current rows require more observations. The deliberately over-regularized candidate fails acceptance and remains inactive. Its rejection does not restore the incumbent's current-condition quality; that remains an explicit follow-up. In the recovery intake, the alpha-10 trial fails the revised `1.6` gate while the earlier alpha-1 version qualifies.
 
 **How:** inspect action, counts and validation RMSE before interpreting distribution flags. Join each actual version to its raw run and approval. Select the qualifying previous version with a reason, then compare its change event and fresh job records. If you trained without justified labels or confused an old CSV with a new job, preserve that failure and repeat only the missing decision/verification. The helper log is mutable and covers helper-mediated changes; it is not a tamper-proof production audit.
 

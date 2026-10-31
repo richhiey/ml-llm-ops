@@ -16,7 +16,10 @@ Start `uv run python` from the clone root. Execute the following Python blocks i
 ```python
 from pathlib import Path
 import json
+import numpy as np
+import pandas as pd
 from linden_mlops import Workspace, batch_predict
+from linden_mlops.pipeline import DATA, sha256
 from linden_mlops.lifecycle import MODEL_NAME
 from linden_mlops.operations import (
     monitor, train_candidate, compare_candidate,
@@ -78,6 +81,13 @@ comparison = compare_candidate(
     inputs / "feedback.csv", candidate["version"], outputs / "comparison.json",
 )
 print(json.dumps(comparison, indent=2))
+roles = pd.read_csv(inputs / "feedback.csv", usecols=["row_id", "partition"])
+training_ids = set(roles.loc[roles.partition.eq("train"), "row_id"])
+validation_ids = set(roles.loc[roles.partition.eq("validation"), "row_id"])
+assert set(comparison["evaluation_rows"]) == validation_ids
+assert validation_ids.isdisjoint(training_ids)
+print("Held-fixed validation rows:", len(validation_ids))
+print("Error improvement in kWh:", comparison["improvement_kwh"])
 ```
 
 This demonstrated configuration produces a pending candidate. Registration alone does not select it. Check that the incumbent and candidate errors use exactly the same `48` validation IDs, disjoint from candidate training. Explain both the candidate's absolute error and its improvement in kWh. The declared requirements are RMSE at most `3` kWh and improvement at least `0.5` kWh; a newer version number is irrelevant.
@@ -88,13 +98,25 @@ This is an executed synthetic author reference. Your report establishes your act
 
 ## 5. Make the selection decision and serve the planner
 
-Only continue with promotion if your actual comparison passes both requirements. Write the reason using your observed values, then call:
+Use the comparison to choose the action. A passing candidate can be promoted with your observed reason. A failed candidate stays inactive; retaining the incumbent avoids an unsupported replacement, but does not prove its observed degradation disappeared. Execute the appropriate branch, then inspect a new job from that resulting version:
 
 ```python
-reason = input("Observed validation and improvement supporting this decision: ").strip()
-event = promote_candidate(workspace, outputs / "comparison.json", reason)
-print(event)
+if comparison["passed"]:
+    reason = input("Observed validation and improvement supporting this decision: ").strip()
+    print(promote_candidate(workspace, outputs / "comparison.json", reason))
+    intended_version = str(candidate["version"])
+    intended_run = candidate["run_id"]
+else:
+    intended_version = str(labeled["model_version"])
+    intended_run = labeled["run_id"]
+    print("Candidate rejected; incumbent retained. Current-condition quality remains unresolved.")
 predictions, job = batch_predict(workspace, output_name="response-batch")
+planned = pd.read_csv(DATA / "batch-v1.csv")
+assert job["resolved_version"] == intended_version and job["run_id"] == intended_run
+assert job["completed_at"] >= comparison["observed_at"]
+assert predictions.row_id.tolist() == planned.row_id.tolist() and len(predictions) == 24
+assert np.isfinite(predictions.prediction_kwh).all() and job["complete_within_60s"]
+assert job["input_sha256"] == sha256(DATA / "batch-v1.csv")
 print(job)
 print(predictions)
 ```
@@ -116,13 +138,13 @@ incident = write_incident(
 print(json.dumps(incident, indent=2))
 ```
 
-Check the recorded trigger, comparison, actual alias event and fresh batch timestamps. Explain why labels changed the action and why comparison justified selection. The function checks evidence connections; it cannot judge whether your explanation is convincing or your follow-up is useful.
+Check the recorded trigger, comparison, actual alias event when selection changed, and fresh batch timestamps. If the candidate failed, say that quality remains unresolved and give the next evidence/containment action; successful CSV delivery does not repair a known error-policy miss. Explain why labels changed the action and why comparison justified selection. The function checks evidence connections; it cannot judge whether your explanation is convincing or your follow-up is useful.
 
 ## Watch out for
 
 An alert with no labels supports investigation, not immediate retraining. Small cohorts return `collect_more`. Invalid inputs reject before monitoring. Changed feedback, a stale trigger or a failed candidate must not move the alias. A candidate can remain pending without being useful enough to serve.
 
-If a destination already exists, read its retained evidence. Choose a new observation/job name only for a genuinely new execution. Do not recreate evidence merely to obtain another passing picture.
+If an interactive session closes, reopen the existing workspace and load `candidate.json`, `comparison.json` and the monitor reports from their actual paths. Reconstruct the intended IDs from those retained records; do not fit a replacement merely to recover a Python variable. If a destination already exists, read its retained evidence. Choose a new observation/job name only for a genuinely new execution. Do not recreate evidence merely to obtain another passing picture.
 
 ## Quick reference
 
