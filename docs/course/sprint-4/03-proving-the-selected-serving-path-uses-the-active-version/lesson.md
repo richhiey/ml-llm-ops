@@ -1,65 +1,52 @@
 ✂️
 # Proving the selected serving path uses the active version
 
-Linden Facilities is ready to hand a batch CSV to the planner. Good model metrics do not prove which artifact served those rows or whether the complete file arrived in time.
+Linden Facilities has a selected operational model and evidence of why it was chosen. The next planner batch must actually load that version. An old output file cannot establish what a job after the response will serve.
 
+## Inspect the observed response first
 
-## Notebook workspace
+Continue the same cumulative source and workspace. Reuse your observed drift-trigger-response cycle when its source, policy, inputs and selected model still match. There is no requirement to retrain again merely to create a new report. If an element is missing, complete that bounded part using the already taught [operational interfaces](https://github.com/richhiey/ml-llm-ops/blob/main/docs/operations.md).
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/04-cumulative-handoff.ipynb) in your local project environment. Find the section for **Proving the selected serving path uses the active version** using its Campus activity ID **A-S4-03**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+Before acting, write the signal, threshold and action supported by the retained evidence. Distinguish the unlabeled shift from the later independent labeled observation. Identify the candidate's training rows and the validation IDs used for both model errors. Explain why the decision was to promote, retain or recover, and what evidence would have justified a different response. Keep the original and feedback final rows outside this decision.
 
-## Work in the repository
-
-Use `uv run linden-mlops batch --output-name serving-check` once, or inspect a retained batch if it already proves the same unchanged selection and input. Compare `work/tracking/serving-check.csv` and `.json` with the source input and saved registry identity. Create an invalid input copy under `work/`, then run `batch --input work/invalid-batch.csv --output-name rejected-input`. Expect rejection and no successful output; retain the valid file separately. Use the API lookup for input-copy and lineage checks.
-
-
-## Starting point
-
-Use your active registered model and `batch-v1.csv`. A **resolved version** is the fixed version returned by the alias lookup at the start of this job. It may differ from the current alias if someone changes the alias after the job starts.
-
-| Acceptance dimension | Observable field |
-|---|---|
-| Correct rows | Input/output row_id lists and finite predictions |
-| Correct model | Resolved version and source run |
-| Timely completion | elapsed_seconds and complete_within_60s |
+If your event concerns an already active unsuitable version, use the taught rollback route and a suitable approved replacement. Rejecting a candidate that was never active is not rollback. Retain failed comparisons instead of deleting an inconvenient result.
 
 ## Your task
 
-Exercise the selected batch path with the representative `24` rows. Capture the input hash, output CSV, resolved version/source run, row count, finite predictions, elapsed seconds and throughput. Check complete output within `60` seconds as required by the [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md).
+1. Inventory the before/after model versions, actual source run, policy/report/data hashes and comparison decision. Separate observed facts from a proposed next action.
+2. Predict the version that a new inference job should load. Invoke `batch_predict` with an explicit workspace and a distinct output name for the response, using the [API reference](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md).
+3. Inspect the raw CSV and job metadata independently: `24` unique IDs in input order, finite predictions, matching input hash, matching intended run/version, and complete job time within `60` seconds. Calculate throughput as rows divided by elapsed seconds. This measures delivery, not training/setup time or business cost.
+4. Prepare a separate invalid-input copy, predict the result, invoke the same application route with the intended workspace explicitly, and retain the rejection. Valid input must still succeed; rejection alone is not evidence of a useful pipeline.
+5. Start the incident note in the existing `HANDOFF.md`: observation/action times, affected version, chosen response, resulting state, verification and one follow-up owner.
 
-Compare output `row_id` values and ordering with the input. Confirm the registered version maps to the intended source run. Then use a copy containing an invalid hour to prove the validated input boundary rejects it. Preserve the valid output separately; a failed job is not evidence of complete serving.
+Your useful output is the complete planner CSV and its job record. Save the small independent CSV/metadata inspection in your own operational check script so another engineer can repeat it on a new job. Give it the input/output paths; do not hard-code a lesson ID or accept a report's `passed` field as its result.
 
-Write a short evidence statement explaining what the observed timing establishes on this machine. Do not infer HTTP latency or universal cost savings from a batch timing record. Also diagnose this proposed shortcut without rerunning: an engineer checks only `rows=24` and the current alias, then calls an old CSV proof of the latest deployment. Name the evidence needed to accept or reject that claim.
-
-## Working with documentation
-
-Inspect `batch_predict` in `src/linden_mlops/lifecycle.py` and the [contract](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md). It resolves once, pins the model version, predicts and writes completion evidence.
+A supplied synthetic intake stays labeled as such. Use your own observed run/version IDs; a reference picture or passing helper flag cannot replace the raw evidence.
 
 ## Hints
 
-1. A row count alone cannot detect reordered or mismatched identifiers.
-2. Use the version recorded for the job; a later alias lookup describes a later moment.
-3. Keep measurements and predictions together so a fast failed request cannot look like success.
+<details><summary>Look for the job after the decision</summary>
+
+The alias describes selection. A fresh job's `resolved_version` and source `run_id` show which model that job loaded. Old output values can look plausible even when they came from a different version.
+
+</details>
 
 ## Checkpoints
 
-Your evidence names the actual version and raw output file. All `24` input identifiers have one finite prediction each. The completion deadline passes, or you diagnose the bottleneck and rerun. The invalid-input test rejects before producing a successful batch result.
+One observed operational cycle is connected to a newly verified batch from its resulting intended version. Contract rejection evidence is retained separately. Your explanation distinguishes distribution change, measured error, response acceptance and delivery correctness.
 
-## Check your work after attempting the task
+<details><summary>Check after recording the action and inspecting the output</summary>
 
-<details>
-<summary>Open the self-check after recording your own result</summary>
+**Result you should get:** the new job and current alias identify the intended artifact, with ordered finite output inside the delivery budget. The separate invalid-input probe rejects before a successful output is claimed.
 
-**Result you should get:** the `24` input identifiers occur once each in the original order with finite `prediction_kwh`; job metadata identifies the intended resolved version/source run, input hash and whole-batch completion no greater than `60` seconds. Your invalid-hour copy fails before a new successful output is written. An old CSV plus today's alias lookup cannot prove which version generated that file.
-
-**How to check:** compare input/output identifier lists and finiteness, then connect the job's recorded version to its registry source run. Use job metadata from the same invocation as the CSV; an alias can change afterwards. Use a fresh invalid-output name so a stale success file cannot be mistaken for a failed job's result. If row identity, lineage or timing is missing, repair that specific check; one fast successful call alone does not establish every acceptance dimension.
+**How:** compare raw registry/run/job records, inspect every output row against input IDs, and independently check values and elapsed time. If the job is stale or resolves another version, retain the mismatch, repair selection or invocation and execute a new job. Correct any incident claim of rollback when the candidate was never active.
 
 </details>
 
 ## Learning outcome
 
-Exercise the selected batch or real-time inference path with a representative input, verify that it resolves to the intended active model version, and capture the output plus the latency, throughput, or completion evidence named in the inference decision brief.
+Exercise a bounded drift-trigger-response cycle in the cumulative system, justify the response using the declared policy, and verify that a fresh inference job uses the resulting intended active model version and meets the inference brief.
 
 ## Summary
 
-Your batch proof identifies the model used, checks row alignment and records whole-job completion. The invalid-input test shows where the serving contract stops bad data.
+The handoff now includes proof that the intended version served after the operational decision, alongside the evidence explaining that response.

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1030" viewBox="0 0 1440 1030" role="img" aria-labelledby="title desc">
+<title id="title">New execution. Same recorded recipe.</title><desc id="desc">Original and replay executions have different unique run IDs but share paired code/data/config/partition/environment identities. A separate numeric gate compares absolute validation RMSE difference with 0.000001 kWh. Both gates are required. The new tracking-store replay deliberately reuses the current environment.</desc>
+<defs>
+<marker id="arrow-forest" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#17482E"/></marker>
+<marker id="arrow-green" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#27784C"/></marker>
+<marker id="arrow-gray" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#D0D0C4"/></marker>
+<marker id="arrow-white" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#FFFFFF"/></marker>
+<marker id="arrow-red" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B91C1C"/></marker>
+<marker id="arrow-amber" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B45309"/></marker>
+</defs>
+<rect width="1440" height="1030" fill="#ECEBE4"/>
+<g font-family="sans-serif">
+<text x="64" y="49" font-size="14" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="2">LINDEN / REPLAYING A RECORDED RUN</text>
+<text x="64" y="112" font-size="42" fill="#0A0A0A" font-weight="700" text-anchor="start">New execution. Same recorded recipe.</text>
+<text x="64" y="152" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">Check the lineage first; then compare the same evaluation result.</text>
+<path d="M64 186 L1376 186" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="64" y="239" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">ORIGINAL EXECUTION</text>
+<text x="956" y="239" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">REPLAY IN A NEW TRACKING STORE</text>
+<path d="M64 278 L401 278 L425 302 L425 432 L64 432 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M401 278 L401 302 L425 302" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="88" y="321" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">Original run ID</text>
+<text x="88" y="366" font-size="20" fill="#27784C" font-weight="400" text-anchor="start">retained, not overwritten</text>
+<text x="88" y="407" font-size="18" fill="#27784C" font-weight="400" text-anchor="start">version + source run + model URI</text>
+<path d="M956 278 L1352 278 L1376 302 L1376 398 L956 398 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M1352 278 L1352 302 L1376 302" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="980" y="321" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">Different run ID</text>
+<text x="980" y="366" font-size="20" fill="#27784C" font-weight="400" text-anchor="start">new execution, not a new search</text>
+<circle cx="79" cy="459" r="15" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="79" y="464" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="middle">1</text>
+<text x="104" y="466" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">Lineage gate</text>
+<rect x="64" y="502" width="361" height="43" rx="3" fill="#E8FFBB" stroke="#17482E" stroke-width="1.5"/>
+<text x="244" y="531" font-size="21" fill="#17482E" font-weight="600" text-anchor="middle">source + data</text>
+<path d="M425 524 L956 524" fill="none" stroke="#17482E" stroke-width="2"/>
+<rect x="625" y="508" width="133" height="33" rx="0" fill="#ECEBE4" stroke="none" stroke-width="1.5"/>
+<text x="691" y="531" font-size="18" fill="#27784C" font-weight="600" text-anchor="middle">must match</text>
+<rect x="956" y="502" width="420" height="43" rx="3" fill="#E8FFBB" stroke="#17482E" stroke-width="1.5"/>
+<text x="1166" y="531" font-size="21" fill="#17482E" font-weight="600" text-anchor="middle">source + data</text>
+<rect x="64" y="568" width="361" height="43" rx="3" fill="#E8FFBB" stroke="#17482E" stroke-width="1.5"/>
+<text x="244" y="597" font-size="21" fill="#17482E" font-weight="600" text-anchor="middle">exact config + partition</text>
+<path d="M425 590 L956 590" fill="none" stroke="#17482E" stroke-width="2"/>
+<rect x="625" y="574" width="133" height="33" rx="0" fill="#ECEBE4" stroke="none" stroke-width="1.5"/>
+<text x="691" y="597" font-size="18" fill="#27784C" font-weight="600" text-anchor="middle">must match</text>
+<rect x="956" y="568" width="420" height="43" rx="3" fill="#E8FFBB" stroke="#17482E" stroke-width="1.5"/>
+<text x="1166" y="597" font-size="21" fill="#17482E" font-weight="600" text-anchor="middle">exact config + partition</text>
+<rect x="64" y="634" width="361" height="43" rx="3" fill="#E8FFBB" stroke="#17482E" stroke-width="1.5"/>
+<text x="244" y="663" font-size="21" fill="#17482E" font-weight="600" text-anchor="middle">Python + packages + lock</text>
+<path d="M425 656 L956 656" fill="none" stroke="#17482E" stroke-width="2"/>
+<rect x="625" y="640" width="133" height="33" rx="0" fill="#ECEBE4" stroke="none" stroke-width="1.5"/>
+<text x="691" y="663" font-size="18" fill="#27784C" font-weight="600" text-anchor="middle">must match</text>
+<rect x="956" y="634" width="420" height="43" rx="3" fill="#E8FFBB" stroke="#17482E" stroke-width="1.5"/>
+<text x="1166" y="663" font-size="21" fill="#17482E" font-weight="600" text-anchor="middle">Python + packages + lock</text>
+<circle cx="79" cy="730" r="15" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="79" y="735" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="middle">2</text>
+<text x="104" y="737" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">Evaluation gate</text>
+<text x="64" y="785" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">Same held-out metric,</text>
+<text x="64" y="823" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">same validation rows</text>
+<path d="M425 794 L577 794" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<rect x="593" y="742" width="783" height="127" rx="5" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="623" y="784" font-size="25" fill="#FFFFFF" font-weight="700" text-anchor="start">Absolute RMSE difference</text>
+<text x="623" y="830" font-size="32" fill="#D7FF94" font-weight="700" text-anchor="start">≤ 0.000001 kWh</text>
+<text x="64" y="936" font-size="23" fill="#17482E" font-weight="600" text-anchor="start">A matching score with changed data fails. A new run ID with matching lineage is expected.</text>
+<text x="64" y="984" font-size="19" fill="#17482E" font-weight="600" text-anchor="start">This task proves a new-store replay. A new source folder and installed environment are separate evidence.</text>
+</g>
+</svg>

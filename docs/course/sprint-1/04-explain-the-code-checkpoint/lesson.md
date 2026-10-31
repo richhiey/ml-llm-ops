@@ -1,60 +1,108 @@
 ✂️
 # Explain-the-code checkpoint
 
-Linden Facilities has received an assistant's proposed input check. It appears to fix invalid hours, but the planner cannot accept hidden edits to planned inputs.
+Linden Facilities receives a proposed guard from a coding assistant. Before merging it, the team needs more than a plausible explanation or a successful ordinary input. Your job is to establish what each statement actually does and whether the proposal meets the pipeline's contract.
 
-
-## Notebook workspace
-
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) in your local project environment. Find the section for **Explain-the-code checkpoint** using its Campus activity ID **A-S1-04**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
-
-## Work in the repository
-
-Open `docs/course/exercises/generated-stage-candidate.py`. Load the candidate in your own local probe script using `runpy.run_path(path)['proposed_guard']`; import the correct guard with `from linden_mlops.pipeline import validate_ranges`. Use pandas tables and fresh `.copy(deep=True)` inputs to investigate the mission below. Run your script with `uv run python your_script.py`. Keep the unsafe candidate separate from `src/`.
-
+Keep your new `batch_input.py` stage, its lifecycle call and tests. The existing correct domain guard remains in `src/linden_mlops/pipeline.py`. The [candidate](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/generated-stage-candidate.py) is deliberately unsafe assistant-style exercise material, kept outside the installed source. It is an authored review fixture, not a record of a new assistant interaction.
 
 ## Starting point
 
-Use the [candidate code](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/generated-stage-candidate.py) and the [snapshot card](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/data/README.md). The candidate is deliberately unsafe exercise material. It is not part of the installed helper. A **mutation** changes an existing object; an input contract must say whether that is allowed.
+Use the same clone and locked environment. The proposed patch concerns domain validation. Its contract accepts temperature in `-30..50`, integer hour in `0..23`, and occupancy in `0..100`. It rejects invalid inputs, preserves accepted values/order/index, and returns an independent table.
 
-| Statement under review | Evidence to retain |
-|---|---|
-| Caller-owned frame | Values before and after the proposed call |
-| Returned object | Whether it is the same object or an independent copy |
-| Guard behavior | Accepted, rejected and silently changed examples |
+Copy the [attempt starter](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/sprint-1-attempt.py) into `work/sprint-1/attempt.py` using VS Code. Complete only `review_candidate()` now; retain the other function for the supplier checkpoint. The starter imports the candidate separately and leaves your reasoning and probes unwritten.
 
 ## Your task
 
-Read the candidate source in the exercise file and produce a line-by-line review. Your project already contains the validated expert addition: keep it. Identify the corrections this proposal needs before merging; do not overwrite your working guard with unsafe code or rebuild the project. Identify each read, write, condition, return and side effect. State which invalid cases the candidate accepts and whether valid values or caller-owned objects change. Keep all original feature values, indexes, targets and partition labels intact for accepted data.
+Before execution, explain every executable line in the candidate. For each line, identify what it reads, any condition it checks, what it writes, and what it returns or raises. A **side effect** changes state outside the returned value; **mutation** changes an existing object.
 
-Probe one valid input plus `hour=24`, a negative hour and a fractional hour, using a fresh copy for each case. Record expected versus observed behavior, including caller mutation and returned-object identity. Show at least one failed contract assertion against the candidate, then contrast the same input with the saved `validate_ranges` function. Reuse the broader boundary tests and passing batch from the walkthrough. Rerun them only if you change the actual project source. You may consult the range-validation reference, but explain the correction yourself.
+Record your predictions for one valid input, `hour=24`, a negative hour, and a fractional hour. For every case, distinguish:
+
+| Question | Observation to record |
+|---|---|
+| Does the call accept or reject? | Returned table or raised exception |
+| Which values remain in the caller's table? | Before/after comparison |
+| What table does the caller receive? | Values/index and returned-object identity |
+
+Write your probes, then run:
+
+```sh
+uv run python work/sprint-1/attempt.py review
+```
+
+Keep a fresh input for each case. Show at least one failed assertion against the required contract and contrast that same case with the application's existing `validate_ranges()`. Preserve the observed failure in your notes, including any prediction you corrected after running it.
+
+Finish with a merge recommendation: name every correction needed and the contract check supporting it. A statement such as “this validates the data” is insufficient unless you explain which invalid inputs it actually rejects. Reuse the existing feature tests and your new planned-batch tests. If the real source changes, rerun affected tests and make a freshly named delivery before relying on its evidence.
 
 ## Working with documentation
 
 | Use it when… | Reference |
 |---|---|
-| You need elementwise range behavior | [pandas Series.between](https://pandas.pydata.org/docs/reference/api/pandas.Series.between.html) |
-| You need to distinguish a view from a copy | [pandas DataFrame.copy](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.copy.html) |
-| You need the scaffold contract | [Contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) |
+| You need the meaning of clipping | [pandas Series.clip](https://pandas.pydata.org/docs/reference/api/pandas.Series.clip.html) |
+| You need to compare a copy with its source | [pandas DataFrame.copy](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.copy.html) |
+| You need to compare values, index and types | [pandas assert_frame_equal](https://pandas.pydata.org/docs/reference/api/pandas.testing.assert_frame_equal.html) |
+| You need the declared pipeline guarantees | [Contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) |
+
+## Keep values and ownership separate
+
+![Writing through b changes the value read by a when both names share one table; an independent copy leaves a's table unchanged](assets/explain-the-code-checkpoint__01__en.png)
+
+Both examples start with the same value. Follow the write through `b`: two names for one table observe the same change, while an independent copy leaves the original table untouched. Equal values before a call do not establish ownership. Use separate observations of values and identity to investigate the candidate yourself.
 
 ## Hints
 
-1. Compare a copy of the input before and after the candidate call. Which assignment changes an existing table?
-2. A maximum check does not validate the minimum or integer requirement.
-3. Explain what an exception should mean for the caller. Silent repair and explicit rejection have different contracts.
+<details>
+<summary>Hint 1 — choose a distinguishing input</summary>
+
+Which contract rule would still be untested if every example used an ordinary integer hour?
+
+</details>
+
+<details>
+<summary>Hint 2 — observe more than the return value</summary>
+
+Retain a deep copy before each call. Compare the caller's table afterward, then test whether the returned object `is` the input object.
+
+</details>
+
+<details>
+<summary>Hint 3 — inspect the direction of a check</summary>
+
+An upper limit does not establish a lower limit or an integer requirement. Read the assignment and return as well as the condition.
+
+</details>
 
 ## Checkpoints
 
-Before accepting the proposal, demonstrate one failure that would be invisible if you tested only `hour=12`. Point to the existing guard line that addresses each required correction. Keep the observed candidate failure and correct-guard contrast beside your review; no second implementation or separate report is required.
-
-## Check your work after attempting the task
+You are finished when your review predicts behavior line by line, exposes a failure that an ordinary input misses, and justifies the correction using the contrast with your working guard. Keep this review beside your stage explanation in the same script comments or `notes.md`. No second pipeline implementation is needed.
 
 <details>
-<summary>Open the self-check after recording your own result</summary>
+<summary>Solution — open after recording your review and observed probes</summary>
 
-**Result you should get:** `hour=24` becomes `23` without an exception, while a negative or fractional hour is accepted unchanged. For accepted inputs the proposal returns the caller's very same frame; a valid hour alone therefore misses the copy-contract failure. The existing `validate_ranges` rejects all three invalid hours and returns a separate deep copy for a valid frame. No candidate code belongs in `src/`.
+**Result you should get:** The candidate rejects an empty table, clips `hour=24` to `23` in the caller's table, accepts a negative or fractional hour unchanged, and returns the caller's same object. It lacks temperature/occupancy checks and the other required feature checks. Even an ordinary valid input exposes the independent-copy failure if you inspect identity. Request changes before merging.
 
-**How to check:** the empty check only covers zero rows. The assignment writes into `frame`, `clip(upper=23)` repairs upper violations, and `return frame` exposes the same object. Compare both values and `returned is input_frame`; one cannot replace the other. If your review says “all valid values are mutated”, narrow that claim: the assignment targets the caller's object, but values already in range can remain equal. If you missed a failure, add that fresh-input probe and correct the corresponding line explanation before proposing a merge.
+**How:** In `proposed_guard`, `len(frame)` reads row count; the condition and `raise` address only emptiness. The assignment reads `hour`, applies `clip(upper=23)`, and writes into `frame`. `return frame` returns that same object. For a concrete refutation:
+
+```python
+sample = pd.DataFrame({"temperature_c": [12.0], "hour": [24.0], "occupancy": [40.0]})
+original = sample.copy(deep=True)
+returned = proposed_guard(sample)
+assert returned is sample
+assert sample.loc[0, "hour"] == 23  # observed silent repair
+try:
+    pd.testing.assert_frame_equal(sample, original)
+except AssertionError as error:
+    print("Candidate violates input preservation:", error)
+else:
+    raise AssertionError("This candidate should expose a changed input")
+try:
+    validate_ranges(original)
+except ValueError as error:
+    print("Working guard rejects:", error)
+else:
+    raise AssertionError("Invalid hour was accepted")
+```
+
+Check negative/fractional hours and valid-object identity separately. If your review says “all valid values change,” narrow it: an assignment targets the caller's object, but already-valid numeric values can remain equal. Replace silent repair with explicit rejection and retain all taught feature checks before an independent-copy return.
 
 </details>
 
@@ -64,4 +112,4 @@ Given an AI-generated addition to the pipeline, explain line by line what it doe
 
 ## Summary
 
-You can distinguish code that rejects a contract violation from code that hides one. Your line-by-line review and contrasting probes establish what must change before the proposal is safe to merge.
+You have an evidence-backed review of a proposed pipeline addition. Your explanation connects statements to rejection, preservation and ownership, so a plausible description cannot substitute for the required behavior.

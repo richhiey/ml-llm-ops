@@ -49,13 +49,13 @@ class Project:
     def require(self, key):
         self.reload()
         if not self.data.get(key):
-            raise ValueError(f'Complete the earlier {key.replace("_", " ")} activity in this project first')
+            raise ValueError(f'Missing project record: {key}')
         return self.data[key]
 
     def plan(self, alphas):
         values = [float(a) for a in alphas]
-        if len(values) != 5 or len(set(values)) != 5 or 1.0 not in values:
-            raise ValueError('Declare five distinct positive alphas including the comparison anchor 1')
+        if not values or len(set(values)) != len(values):
+            raise ValueError('Declare a nonempty set of distinct positive alphas')
         for alpha in values:
             Config(alpha=alpha)
         if self.data.get('matrix_run_ids') and values != self.data.get('planned_alphas'):
@@ -65,10 +65,14 @@ class Project:
 
     def record_matrix(self, workspace, records):
         ids = [record['run_id'] for record in records]
-        if len(ids) != 5 or len(set(ids)) != 5:
-            raise ValueError('Record the five distinct completed executions')
+        if not ids or len(set(ids)) != len(ids):
+            raise ValueError('Record distinct completed executions')
         rows = export_runs(workspace)
+        if 'run_id' not in rows:
+            raise ValueError('Requested run IDs are missing from this tracking store')
         rows = rows[rows.run_id.isin(ids)].copy()
+        if len(rows) != len(ids) or set(rows.run_id) != set(ids):
+            raise ValueError('Requested run IDs are missing from this tracking store')
         verify_summary(rows, ids[0])  # validate comparability, not the proposed choice
         if set(rows.alpha.astype(float)) != set(self.require('planned_alphas')):
             raise ValueError('Executed configurations differ from the declared matrix')

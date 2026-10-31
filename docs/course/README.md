@@ -1,6 +1,15 @@
 # Course journey
 
-Work in one clone throughout the course. Follow [setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md), then work through the [four local notebooks](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/README.md) alongside the matching Campus activities. They import the shared core modules for demonstrations, visualizations and your independent attempts. Terminal/API commands provide equivalent checks. Reuse your runs, decisions and outputs between activities; there is nothing to submit. Checkpoints help you check your own understanding.
+Use one local clone, the [setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md), and reusable core modules. Source/terminal is primary; [four local notebooks](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/README.md) are optional companions. Retain good evidence instead of regenerating completed work.
+
+| Sprint | Evidence carried forward |
+|---|---|
+| 1 | Explained stage extension and tested batch contract |
+| 2 | Declared comparable runs, logging evidence and validated assistant summary |
+| 3 | Registered active version, monitoring policy, candidate decision and isolated recovery evidence |
+| 4 | Intended active recipe, observed operational cycle, short incident and clean receiving proof |
+
+Keep the original experiment selection distinct from an operationally selected model. Export the intended run explicitly. Isolated client states do not replace the main project. Final holdouts stay closed until selection is fixed.
 
 ## Sprint 1 · Build a reliable pipeline
 
@@ -22,24 +31,22 @@ Work in one clone throughout the course. Follow [setup](https://github.com/richh
 - [Validating an assistant-generated experiment summary](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/07-validating-an-assistant-generated-experiment-summary/lesson.md) · Practical Walkthrough
 - [Experiment tracking deliverable](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/08-experiment-tracking-deliverable/lesson.md) · Assessment Lesson
 
-## Sprint 3 · Manage and recover a model
+## Sprint 3 · Registry, drift and response
 
 - [From "which file is production?" to a registry](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/01-from-which-file-is-production-to-a-registry/lesson.md) · Concept Note
 - [Registering and promoting a model](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/02-registering-and-promoting-a-model/lesson.md) · Practical Walkthrough
-- [What full reproducibility requires](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/03-what-full-reproducibility-requires/lesson.md) · Concept Note
-- [Reproducing a past training run](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/04-reproducing-a-past-training-run/lesson.md) · Independent Practice
+- [Recognising drift and choosing a response](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/03-recognising-drift-and-choosing-a-response/lesson.md) · Concept Note
+- [From a monitoring signal to an evaluated candidate](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/04-from-a-monitoring-signal-to-an-evaluated-candidate/lesson.md) · Practical Walkthrough
 - [Rolling back a bad model version](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/05-rolling-back-a-bad-model-version/lesson.md) · Independent Practice
 - [Registry lifecycle deliverable](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/06-registry-lifecycle-deliverable/lesson.md) · Assessment Lesson
 
-## Sprint 4 · Hand over a working project
+## Sprint 4 · Reproducible operational handoff
 
-- [Scoping the cumulative pipeline for production-grade reproducibility](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-4/01-scoping-the-cumulative-pipeline-for-production-grade-reproducibility/lesson.md) · Independent Practice
+- [What full reproducibility requires](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-4/01-what-full-reproducibility-requires/lesson.md) · Concept Note
 - [Integrating pipeline, tracking, and registry](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-4/02-integrating-pipeline-tracking-and-registry/lesson.md) · Independent Practice
 - [Proving the selected serving path uses the active version](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-4/03-proving-the-selected-serving-path-uses-the-active-version/lesson.md) · Independent Practice
 - [Setup, run, and expected-evidence instructions](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-4/04-setup-run-and-expected-evidence-instructions/lesson.md) · Independent Practice
 - [Proving the pipeline reproduces](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-4/05-proving-the-pipeline-reproduces/lesson.md) · Independent Practice
 - [Reproducible pipeline deliverable](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-4/06-reproducible-pipeline-deliverable/lesson.md) · Assessment Lesson
 
-[Exact source outcome map](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/outcomes.md) · [How to read the notebook figures](https://github.com/richhiey/ml-llm-ops/blob/main/docs/visualizations.md)
-
-[Module A review, revisions and verification limits](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/revision-review.md)
+[Approved outcome map](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/outcomes.md) · [Operational runbook](https://github.com/richhiey/ml-llm-ops/blob/main/docs/operations.md) · [Verification limits](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/revision-review.md)

@@ -1,67 +1,58 @@
 🏷️
 # From notebook to pipeline
 
-Linden Facilities can fit an energy-demand model in a notebook, but the planner needs the same 24-row prediction job tomorrow. A cell run out of order can silently use yesterday's features or a model fitted on different rows. A successful printout does not explain how to rebuild it.
+Linden Facilities has an energy-demand model that works in an analyst's notebook. Tomorrow, the planner needs another complete file of 24 hourly predictions. The analyst is away. Which cells produced the fitted model? Which data did they use? Will running the notebook from the top recreate the same result?
 
+Those questions turn a successful experiment into an engineering task. Our project keeps the useful ML work and makes its dependencies explicit. You will inspect that project in VS Code, extend one validation boundary, and build evidence that another engineer can understand.
 
-Read this explanation alongside the [repository setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Use your existing project evidence for the checks; no new model execution is needed.
+## Make the next execution predictable
 
+A **pipeline** connects stages through declared inputs and outputs. A **reproducible** execution can be rebuilt from recorded source, data, configuration and environment to obtain an agreed result. Saving a prediction file preserves a result; it does not preserve everything needed to rebuild it.
 
-## Notebook workspace
+A notebook can call a well-structured pipeline. The problem is hidden state: a cell may depend on an object fitted earlier, a changed file, or cells run in a different order. Moving that same hidden dependency into a script would preserve the problem. Named functions, explicit configuration and checks at their boundaries make the execution inspectable in either workspace.
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) in your local project environment. Find the section for **From notebook to pipeline** using its Campus activity ID **A-S1-01**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+Linden's supplied Python scaffold has five stages. Read the table as input → responsibility → output, rather than a list of functions to memorize.
 
-## A pipeline makes dependencies explicit
-
-A **pipeline** connects stages through declared inputs and outputs. Reproducibility means another engineer can recover the source, data, configuration and environment and obtain an agreed result. Neither requires a large orchestration framework: our Python functions already expose the boundaries.
-
-| Stage | Linden input → output | Failure the boundary can expose |
+| Stage | What it does for Linden | Output another stage can use |
 |---|---|---|
-| Ingestion | Fixed CSV → checked table | Duplicate `row_id` or absent fields |
-| Preprocessing | Checked table → ordered features | Missing or invalid measurements |
-| Training | Train features and target → fitted model | Fitting on held-out rows |
-| Evaluation | Held-out features and target → RMSE/MAE | Scoring different rows across comparisons |
-| Inference | Active fitted model and planned inputs → predictions | Loading a different version than intended |
+| Ingestion | Reads the historical CSV and checks its schema, completeness and unique identifiers | Checked historical table |
+| Preprocessing | Checks model inputs and selects the three features in the declared order | Feature table with rows/index preserved |
+| Training | Fits preprocessing statistics and regression coefficients using training rows | Fitted scaler and estimator together |
+| Evaluation | Compares validation predictions with known demand | Error metrics in kWh |
+| Inference | Uses the fitted artifact to predict planned inputs | Identified rows with `prediction_kwh` |
 
-RMSE means root mean squared error; MAE means mean absolute error. Both describe prediction error in kWh; neither is a prediction for a future row.
+## Follow the target, then the fitted artifact
 
-The target is `demand_kwh`. The inputs are `temperature_c`, `hour`, and `occupancy`. `row_id` aligns records; `partition` fixes their evaluation role. Neither belongs among the model features. A **fitted model** includes learned preprocessing: Linden's scaler stores training means and scales alongside the regression coefficients.
+A **feature** is an input to the model; the **target** is the value it learns to predict. Linden's features are `temperature_c`, `hour` and `occupancy`. Its historical target is `demand_kwh`. The unique identifier `row_id` aligns records; `partition` identifies their fixed role. Neither is a model feature.
 
-## Walk a historical row and a planned row through the system
+![Historical rows split into training and evaluation paths; a fitted scaler and model are reused by a separate planned-input path](assets/from-notebook-to-pipeline__01__en.png)
 
-Consider an illustrative historical record with `temperature_c=12`, `hour=9`, `occupancy=40` and a known `demand_kwh`. Those values describe a teaching example, not a claimed row from the snapshot. Ingestion reads and checks its table. Preprocessing selects the three features in the declared order. If its `partition` is `train`, training may use its known target to fit the model. If the partition is `validation`, evaluation compares a prediction with that target without fitting on the row.
+Follow the solid data arrows. Historical training rows supply both features and known demand to fitting. Validation rows supply known demand to evaluation, without fitting. Planned rows supply features to inference and have no known demand yet. Evaluation produces evidence; it does not turn into a prediction input.
 
-A planned record may have the same three feature values but no known demand yet. Inference can transform those features using the already fitted scaler and return `prediction_kwh`. It cannot compute the prediction's error until an actual demand value is observed. This is why “the CSV was produced” and “the model met its error requirement” need different checks.
+Linden uses a `StandardScaler`, which learns feature means and scales, followed by Ridge regression, a linear model whose penalty limits coefficient size. The scaler is fitted inside the model using training rows only. Both fitted objects must travel together. At inference, they transform and predict; they do not learn again from the planned batch.
 
-| Object | Learns from training rows? | Used again at inference? |
-|---|---|---|
-| Feature-column list | No; it is a declared interface | Yes, in the same order |
-| Fitted scaler | Yes; it learns means and scales | Yes, without fitting again |
-| Fitted Ridge estimator | Yes; it learns coefficients | Yes, to predict |
-| Validation RMSE | No; it measures a held-out result | No; it is decision evidence |
+This also separates two questions: did the job deliver usable predictions, and how well did the model predict held-out historical demand? A completed CSV answers the first. **RMSE** (root mean squared error) and **MAE** (mean absolute error) answer the second, in the target's units of kWh. Without observed demand for planned rows, there is no prediction-error score for that batch.
 
-## Training and inference share a contract
+## Know what stays fixed
 
-A **contract** names what a stage accepts and guarantees. Training sees known demand values; inference sees only planned features. Both need the same column order and transformations. Fitting another scaler on tomorrow's batch changes the meaning of its inputs even if the code runs.
+The [dataset card](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/data/README.md) describes 240 fixed synthetic records: 168 training, 48 validation and 24 reserved final rows. Use the supplied split. Final targets and scores stay outside development decisions until the final handoff. This small teaching fixture demonstrates operational evidence; its interleaved split is not a real building-forecasting evaluation design.
 
-The helper stores a `StandardScaler` and a Ridge regressor together. Ridge is a linear model with a penalty that limits coefficient size. Evaluation happens on the snapshot's fixed validation rows; the separate final rows are reserved until configuration selection is complete.
+The [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) asks for all 24 planned predictions in one complete CSV within 60 seconds. Keep that delivery requirement in view as you trace and change the code.
 
 ## Check for Understanding
 
-Use this diagnosis as part of your working notes stage-map answer; it is not another report.
-
-Linden's teammate fits a new scaler on the planned batch and says the model is unchanged because the regression coefficients came from yesterday's file. Diagnose the resulting contract failure and specify the artifact that must be handed over.
+Sketch the two paths for Linden. Mark where a known target is required and which fitted artifact must reach planned inference. Then diagnose this proposal: “We'll keep yesterday's regression coefficients but fit a fresh scaler on tomorrow's planned inputs.” What breaks, and what must be handed over instead?
 
 <details>
-<summary>Check your answer after attempting the diagnosis</summary>
+<summary>Solution — open after drawing your paths and diagnosing the proposal</summary>
 
-> **Result you should get:** the batch is transformed with different learned statistics, so the regression receives a different feature representation. Hand over the fitted scaler and regressor together.
->
-> **How:** trace which object learned means/scales during training. Inference must reuse that fitted object; it may validate/extract planned features but must not fit on the batch.
+**Result you should get:** Training and historical evaluation require known demand; planned inference does not. The proposal changes the feature representation the coefficients expect. Hand over the fitted scaler and regressor together, alongside the recorded recipe.
+
+**How:** Trace which object learned means/scales during training. A new scaler uses different statistics even if the column names and regression coefficients match. Mark that learned state on your sketch; do not draw evaluation metrics entering the estimator as features.
 
 </details>
 
-![From notebook to pipeline: evidence path](assets/from-notebook-to-pipeline__01__en.png)
+Keep this sketch in your working notes. You will attach concrete functions, records and output files to the same map. Before execution, use the [VS Code setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md).
 
 ## Learning outcome
 
@@ -69,4 +60,4 @@ Explain why a reproducible training/inference pipeline replaces a one-off notebo
 
 ## Summary
 
-Linden’s notebook result now has an explicit path from source data to prediction. You can inspect the stage boundaries and see why fitted preprocessing must travel with the model.
+Linden needs a repeatable dependency chain as well as a prediction file. You can now separate historical fitting/evaluation from planned inference and locate the fitted preprocessing that connects them. The next step is to find those boundaries in the supplied source and its actual outputs.

@@ -1,67 +1,68 @@
 🏷️
 # Controls, confounders, and decision metrics
 
-Linden Facilities sees a smaller error after a teammate changed both regularization and evaluation rows. The team wants to attribute the improvement to the model change, but two explanations now fit the evidence.
+Linden Facilities changes a model setting and sees a smaller error. A teammate also changes the rows used for evaluation. Did the model improve, or did it receive an easier test?
 
+To answer, keep the evaluation question steady while changing the setting you intend to investigate.
 
-Read this explanation alongside the [repository setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Use your existing project evidence for the checks; no new model execution is needed.
+## Give the experiment one moving part
 
+The pipeline uses **Ridge regression**: a linear model that learns a weight for each feature, with a restraint on how large those weights become. That restraint is called **regularization**. Its strength is controlled by `alpha`.
 
-## Notebook workspace
+Think about temperature’s contribution to predicted energy demand. A learned weight determines how much that contribution changes as the input changes. A larger `alpha` discourages large weights more strongly. Too much restraint can make the model miss useful patterns; this is **underfitting**. Less restraint is not automatically better either. We will compare settings rather than assume which one wins.
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) in your local project environment. Find the section for **Controls, confounders, and decision metrics** using its Campus activity ID **A-S2-02**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+A **factor** is the setting deliberately varied. A **control** is a condition held fixed. A **confounder** is another changed condition that could explain the result. Here, change `alpha` while keeping this recipe fixed:
 
-## Hold the question steady
-
-A **control** is a condition held fixed across a comparison. A **factor** is the setting deliberately varied. A **confounder** is another changed condition that could explain the observed difference. To compare `alpha`, hold the data snapshot, split, features, scaling, solver, guard and evaluation metric fixed.
-
-| Run change | What you can conclude |
+| Fixed condition | Practical reason |
 |---|---|
-| Alpha only; identical validation rows | Difference under those controlled conditions |
-| Alpha and split changed | Cannot isolate alpha's effect |
-| Same alpha, final instead of validation rows | Different evaluation, not a new alpha comparison |
-| Added input guard; valid rows unchanged | Validate operational contract separately from model improvement |
+| Same snapshot and train/validation rows | Every candidate learns from and is tested on the same examples |
+| Same feature order and input guard | Inputs keep the same meaning and validity rules |
+| Same training-only scaler | Feature rescaling learns from training rows, then is reused unchanged |
+| Same Ridge solver, `svd` | The numerical method that fits the weights stays fixed |
+| Same metric and direction | The rule for deciding the winner does not move |
 
-## Primary and diagnostic metrics have different jobs
+Changing `alpha` and the split together prevents us from isolating `alpha`’s effect. Changing the guard at the same time introduces another difference even if the valid fixture happens to produce identical predictions. Test input safety separately from the model comparison.
 
-A **primary decision metric** is the measure chosen in advance to rank candidates. Here it is validation RMSE, in kWh, lower is better. Squaring errors before averaging makes larger errors count more. A **diagnostic metric** helps explain behavior without silently replacing the selection rule; here MAE measures average absolute error.
+## See the individual misses before the score
 
-A teammate cannot choose RMSE when it favors one run and switch to training score when it favors another. Training metrics describe fit to known rows; they do not measure the same held-out question. The inference brief also has a completion budget: good RMSE and acceptable batch completion are separate requirements.
+An error is predicted demand minus observed demand. A miss of `-8` kWh and one of `+8` kWh both have magnitude `8` kWh. Signs should not cancel when we describe how far predictions miss.
 
-## Connect an error measure to a decision
+Consider two illustrative lists of error magnitudes: `A=[2, 2, 8]` and `B=[4, 4, 4]` kWh. Each totals `12` kWh across three predictions. A includes one much larger miss.
 
-For a prediction, the error is the predicted demand minus the observed demand. **MAE** averages the absolute errors: signs cannot cancel, and each extra kWh contributes equally. **RMSE** squares each error, averages the squares, then takes the square root. Squaring gives a large miss more influence; the square root brings the final result back to kWh.
+**Mean absolute error (MAE)** is the average miss magnitude: both are `4` kWh. **Root mean squared error (RMSE)** gives larger individual misses more influence by squaring errors before averaging, then returns the score to kWh by taking the square root. A’s RMSE is about `4.899` kWh; B’s is `4` kWh. You do not need to derive this measure to interpret what it rewards.
 
-For the illustrative error lists `A=[2,2,8]` and `B=[4,4,4]`, both MAEs are `(2+2+8)/3 = 4` kWh. A's RMSE is `sqrt((4+4+64)/3) = sqrt(24)`, about `4.899` kWh. B's RMSE is `4` kWh. The distinction matters when the brief wants larger misses to count more heavily. It does not make RMSE the right metric for every business problem.
+![Fixed comparison conditions and illustrative errors show why one large miss can change RMSE even when MAE is equal](assets/controls-confounders-and-decision-metrics__01__en.png)
 
-Linden declares validation RMSE as the primary model-selection metric. MAE helps interpret the result, and batch completion checks whether the output is delivered in time. Those measures answer different questions; the report should preserve each instead of letting the most favorable number decide.
+These errors illustrate the measures; they are not Linden run results. A larger RMSE penalty for the isolated miss does not tell us its financial cost.
 
-## Interpret a tiny winning margin carefully
+## Declare which measure decides
 
-A deterministic ranking can distinguish two raw values that round to the same display value. That tells you which row wins the declared metric rule. It does not quantify uncertainty about unseen facility demand. Nor does the `1e-6` reproduction tolerance do that: it checks whether a repeated execution agrees with its original result.
+A **primary decision metric** is the measure chosen before results are seen to rank candidates. Linden uses lower validation `rmse_kwh`. Larger misses matter in this declared comparison. **Diagnostic metrics** help explain behavior; validation `mae_kwh` is one of them. A training metric describes predictions on the rows used for fitting and answers a different question.
 
-Keep three statements separate in your explanation: which candidate ranks first, what operational checks it still needs, and what the synthetic evaluation cannot establish. This prevents a correctly sorted table from becoming an unsupported deployment recommendation.
+The planner also needs a complete `24`-row file within `60` seconds. Error and delivery time are separate requirements. Neither metric proves serving cost, and the synthetic snapshot cannot establish performance across real buildings.
+
+Two rounded display values can look equal while their underlying numbers differ. A small numerical lead identifies the winner under the declared rule; it does not establish a meaningful improvement on future demand. Keep that limit in the recommendation.
 
 ## Check for Understanding
 
-These are explicitly illustrative comparison cards, not new executions on the reserved final rows. Candidate C has validation errors `[0, 0, 9]` kWh; D has `[3, 3, 3]` kWh under identical controls. Another card reports final-partition RMSE `2` kWh. Produce the MAE and RMSE for C and D, rank the comparable candidates under Linden's declared rule, and explain which card must stay out of that ranking.
+These are illustrative observations, not evaluations of the reserved final rows. Candidate C has validation errors `[0, 0, 9]` kWh; D has `[3, 3, 3]` kWh under identical controls. A third observation reports final-partition RMSE `2` kWh. Calculate C’s and D’s MAE/RMSE, recommend the comparable winner under Linden’s rule, and explain which observation must stay outside the ranking.
 
 <details>
-<summary>Check the numbers after committing to a ranking</summary>
+<summary>Check after recording your numbers and recommendation</summary>
 
-**Result you should get:** C and D both have MAE `3` kWh. C has RMSE `sqrt(27) ≈ 5.196` kWh; D has RMSE `3` kWh. D wins the comparable validation ranking. The final-partition card is excluded, even though its number is lower.
+**Result you should get:** both MAEs are `3` kWh. C’s RMSE is about `5.196` kWh; D’s is `3` kWh. D wins the validation comparison. The final-partition observation evaluates different rows and is excluded.
 
 **How:**
 
 ```python
 import numpy as np
-for name, errors in {"C": [0, 0, 9], "D": [3, 3, 3]}.items():
+for label, errors in {"C": [0, 0, 9], "D": [3, 3, 3]}.items():
     errors = np.asarray(errors, dtype=float)
-    print(name, "MAE", np.abs(errors).mean(),
+    print(label, "MAE", np.abs(errors).mean(),
           "RMSE", np.sqrt(np.square(errors).mean()))
 ```
 
-Equal average absolute error does not imply equal squared-error penalty. If you chose the final card, inspect evaluation basis before sorting: it answers a different question. These cards do not authorize opening the actual final holdout.
+If the smaller final score seemed to win, check the row basis before sorting. This exercise does not authorize opening the actual final holdout, which stays reserved until configuration selection is fixed for the final handoff.
 
 </details>
 
@@ -71,4 +72,4 @@ Explain why a run comparison is invalid when dataset split, evaluation condition
 
 ## Summary
 
-You can separate an alpha comparison from a changed evaluation question. The declared primary metric and fixed controls now determine how the result table should be read.
+You can distinguish a smaller error from a fair comparison. Linden’s experiment will vary one intended factor, keep the test fixed and use a declared primary metric instead of whichever number looks most favorable.

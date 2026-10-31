@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1180" viewBox="0 0 1440 1180" role="img" aria-labelledby="title desc">
+<title id="title">Carry the recipe, not the old workspace.</title><desc id="desc">The original project exports a selected run into portable manifest/config/environment/source/model files, the actual selected training-data.csv and a checksum index after a release descriptor is checked. HANDOFF.md and explained-extension evidence are separate supplementary files beside the export. The receiver restores a new source folder, rebuilds an exact recorded Python/lock environment, and trains into a new store. The preserved original store is not consulted after export.</desc>
+<defs>
+<marker id="arrow-forest" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#17482E"/></marker>
+<marker id="arrow-green" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#27784C"/></marker>
+<marker id="arrow-gray" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#D0D0C4"/></marker>
+<marker id="arrow-white" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#FFFFFF"/></marker>
+<marker id="arrow-red" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B91C1C"/></marker>
+<marker id="arrow-amber" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B45309"/></marker>
+</defs>
+<rect width="1440" height="1180" fill="#ECEBE4"/>
+<g font-family="sans-serif">
+<text x="64" y="49" font-size="14" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="2">LINDEN / PORTABLE HANDOFF</text>
+<text x="64" y="112" font-size="42" fill="#0A0A0A" font-weight="700" text-anchor="start">Carry the recipe, not the old workspace.</text>
+<text x="64" y="152" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">The receiver needs portable files, separate instructions, and three new places to work.</text>
+<path d="M64 186 L1376 186" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="64" y="239" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">1 / ORIGINAL PROJECT</text>
+<path d="M64 279 L365 279 L389 303 L389 565 L64 565 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M365 279 L365 303 L389 303" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="88" y="322" font-size="29" fill="#17482E" font-weight="700" text-anchor="start">Selected run</text>
+<text x="88" y="369" font-size="23" fill="#27784C" font-weight="400" text-anchor="start">source + fitted artifact</text>
+<text x="88" y="415" font-size="22" fill="#27784C" font-weight="400" text-anchor="start">original tracking store</text>
+<text x="88" y="461" font-size="22" fill="#17482E" font-weight="600" text-anchor="start">validated release.json</text>
+<text x="88" y="521" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">export while available</text>
+<path d="M389 421 L476 421" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<text x="492" y="239" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">2 / CANONICAL EXPORT</text>
+<path d="M492 279 L863 279 L887 303 L887 673 L492 673 Z" fill="#E8FFBB" stroke="#17482E" stroke-width="2"/>
+<path d="M863 279 L863 303 L887 303" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="516" y="310" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">manifest.json</text>
+<text x="516" y="329" font-size="15" fill="#27784C" font-weight="400" text-anchor="start">recorded recipe identities</text>
+<text x="516" y="356" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">release.json</text>
+<text x="516" y="375" font-size="15" fill="#27784C" font-weight="400" text-anchor="start">verified model + source + job</text>
+<text x="516" y="402" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">source.tar.gz</text>
+<text x="516" y="421" font-size="15" fill="#27784C" font-weight="400" text-anchor="start">app code + reference data + lock</text>
+<text x="516" y="448" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">training-data.csv</text>
+<text x="516" y="467" font-size="15" fill="#27784C" font-weight="400" text-anchor="start">actual selected snapshot + hash</text>
+<text x="516" y="494" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">config.json</text>
+<text x="516" y="513" font-size="15" fill="#27784C" font-weight="400" text-anchor="start">selected settings</text>
+<text x="516" y="540" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">environment.txt</text>
+<text x="516" y="559" font-size="15" fill="#27784C" font-weight="400" text-anchor="start">recorded distributions</text>
+<text x="516" y="586" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">model/</text>
+<text x="516" y="605" font-size="15" fill="#27784C" font-weight="400" text-anchor="start">fitted-model files</text>
+<text x="516" y="632" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">bundle.json</text>
+<text x="516" y="651" font-size="15" fill="#27784C" font-weight="400" text-anchor="start">indexed file checksums</text>
+<path d="M887 421 L974 421" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<text x="990" y="239" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">3 / NEW RECEIVING SOURCE</text>
+<path d="M990 279 L1352 279 L1376 303 L1376 483 L990 483 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M1352 279 L1352 303 L1376 303" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="1014" y="322" font-size="29" fill="#17482E" font-weight="700" text-anchor="start">Restored source</text>
+<text x="1014" y="369" font-size="23" fill="#27784C" font-weight="400" text-anchor="start">code + data + uv.lock</text>
+<text x="1014" y="421" font-size="24" fill="#17482E" font-weight="600" text-anchor="start">new folder</text>
+<path d="M1183 483 L1183 534" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<rect x="990" y="548" width="386" height="125" rx="5" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="1014" y="590" font-size="29" fill="#FFFFFF" font-weight="700" text-anchor="start">New .venv</text>
+<text x="1014" y="630" font-size="18" fill="#D7FF94" font-weight="400" text-anchor="start">exact Python patch + locked packages</text>
+<path d="M1183 673 L1183 699 L950 699 L950 815 L976 815" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<text x="990" y="744" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">4 / NEW TRACKING + OUTPUT STATE</text>
+<path d="M990 782 L1352 782 L1376 806 L1376 976 L990 976 Z" fill="#E8FFBB" stroke="#17482E" stroke-width="2"/>
+<path d="M1352 782 L1352 806 L1376 806" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="1014" y="826" font-size="28" fill="#17482E" font-weight="700" text-anchor="start">Receiving execution</text>
+<text x="1014" y="871" font-size="22" fill="#17482E" font-weight="600" text-anchor="start">retrain + register + select</text>
+<text x="1014" y="918" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">new batch + recovery checks</text>
+<path d="M492 731 L863 731 L887 755 L887 976 L492 976 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M863 731 L863 755 L887 755" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="516" y="776" font-size="30" fill="#17482E" font-weight="700" text-anchor="start">HANDOFF.md</text>
+<text x="516" y="823" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">working directories + commands</text>
+<text x="516" y="865" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">expected evidence + recovery</text>
+<text x="516" y="921" font-size="21" fill="#17482E" font-weight="600" text-anchor="start">+ extension explanation / proof</text>
+<path d="M887 854 L976 854" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<rect x="64" y="731" width="325" height="245" rx="5" fill="#FFFFFF" stroke="#D0D0C4" stroke-width="1.5"/>
+<text x="88" y="776" font-size="28" fill="#17482E" font-weight="700" text-anchor="start">Original store</text>
+<text x="88" y="823" font-size="23" fill="#27784C" font-weight="400" text-anchor="start">preserved intact</text>
+<text x="88" y="868" font-size="21" fill="#17482E" font-weight="600" text-anchor="start">unavailable to receiver</text>
+<path d="M209 906 L243 940" fill="none" stroke="#B45309" stroke-width="3"/>
+<path d="M209 940 L243 906" fill="none" stroke="#B45309" stroke-width="3"/>
+<text x="64" y="1055" font-size="24" fill="#17482E" font-weight="700" text-anchor="start">The export does not collect work/HANDOFF.md or arbitrary learner notes automatically.</text>
+<text x="64" y="1134" font-size="20" fill="#17482E" font-weight="600" text-anchor="start">A recorded model URI explains origin. The exported model files remove the receiving dependency on it.</text>
+</g>
+</svg>

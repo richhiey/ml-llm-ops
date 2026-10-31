@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1050" viewBox="0 0 1440 1050" role="img" aria-labelledby="title desc">
+<title id="title">Inventory the proof before adding features.</title><desc id="desc">Five cumulative stages connect train, track, register, select active and infer. Each has an unclassified evidence attachment for the learner inventory. A separate receiving boundary requires portable files, instructions and a clean execution; the missing-proof span does not demand a second extension, replacement estimator or new platform.</desc>
+<defs>
+<marker id="arrow-forest" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#17482E"/></marker>
+<marker id="arrow-green" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#27784C"/></marker>
+<marker id="arrow-gray" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#D0D0C4"/></marker>
+<marker id="arrow-white" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#FFFFFF"/></marker>
+<marker id="arrow-red" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B91C1C"/></marker>
+<marker id="arrow-amber" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B45309"/></marker>
+</defs>
+<rect width="1440" height="1050" fill="#ECEBE4"/>
+<g font-family="sans-serif">
+<text x="64" y="49" font-size="14" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="2">LINDEN / SCOPE BEFORE MORE CODE</text>
+<text x="64" y="112" font-size="42" fill="#0A0A0A" font-weight="700" text-anchor="start">Inventory the proof before adding features.</text>
+<text x="64" y="152" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">Keep the cumulative project. Find what another engineer still cannot verify.</text>
+<path d="M64 186 L1376 186" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="64" y="239" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">EXISTING CUMULATIVE PROJECT / INSPECT YOUR OWN RECORDS</text>
+<circle cx="79" cy="275" r="15" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="79" y="280" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="middle">1</text>
+<text x="104" y="282" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">Train</text>
+<rect x="64" y="316" width="200" height="136" rx="5" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="164" y="357" font-size="31" fill="#FFFFFF" font-weight="700" text-anchor="middle">fit</text>
+<text x="164" y="391" font-size="16" fill="#D7FF94" font-weight="400" text-anchor="middle">baseline / optional T4</text>
+<text x="164" y="426" font-size="17" fill="#FFFFFF" font-weight="400" text-anchor="middle">same contract</text>
+<path d="M264 383 L316 383" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M164 452 L164 501" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<circle cx="80" cy="539" r="16" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="80" y="545" font-size="20" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="109" y="546" font-size="19" fill="#27784C" font-weight="600" text-anchor="start">your evidence</text>
+<path d="M64 582 L264 582" fill="none" stroke="#D0D0C4" stroke-width="2"/>
+<circle cx="345" cy="275" r="15" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="345" y="280" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="middle">2</text>
+<text x="370" y="282" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">Track</text>
+<path d="M330 316 L506 316 L530 340 L530 452 L330 452 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M506 316 L506 340 L530 340" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="350" y="360" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">run ID</text>
+<text x="350" y="409" font-size="18" fill="#27784C" font-weight="400" text-anchor="start">params / metrics</text>
+<path d="M530 383 L582 383" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M430 452 L430 501" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<circle cx="346" cy="539" r="16" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="346" y="545" font-size="20" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="375" y="546" font-size="19" fill="#27784C" font-weight="600" text-anchor="start">your evidence</text>
+<path d="M330 582 L530 582" fill="none" stroke="#D0D0C4" stroke-width="2"/>
+<circle cx="611" cy="275" r="15" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="611" y="280" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="middle">3</text>
+<text x="636" y="282" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">Register</text>
+<path d="M596 316 L772 316 L796 340 L796 452 L596 452 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M772 316 L772 340 L796 340" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="616" y="360" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">version</text>
+<text x="616" y="409" font-size="18" fill="#27784C" font-weight="400" text-anchor="start">source run + tags</text>
+<path d="M796 383 L848 383" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M696 452 L696 501" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<circle cx="612" cy="539" r="16" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="612" y="545" font-size="20" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="641" y="546" font-size="19" fill="#27784C" font-weight="600" text-anchor="start">your evidence</text>
+<path d="M596 582 L796 582" fill="none" stroke="#D0D0C4" stroke-width="2"/>
+<circle cx="877" cy="275" r="15" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="877" y="280" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="middle">4</text>
+<text x="902" y="282" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">Select active</text>
+<rect x="862" y="316" width="200" height="136" rx="5" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="962" y="369" font-size="31" fill="#FFFFFF" font-weight="700" text-anchor="middle">active</text>
+<text x="962" y="412" font-size="17" fill="#D7FF94" font-weight="400" text-anchor="middle">version pointer</text>
+<path d="M1062 383 L1114 383" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M962 452 L962 501" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<circle cx="878" cy="539" r="16" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="878" y="545" font-size="20" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="907" y="546" font-size="19" fill="#27784C" font-weight="600" text-anchor="start">your evidence</text>
+<path d="M862 582 L1062 582" fill="none" stroke="#D0D0C4" stroke-width="2"/>
+<circle cx="1143" cy="275" r="15" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="1143" y="280" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="middle">5</text>
+<text x="1168" y="282" font-size="22" fill="#17482E" font-weight="700" text-anchor="start">Infer</text>
+<path d="M1128 316 L1352 316 L1376 340 L1376 452 L1128 452 Z" fill="#E8FFBB" stroke="#17482E" stroke-width="2"/>
+<path d="M1352 316 L1352 340 L1376 340" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="1148" y="360" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">24-row CSV</text>
+<text x="1148" y="409" font-size="18" fill="#27784C" font-weight="400" text-anchor="start">job metadata</text>
+<path d="M1228 452 L1228 501" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<circle cx="1144" cy="539" r="16" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="1144" y="545" font-size="20" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="1173" y="546" font-size="19" fill="#27784C" font-weight="600" text-anchor="start">your evidence</text>
+<path d="M1128 582 L1376 582" fill="none" stroke="#D0D0C4" stroke-width="2"/>
+<path d="M64 630 L1376 630" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="64" y="676" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">WHAT REMAINS TO BE PROVED?</text>
+<path d="M64 716 L412 716 L436 740 L436 898 L64 898 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M412 716 L412 740 L436 740" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="87" y="758" font-size="28" fill="#17482E" font-weight="700" text-anchor="start">Existing extension</text>
+<text x="87" y="803" font-size="22" fill="#27784C" font-weight="400" text-anchor="start">accepted / rejected probes</text>
+<text x="87" y="846" font-size="20" fill="#27784C" font-weight="400" text-anchor="start">explanation + unchanged stages</text>
+<path d="M436 808 L540 808" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M572 808 L837 808" fill="none" stroke="#17482E" stroke-width="2.5" stroke-dasharray="5 5"/>
+<text x="704" y="764" font-size="24" fill="#17482E" font-weight="700" text-anchor="middle">Inventory the gap</text>
+<text x="704" y="853" font-size="20" fill="#27784C" font-weight="400" text-anchor="middle">then name the next check</text>
+<path d="M906 716 L1352 716 L1376 740 L1376 898 L906 898 Z" fill="#E8FFBB" stroke="#17482E" stroke-width="2"/>
+<path d="M1352 716 L1352 740 L1376 740" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="930" y="758" font-size="29" fill="#17482E" font-weight="700" text-anchor="start">Receiving engineer</text>
+<text x="930" y="803" font-size="23" fill="#17482E" font-weight="600" text-anchor="start">portable files + clear runbook</text>
+<text x="930" y="846" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">new source / environment / state</text>
+<text x="64" y="1004" font-size="21" fill="#17482E" font-weight="600" text-anchor="start">An evidence gap calls for a better check. It does not automatically call for another feature.</text>
+</g>
+</svg>

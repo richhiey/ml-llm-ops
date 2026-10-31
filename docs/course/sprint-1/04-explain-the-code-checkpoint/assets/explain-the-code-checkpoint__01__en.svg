@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+<title id="title">Follow the write, not just the values.</title><desc id="desc">Neutral numeric pandas table examples, unrelated to the candidate. In the alias example b equals a, so both names point to one table and observe 99 after a write through b. With a deep copy, a retains 12 while b’s separate table contains 99. Equal initial values do not establish object identity.</desc>
+<defs>
+<marker id="arrow-forest" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#17482E"/></marker>
+<marker id="arrow-green" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#27784C"/></marker>
+<marker id="arrow-white" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#FFFFFF"/></marker>
+<marker id="arrow-red" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B91C1C"/></marker>
+<marker id="arrow-gray" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#D0D0C4"/></marker>
+</defs>
+<rect width="1440" height="900" fill="#ECEBE4"/>
+<g font-family="sans-serif">
+<text x="64" y="49" font-size="14" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="2">LINDEN / READING OBJECT BEHAVIOR</text>
+<text x="64" y="112" font-size="42" fill="#0A0A0A" font-weight="700" text-anchor="start">Follow the write, not just the values.</text>
+<text x="64" y="152" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">Both examples start at value = 12. Then b writes value = 99.</text>
+<path d="M64 186 L1376 186" fill="none" stroke="#D0D0C4" stroke-width="1" stroke-linejoin="miter"/>
+<path d="M720 231 L720 790" fill="none" stroke="#D0D0C4" stroke-width="1" stroke-linejoin="miter"/>
+<text x="64" y="247" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.5">ALIAS</text>
+<text x="784" y="247" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.5">INDEPENDENT COPY</text>
+<text x="64" y="299" font-size="30" fill="#17482E" font-weight="700" text-anchor="start">b = a</text>
+<text x="784" y="299" font-size="30" fill="#17482E" font-weight="700" text-anchor="start">b = a.copy(deep=True)</text>
+<circle cx="129" cy="425" r="35" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="129" y="435" font-size="30" fill="#D7FF94" font-weight="700" text-anchor="middle">a</text>
+<circle cx="129" cy="601" r="35" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="129" y="611" font-size="30" fill="#D7FF94" font-weight="700" text-anchor="middle">b</text>
+<path d="M164 425 L278 425 L278 490 L362 490" fill="none" stroke="#17482E" stroke-width="2.5" stroke-linejoin="miter" marker-end="url(#arrow-forest)"/>
+<path d="M164 601 L278 601 L278 528 L362 528" fill="none" stroke="#17482E" stroke-width="2.5" stroke-linejoin="miter" marker-end="url(#arrow-forest)"/>
+<rect x="376" y="434" width="228" height="158" rx="4" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<rect x="377" y="435" width="226" height="32" rx="2" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="392" y="457" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="start">one object</text>
+<text x="396" y="496" font-size="16" fill="#27784C" font-weight="400" text-anchor="start">value</text>
+<text x="490.0" y="540" font-size="38" fill="#17482E" font-weight="700" text-anchor="middle">99</text>
+<rect x="179" y="568" width="114" height="30" rx="0" fill="#D7FF94" stroke="none" stroke-width="1.5"/>
+<text x="236" y="589" font-size="17" fill="#17482E" font-weight="700" text-anchor="middle">write 99</text>
+<text x="64" y="716" font-size="27" fill="#17482E" font-weight="700" text-anchor="start">a reads 99</text>
+<text x="376" y="716" font-size="27" fill="#17482E" font-weight="700" text-anchor="start">b reads 99</text>
+<text x="64" y="755" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">One shared object receives the write.</text>
+<circle cx="849" cy="415" r="35" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="849" y="425" font-size="30" fill="#D7FF94" font-weight="700" text-anchor="middle">a</text>
+<path d="M884 415 L1114 415" fill="none" stroke="#17482E" stroke-width="2.5" stroke-linejoin="miter" marker-end="url(#arrow-forest)"/>
+<rect x="1128" y="351" width="228" height="128" rx="4" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<rect x="1129" y="352" width="226" height="32" rx="2" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="1144" y="374" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="start">object A</text>
+<text x="1148" y="413" font-size="16" fill="#27784C" font-weight="400" text-anchor="start">value</text>
+<text x="1242.0" y="457" font-size="38" fill="#17482E" font-weight="700" text-anchor="middle">12</text>
+<circle cx="849" cy="601" r="35" fill="#17482E" stroke="none" stroke-width="2"/>
+<text x="849" y="611" font-size="30" fill="#D7FF94" font-weight="700" text-anchor="middle">b</text>
+<path d="M884 601 L1114 601" fill="none" stroke="#17482E" stroke-width="2.5" stroke-linejoin="miter" marker-end="url(#arrow-forest)"/>
+<rect x="1128" y="537" width="228" height="128" rx="4" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<rect x="1129" y="538" width="226" height="32" rx="2" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="1144" y="560" font-size="15" fill="#D7FF94" font-weight="700" text-anchor="start">object B</text>
+<text x="1148" y="599" font-size="16" fill="#27784C" font-weight="400" text-anchor="start">value</text>
+<text x="1242.0" y="643" font-size="38" fill="#17482E" font-weight="700" text-anchor="middle">99</text>
+<rect x="919" y="568" width="114" height="30" rx="0" fill="#D7FF94" stroke="none" stroke-width="1.5"/>
+<text x="976" y="589" font-size="17" fill="#17482E" font-weight="700" text-anchor="middle">write 99</text>
+<text x="784" y="716" font-size="27" fill="#17482E" font-weight="700" text-anchor="start">a reads 12</text>
+<text x="1128" y="716" font-size="27" fill="#17482E" font-weight="700" text-anchor="start">b reads 99</text>
+<text x="784" y="755" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">Only the copied table receives the write.</text>
+<path d="M64 806 L1376 806" fill="none" stroke="#D0D0C4" stroke-width="1" stroke-linejoin="miter"/>
+<text x="64" y="852" font-size="23" fill="#17482E" font-weight="600" text-anchor="start">Compare values and object identity as separate observations.</text>
+</g>
+</svg>

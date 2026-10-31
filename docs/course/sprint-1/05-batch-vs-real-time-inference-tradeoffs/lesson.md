@@ -1,71 +1,64 @@
 🏷️
 # Batch vs real-time inference tradeoffs
 
-Linden Facilities receives all 24 planned hourly inputs together. The planner needs one complete file within `60` seconds; nobody is waiting on individual HTTP responses. The inference pattern should follow that use case.
+Linden Facilities can now reject invalid inputs and produce a complete prediction file. The planner asks whether the team should replace that job with a permanent prediction endpoint. Before choosing an architecture, read what the planner actually needs.
 
+All 24 planned hourly inputs arrive together. One complete CSV must be ready within 60 seconds. There is no interactive caller. Your existing batch files let you connect a recommendation to an observed delivery, rather than a preference for a familiar technology.
 
-Read this explanation alongside the [repository setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). Use your existing project evidence for the checks; no new model execution is needed.
+## Identify what is waiting
 
+**Batch inference** processes a bounded group of inputs as one job. **Real-time inference** responds to requests as they arrive, within a response-time budget. Neither name guarantees that a particular implementation is fast or inexpensive.
 
-## Notebook workspace
+**Latency** is elapsed time until the required result is available. For Linden, the waiting party is the planner waiting for the complete file. For an interactive application, it may be a person waiting for one response. These are different completion events.
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) in your local project environment. Find the section for **Batch vs real-time inference tradeoffs** using its Campus activity ID **A-S1-05**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+![Architectural timelines contrast all inputs arriving together and a whole-file deadline with separate request arrivals and individual response deadlines](assets/batch-vs-real-time-inference-tradeoffs__01__en.png)
 
-## Which latency matters?
+The spacing and route lengths illustrate the two contracts; they are not benchmarks. Overlapping request lanes show that callers can arrive before earlier requests finish. The `60 s` batch deadline belongs to the supplied brief. No request-serving implementation or measured request latency is supplied.
 
-Use the comparison below to connect each pattern to the waiting time and resource obligation it creates. Latency is elapsed time until the required result is available; throughput counts completed records per unit time.
+| Dimension | Batch job | Request service | Linden's requirement |
+|---|---|---|---|
+| Arrival | Inputs collected together | Requests arrive individually | 24 rows together |
+| Latency | Time to complete the required job | Time from each request to its response | Complete file within 60 seconds |
+| Throughput | Completed rows per unit time over the job | Completed requests per unit time under stated load | All planned rows delivered |
+| Resource obligations | Load/process/write during the job | Maintain the required availability and handle concurrent callers | A bounded local job |
 
-| Dimension | Batch | Real-time requests |
+**Throughput** counts completed records per unit time. Linden's metadata records `rows_per_second` for the whole timed batch. Dividing job duration by 24 gives an average time per completed row within that job; it does not establish the response latency of 24 independent network requests.
+
+## Compare resource obligations before price
+
+A batch can load a fitted model once, process the input and exit. A request service often keeps the model in memory to avoid loading it per request. It also needs to handle its availability window, startup, queuing and failures. A busy service may use resources efficiently; an infrequent batch may avoid idle capacity.
+
+Those observations identify what to investigate, not a universal price ranking. An actual cost claim requires workload, resource consumption and pricing evidence. The [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) supports batch because it meets a shared-arrival, whole-file need with fewer availability obligations. Model size alone does not justify an endpoint.
+
+The fitted scaler and regressor could support either pattern. Changing the delivery pattern changes how inputs arrive, execution is scheduled, and outputs are returned. It does not require fitting preprocessing again on new requests.
+
+## Use the evidence you already have
+
+Open your actual `work/baseline-state/validated-batch.json` and matching CSV, or the new job name you used after a repair. These files record delivery through the source you edited. Its `run_id` must match the fitted baseline artifact you deliberately supplied; the model was not retrained merely to validate the new input boundary.
+
+| Evidence | Supported conclusion | Limit |
 |---|---|---|
-| Inputs | A bounded group available together | Arrive individually over time |
-| Useful latency | Whole job completes before deadline | Individual response budget |
-| Resource cost | Resources needed during the job | Often keep a service warm and available |
-| Throughput | Can reuse one model load for many rows | Depends on workers, concurrency and queuing |
-| Linden fit | Matches the supplied planning brief | Adds an availability obligation the brief does not need |
+| 24 finite predictions with matching `row_id` order | Complete, aligned output | Does not establish future prediction accuracy |
+| `elapsed_seconds` and `complete_within_60s` | Measured batch met its deadline | Excludes environment setup and training |
+| `rows_per_second` | Observed throughput for that job | Does not establish service throughput under load |
+| Source run and resolved version | Which fitted artifact produced the file | Does not establish price or availability |
 
-The [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) selects batch. Request serving remains a prepared architectural comparison, not a measured endpoint in this scaffold. Neither pattern is universally cheaper or faster; hardware, workload and availability needs matter.
-
-## What a permanent service adds
-
-Real-time inference accepts inputs as callers submit them and returns responses within a request budget. The model is often kept in memory so each request avoids loading it again. That can help response latency, but the system must also handle startup, concurrent callers, failures and periods with no traffic. “The model is small” does not remove those obligations.
-
-Batch inference can load the model once, process a bounded input and exit after writing results. This fits work that arrives together and has a completion deadline. It may be a poor choice when a caller must wait for the next scheduled batch to get an urgent answer. The same fitted model can support either pattern; the surrounding input, execution and delivery contract changes.
-
-## Reason about cost without inventing a price
-
-Cost depends on resource use and availability requirements, not the word “batch” or “API”. Compare what must run and for how long:
-
-| Question | Linden's brief | What a different request brief would need |
-|---|---|---|
-| When do inputs arrive? | All 24 planned rows together | Arrival rate and peak bursts |
-| When is output useful? | Complete file within 60 seconds | Budget for each caller |
-| What must stay available? | The process while a job executes | A service during its availability window |
-| What should be measured? | Complete rows, elapsed job time, selected version | Request latency distribution, throughput under load, availability |
-
-A busy service can use hardware efficiently. An infrequent batch can avoid keeping a worker idle. Neither observation provides a universal price ranking. Linden's defensible recommendation is that batch meets the stated delivery need with a smaller availability obligation; actual cost would require resource and pricing evidence.
-
-## What our evidence can establish
-
-Reuse the edited-project batch already produced by the walkthrough; do not execute another job for this page. `work/edited/batch.json` record the row count, elapsed seconds, rows per second, source run and resolved model version. Timing includes loading the model and writing the CSV. We check completion against `60` seconds, not against one author's exact observed time.
-
-The supplied delivery wrapper records which fitted model produced the batch. Interpreting that identity is enough here; configuring model selection is later work.
+Inspect the actual figures; do not generate another batch just for this page. If the record is missing or source changed, return to the saved-source verification before claiming completion.
 
 ## Check for Understanding
 
-Use your answer in the same short recommendation, addressing latency, throughput and resource obligations. There is no extra endpoint build or benchmark.
-
-A teammate recommends a permanent endpoint because one local batch row takes little compute. Identify the missing evidence and decide which completion measure Linden should accept now.
+Write a short recommendation in the same working notes. Address latency, throughput and resource cost, citing your retained batch evidence. Then consider a changed brief: inputs arrive separately and each caller must receive an answer within 200 ms. Explain which part of your recommendation changes and what new measurements would be required. The 200 ms budget is hypothetical, not a measured result.
 
 <details>
-<summary>Check your answer after attempting the diagnosis</summary>
+<summary>Solution — compare after writing both decisions</summary>
 
-> **Result you should get:** choose batch completion for all `24` rows within `60` seconds. One row's compute time does not establish request latency or justify a permanent service.
->
-> **How:** map the input arrival pattern and planner deadline to the measured job. For an endpoint, request arrival rate, network/queue latency and availability costs would still need evidence.
+**Result you should get:** Batch fits the actual brief: all 24 inputs arrive together and a complete file is needed within 60 seconds. Cite your observed completion, aligned rows and throughput. Cost remains a qualitative resource comparison unless you have consumption/pricing data.
+
+For the changed brief, request serving becomes a candidate because each caller has its own deadline. The existing batch result does not prove a 200 ms response budget can be met.
+
+**How:** Match the waiting party and completion event to the architecture. The changed brief needs end-to-end request latency, including queue/network time, under the expected arrival rate and concurrency, plus availability and resource-cost evidence. Reuse the fitted artifact; do not substitute local per-row compute time for those measurements.
 
 </details>
-
-![Batch vs real-time inference tradeoffs: evidence path](assets/batch-vs-real-time-inference-tradeoffs__01__en.png)
 
 ## Learning outcome
 
@@ -73,4 +66,4 @@ Compare batch and real-time inference patterns - latency, cost, throughput - and
 
 ## Summary
 
-Linden’s shared input arrival and whole-job deadline support batch inference. You can justify that choice without inventing request-serving timings or universal cost claims.
+Your inference choice follows Linden's input arrival and delivery deadline. You can support it with the completed batch while naming the measurements still missing for a request service. Keep that recommendation with the validated stage and code explanation for the acceptance task.

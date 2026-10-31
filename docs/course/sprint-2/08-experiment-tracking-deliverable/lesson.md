@@ -3,14 +3,21 @@
 
 Harbor Facilities wants to know which configuration it should promote and why. You will hand over a controlled comparison and a checked assistant recommendation. A client note bundles differently labeled observations and a confident recommendation. Audit it before deciding whether it changes your evidence-based selection.
 
+## Reuse your work; investigate the new intake
 
-## Notebook workspace
+| Evidence already available | New work here |
+|---|---|
+| Five declared configurations, saved run IDs and selected recipe | Decide which client observations are comparable |
+| MLflow UI comparison and real logging pair | Trace observation fields to their source runs |
+| Actual approved-assistant response and claim checks | Audit the separate client note and defend the recommendation |
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) in your local project environment. Find the section for **Experiment tracking deliverable** using its Campus activity ID **A-S2-08**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+An **observation** is one reported measurement; a **run** is one execution; a **configuration** is the settings used in that execution. Determine their relationships from the intake rather than counting labels as experiments.
 
-## Work in the repository
+![Unclassified client observations expose identity, metric and evaluation-basis fields for investigation](assets/experiment-tracking-deliverable__01__en.png)
 
-Reuse your existing five logged configurations, actual autologging evidence, MLflow UI inspection and approved assistant response. Prepare the new client intake from those actual records:
+## Prepare the client packet
+
+Reuse your existing five logged configurations, actual autologging evidence, MLflow UI inspection and approved assistant response. The course-only intake preparation tool assembles an incoming review packet from your actual records. It stays outside the application package and never changes the model or experiment. Prepare that constructed client intake once:
 
 ```sh
 uv run python docs/course/exercises/prepare-evidence.py comparison --destination work/harbor-comparison
@@ -20,7 +27,7 @@ Open `observations.json` and `client-note.txt` in that directory. Preparation re
 
 ## What you will work with
 
-Reuse your cumulative helper project and its fixed synthetic snapshot, [contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md), [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) and [clean-state specification](https://github.com/richhiey/ml-llm-ops/blob/main/docs/clean-state.md). Keep `row_id`, `temperature_c`, `hour`, `occupancy`, `demand_kwh` and `partition` unchanged in the source data. Harbor is a new acceptance client inside the same scaffold; it does not introduce a replacement project.
+Use the existing synthetic demand snapshot and [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md). Harbor is a new acceptance client inside the same project. Preserve the source data, generated packet and original assistant response. Keep your findings in the existing working note; no duplicate experiment or report is needed.
 
 ## As you work, keep these questions in mind
 
@@ -38,7 +45,7 @@ Retain evidence for your five distinct declared configurations: matrix, actual I
 
 ### Task B — Demonstrate autologging
 
-Reuse the enabled-before-fit setup and your real autolog on/off comparison. Trace the intake's training metric to its logged field and row basis alongside the explicit validation metric. Autologging captures estimator fields during fitting; explicit logging records the pipeline’s declared validation result. Explain which fields autologging owns, why `log_models=False` is used and what explicit logging still controls. Preserve your existing five-run MLflow UI inspection record.
+Reuse the enabled-before-fit setup and your real autolog on/off comparison. Determine each intake measurement’s evaluation basis and trace its actual logged field. Explain its role alongside the declared validation metric. Autologging captures estimator fields during fitting; explicit logging records the pipeline’s declared validation result. Explain which fields autologging owns, why `log_models=False` is used and what explicit logging still controls. Preserve your existing five-run MLflow UI inspection record.
 
 ### Task C — Validate the recommendation
 
@@ -46,7 +53,7 @@ Keep the actual approved-assistant prompt, input and response, together with you
 
 ## Final check
 
-Check your existing working notes with links to the actual output files and run IDs. Explain one decision by pointing to its raw evidence. Keep unsupported claims visible and correct them before relying on them. Use only previously practiced interfaces; no new platform is required.
+Check your existing working notes against the output filenames and full run IDs. Any repository links must use GitHub URLs. Explain one decision by pointing to its raw evidence. Keep unsupported claims visible and correct them before relying on them. Use only previously practiced interfaces; no new platform is required.
 
 ## Check your audit after the attempt
 

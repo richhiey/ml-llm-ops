@@ -17,6 +17,7 @@ dependencies = [
     "fastapi==0.119.0",
     "uvicorn==0.37.0",
     "pydantic==2.12.3",
+    "scipy==1.18.1",
 ]
 
 [dependency-groups]

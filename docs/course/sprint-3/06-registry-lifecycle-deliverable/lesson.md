@@ -1,74 +1,44 @@
 ✂️
 # Registry lifecycle deliverable
 
-Harbor Facilities hands over three model versions and a revised validation-error limit. A trial is active, and a newer artifact is still pending. Identify and restore a suitable prior approved version from the evidence, rather than assuming that “latest” means safe.
-
-
-## Notebook workspace
-
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) in your local project environment. Find the section for **Registry lifecycle deliverable** using its Campus activity ID **A-S3-06**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
-
-## Work in the repository
-
-Prepare Harbor's separate intake once:
-
-```sh
-uv run linden-mlops prepare --case registry-assessment --state work/harbor-registry
-uv run linden-mlops inspect --state work/harbor-registry
-```
-
-Use the known CLI/API operations to investigate and resolve the revised `1.45` kWh limit. Supply explicit `--state work/harbor-registry` for its alias, batch and reproduction operations; use the actual version/run IDs. Retain the main cumulative selection. Preparation performs no recovery decision. There is nothing to submit.
-
+Harbor Facilities needs to operate a selected demand model under unfamiliar feedback evidence. It also has an incoming registry recovery incident. The client needs a justified model decision and usable predictions; the newest version is not automatically suitable.
 
 ## What you will work with
 
-Reuse your cumulative helper project and its fixed synthetic snapshot, [contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md), [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) and [clean-state specification](https://github.com/richhiey/ml-llm-ops/blob/main/docs/clean-state.md). Keep `row_id`, `temperature_c`, `hour`, `occupancy`, `demand_kwh` and `partition` unchanged in the source data. Harbor is a new acceptance client inside the same scaffold; it does not introduce a replacement project.
+Continue the same repository in a new isolated investigation store. Use the supplied [Harbor monitoring intake](https://github.com/richhiey/ml-llm-ops/tree/main/docs/course/exercises/monitoring/harbor) and its data card/policy. Its independent synthetic cohorts have separate train/validation/final roles. Establish a guarded incoming baseline using the lifecycle operations you already know, retaining actual IDs and observed validation before approval.
 
-## As you work, keep these questions in mind
+The separate registry intake is supplied at `work/harbor-registry`. Read `case.json` and inspect its three actual registered versions, source runs and tags. [Exercise intake setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/README.md) is separate from application operation. It creates starting conditions, not a completed response. Keep your cumulative Linden project unchanged and preserve all client artifacts.
 
-Which version meets the revised client requirement and has approval evidence? What will the next batch actually load? Can you recover the run behind that version?
+## Your task
 
-## Quick diagnosis
+Before executing a response, inspect the declared policy, cohort sizes and available labels. Record the expected signal, threshold and action. Verify an unlabeled observation first, then evaluate the independent labeled feedback. Retain hashes and the version used for both distributions. Explain why input change, output change and measured degradation support different claims.
 
-Before changing the alias, make a three-row inventory with each actual version ID, source run ID, validation RMSE, approval status and current alias. State which version Harbor should serve under the revised requirement and why the other two do not qualify. Commit to that prediction before executing the rollback.
+When the evidence justifies it, train one candidate. Declare its configuration before comparing it with the incumbent on the same validation IDs. Explain each acceptance criterion using actual errors and improvement. If it fails, retain the incumbent; if it passes, use guarded promotion with your own evidence-based reason. In either case, invoke a new client batch and inspect the actual model/source and delivered predictions. Do not change thresholds or inspect final rows to improve your verdict.
 
-## Making improvements
+## Recover the client's registry selection
 
-### Task A — Inspect the client handover
+The incoming registry client's revised requirement is validation RMSE at most `1.45` kWh. Inspect all three versions and their source validation errors, the current alias and recorded approvals. Choose a suitable previously approved recovery version. An old approval under a looser policy, a high version counter or the pending decoy cannot settle this requirement.
 
-Prepare the separate Harbor intake using the command above. This produces three registered artifacts, validation tags and a currently active trial; no rollback is done for you. The revised client limit is validation RMSE <= `1.45` kWh. Inspect all three versions and their source runs. Determine which previously approved version qualifies; the highest version number is not necessarily approved or active.
-
-### Task B — Complete and reverse a lifecycle decision
-
-Document a registered/tagged/active selection from your cumulative project. For the client state, record the current alias and validation evidence, reassign `active` to the qualifying prior version with a reason, retain all artifacts, and tag the trial incident. Capture old/new versions and source run in audit evidence. A new batch must prove the restored selection is actually used.
-
-### Task C — Reproduce the approved result
-
-Recover the selected version's source/data/config/environment/model lineage. Rebuild its evaluation in a new state and compare absolute RMSE within `1e-6` kWh. Name which clean-state layers you proved and what would remain to demonstrate a new environment. Explain the audit's helper-only, mutable and non-atomic limits.
+Use the actual application `activate` interface against `--state work/harbor-registry`, supplying the observed version and your reason. Invoke one new, distinctly named batch in that store. Reconcile old/new alias evidence with the new job's source version/run. Preserve the pending version and failed client trial.
 
 ## Final check
 
-Check your existing working notes with links to the actual output files and run IDs. Explain one decision by pointing to its raw evidence. Keep unsupported claims visible and correct them before relying on them. Use only previously practiced interfaces; no new platform is required.
+Your evidence joins monitor → policy → candidate run/data → shared validation comparison → resulting active selection → actual planner output. It also demonstrates a separate rollback with old/new versions, reason, timestamp and a new job using the recovered model. Check the output contract independently: `24` finite, uniquely identified predictions in input order within `60` seconds.
 
-## Check your recovery after the attempt
+Write a short explanation of one harmful feedback loop to avoid and the evidence that prevents it here. Review your explanation separately from helper success. Reproduction belongs to the later handoff work; this checkpoint does not require another model search or unrelated report.
 
-<details>
-<summary>Solution — approved rollback and its proof</summary>
+<details><summary>Check after attempting the client decisions and recovery</summary>
 
-**Result you should get:** the source run configured with `alpha=0.1` is the previously approved version that meets validation RMSE `<=1.45` kWh. The active `alpha=10` trial fails the revised threshold even though it passed the earlier approval policy. The newer `alpha=100` artifact is pending; “newest” provides neither approval nor suitability. Use the actual version/run IDs returned in your state rather than assuming version counters.
+**Result you should get:** Harbor's unlabeled window supports investigation; its independent degraded labels justify evaluating a candidate. Candidate acceptance depends on your actual comparison. In the registry intake, the previously approved alpha-0.1 version meets `1.45`; the active alpha-10 trial does not, and the alpha-100 decoy is pending. The final recovery output comes from the suitable actual version.
 
-After recovery, `active` resolves to the qualifying prior version, all three artifacts remain and the trial has an incident tag. The audit names the observed old and new versions, reason and time. A new batch names the restored version and source run, produces `24` aligned finite outputs and meets the completion budget. Reproduction matches the chosen version's invariant lineage and absolute validation RMSE delta `<=1e-6` kWh. A new-store replay alone does not prove a fresh source/environment test.
-
-**How:** join each registry version to its source run and approval tags, then apply the revised client threshold to the validation metric. Compare the pre-action alias with the rollback event and post-action alias. Inspect the new batch metadata instead of treating an alias command's success as inference evidence. Compare the reproduced run's recorded recipe and evaluation with the same approved source run; timestamps and run IDs may change.
-
-If the batch names the trial, check whether it was created before the reassignment or against the wrong `--state`. If the newest pending artifact was chosen, restore the approval requirement before moving the alias again. Preserve the failed evidence and reason for correction. The helper's mutable, non-atomic local audit records its own operations; it cannot prove that all possible out-of-band changes were captured.
+**How:** join each version to its source run, raw validation error and approval before selection. Inspect the real change event and new client batch. Training on model predictions as if they were true demand labels could reinforce its own errors; use independent targets and disjoint validation instead. If you chose the pending decoy or relied on stale inference, preserve that attempt, repair the selection and repeat the missing verification. Copying Linden's guided conclusion cannot establish Harbor's result.
 
 </details>
 
 ## Learning outcome
 
-Deliverable: a model registered, tagged with validation evidence, assigned the active-model alias, then rolled back by alias reassignment - with a documented audit trail and the lineage needed to reproduce the approved run within the tolerance declared in the clean-state verification specification.
+Deliverable: a registered and validated active model, an evidence-backed drift and re-evaluation or retraining decision with its signal, threshold and action, a candidate comparison on separate validation rows, and a demonstrated rollback with audit and fresh inference evidence.
 
 ## Summary
 
-Harbor’s revised acceptance rule is connected to a preserved trial, a documented rollback and a reproducible approved result. Current selection and history have distinct evidence.
+Harbor receives a traceable model response and a demonstrated recovery with usable fresh output. Its actual policy, evidence and version identities support the decision while remaining separate from Linden's cumulative project.

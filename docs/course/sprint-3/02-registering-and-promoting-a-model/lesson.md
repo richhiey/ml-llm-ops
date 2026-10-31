@@ -1,83 +1,90 @@
 📝
 # Registering and promoting a model
 
-Linden Facilities has selected a guarded run. We will give its artifact a registered version, attach validation evidence and make it the version used by the next batch.
+Linden Facilities has selected a guarded validation run. We will register that run’s fitted artifact, record the validation decision and select it for a new batch. No additional model training is needed.
 
+## Starting point and finished state
 
-## Notebook workspace
+Use the existing VS Code clone, saved `selection` in `work/project.json` and local tracking store. A **model version** identifies a registered artifact; its **tags** describe validation; the mutable `active` **alias** selects which version a new job loads. A model **URI** is its saved loading address.
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) in your local project environment. Find the section for **Registering and promoting a model** using its Campus activity ID **A-S3-02**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+Finish with a usable planner CSV and a traceable run → version → new batch connection, plus the deliberate rejection of an attempt to activate a pending version. The commands are ordinary application operations. Keep the actual run and version IDs from their outputs; the example labels below must be replaced with your observed values.
 
-## Work in the repository
+## Follow these steps
 
-Carry forward the actual selected validation run:
+### Step 1 — Register the selected artifact
 
 ```sh
 uv run linden-mlops status
-uv run linden-mlops register
-uv run linden-mlops activate --reason 'Probe pending boundary'
+uv run linden-mlops register --run-id ACTUAL_SELECTED_RUN_ID
+uv run linden-mlops inspect
 ```
 
-On the first registration, expect a pending version and the deliberate activation error `Only approved versions may be active`. Registration reuses the saved version when repeated; if it was already approved, inspect the retained earlier result rather than claim a new pending failure. Run the contract checks and inspect selected validation RMSE first:
+Check the selected run ID in `status`. `register` returns that ID and a version string. `inspect` prints registered versions and their tags; the new version has `validation_status=pending`. The version’s `run_id` must match the selection. Registration adds an identity to an already logged artifact.
+
+Keep the returned identities. Reopening this activity reuses the saved version; local version counters are not universal identifiers. If it is already approved, inspect your retained first-run evidence rather than claiming it is newly pending.
+
+### Step 2 — Observe the pending boundary fail
+
+For the newly pending version, deliberately try:
 
 ```sh
-uv run pytest tests/test_spine.py::test_contract_extension_and_unchanged_pipeline -q
+uv run linden-mlops activate --version ACTUAL_REGISTERED_VERSION --reason 'Deliberate pending-status probe'
+```
+
+Expect a nonzero exit and `Only approved versions may be active`. This is an intentionally rejected action. Check the current state before continuing; a new registration must not have selected the candidate. The helper enforces this approval policy; a plain MLflow tag does not enforce it by itself.
+
+### Step 3 — Inspect checks before recording approval
+
+```sh
+uv run pytest tests/test_batch_input.py tests/test_spine.py::test_contract_extension_and_unchanged_pipeline -q
 uv run linden-mlops compare
-uv run linden-mlops approve --reason 'Observed passing range contract and finite validation RMSE within 5 kWh'
-uv run linden-mlops activate --reason 'Selected comparable validation run after contract checks'
+```
+
+Expect the saved-source contract test to pass. Your batch-input tests check the added `validate_planned_batch` stage, including a partial plan rejection, identity/completeness and valid-input preservation. The existing spine test separately checks domain rejection and unchanged training behavior. The student-created `src/linden_mlops/batch_input.py` and `tests/test_batch_input.py` must be present in the selected source, not only in an unsaved editor buffer. In the selected run’s raw record, check `range_guard=True`, `evaluation_partition=validation` and finite `rmse_kwh` at most `5` kWh. **Finite** means a real numeric value, rather than `NaN` or infinity.
+
+The `5` kWh limit is the scaffold’s teaching approval gate. It is separate from choosing the smallest error among the five comparable candidates. Passing the gate does not mean every production concern has been tested.
+
+Only after observing the checks, record your own reason:
+
+```sh
+uv run linden-mlops approve --version ACTUAL_REGISTERED_VERSION --reason 'REPLACE_WITH_YOUR_OBSERVED_CHECKS_AND_SCORE'
+uv run linden-mlops inspect
+```
+
+Replace the placeholder with the tests and selected score you actually inspected. Expect `validation_status=approved` and `validation_evidence` containing your rationale. The measured score remains inspectable in the source run. `approve` checks the helper’s metric/guard policy and records your reason; it does not execute the test command for you.
+
+### Step 4 — Select it, then inspect a new batch
+
+```sh
+uv run linden-mlops activate --version ACTUAL_REGISTERED_VERSION --reason 'REPLACE_WITH_YOUR_EVIDENCE_BASED_SELECTION_REASON'
 uv run linden-mlops batch
 uv run linden-mlops inspect
 ```
 
-Expect the saved selected run → returned version → `batch.json` source run/version to match. Inspect actual tags with `inspect`; replace rationale if your checks differ. Approval records your reason and a metric policy; it does not execute tests.
+The activation event names previous and new versions, source run, time and reason. The batch resolves `active` once, loads that version and writes `work/tracking/batch.csv` and `batch.json`. Use a new `--output-name` for a distinct later job; reopen a retained job instead of overwriting it. Check that its `resolved_version` equals the registered version and its `run_id` equals the selected run. Also inspect `24` aligned finite predictions and `complete_within_60s=True`.
 
+![The selected artifact is registered pending, checked and approved, explicitly selected and recorded by a new batch](assets/registering-and-promoting-a-model__01__en.png)
 
-## Follow the artifact into active selection
-
-Use the commands above to register, probe pending status and validate the selected artifact. A model version is a named registry record; `active` is a mutable alias pointing to one version.
-
-1. **Register the fitted artifact.** Register the selected Sprint 2 run and its logged model URI; do not train another baseline. Keep the returned run ID, model URI and version. Expect `validation_status=pending`; registration alone does not select it.
-2. **Probe the boundary.** Try to activate the pending version. Expect a deliberate rejection. This is the course helper's policy: MLflow tags and aliases do not enforce approval by themselves.
-3. **Validate, then approve.** Inspect valid-copy and invalid-hour probes and the finite held-out RMSE. The helper requires guard enabled and validation RMSE at most `5` kWh, plus a reason. It records approval but does not run your tests for you.
-4. **Select and inspect the next batch.** Assign `active` using the returned version and a reason. Verify the registered version's source run matches the training run and the next batch's resolved version. An alias assignment changes future resolution; it does not prove every already-running consumer reloaded.
+The reference diagram shows one actual connected execution. Your IDs may differ. The next job’s metadata proves what it loaded; a later alias lookup alone cannot prove what an earlier job used. An alias change does not force an already-running process to reload.
 
 ## Watch out for
 
-Version counters are local to a registered model/store. Reuse actual returned identities. The helper's JSONL event records old/new selection, time, source run and reason; it is mutable and its update is not atomic with the alias change.
+If version, run and batch disagree, compare full IDs and store paths before approving anything else. Keep existing artifacts. The helper’s `audit.jsonl` contains one JSON event per line, but only for helper-mediated changes. The file can be edited, and an alias change can succeed even if saving its event fails. Report and reconcile such a mismatch rather than claiming a complete history.
+
+See the [source/API lookup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md) for the registry client and each helper’s exact acceptance conditions.
 
 ## Quick reference
 
-| Operation | Effect |
-|---|---|
-| `register` | Create a pending version |
-| `approve` | Check the teaching gate and record rationale |
-| `activate` | Reassign `active` and append a helper event |
-| `batch_predict` | Resolve `active` once for the job |
+| Command | Intended effect | Check |
+|---|---|---|
+| `register` | Create/reopen candidate version | Correct source run, initially pending |
+| `approve` | Record validation under the local gate | Honest reason and observed checks |
+| `activate` | Move `active` and append an event | Actual old/new version and source run |
+| `batch` | Load the selected version for a job | New job’s own version/run and output |
 
 ## Check your result
 
-Explain the difference between “registered,” “approved” and “selected.” Point to the run → version → batch chain and the rejected pending-selection output in your working notes.
-
-![Registering and promoting a model: evidence path](assets/registering-and-promoting-a-model__01__en.png)
-
-## Check your work after attempting the task
-
-<details>
-<summary>Compare your result after the attempt</summary>
-
-**Result you should get:** The selected run's model is registered pending; pending activation rejects. After observed contract checks and valid approval, the active alias and next batch resolve to that same version/source run. Reopening saved evidence need not create another pending attempt.
-
-**How:** Match the returned identities rather than assume a counter. Approval records rationale and checks the teaching gate; it does not run tests. If registration alone seemed to deploy a model, compare version identity, tags, alias and the next job's own metadata.
-
-</details>
-
-## Read the notebook figure
-
-![Selected run, registered version and the actual batch source form one consistent chain](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/sprint-3/02-registering-and-promoting-a-model/assets/model-identity__02__en.png)
-
-This diagram is derived from the verified reference records, rather than a UI screenshot. The full selected run ID agrees with the registered version's source and the new batch's recorded source; the batch resolved version 1. Compare your own full IDs and recorded batch resolution. A later alias lookup alone does not prove what an earlier batch loaded.
-
-Regenerate this figure from your actual records in the sprint notebook. The [editable SVG](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/02-registering-and-promoting-a-model/assets/model-identity__02__en.svg) and [reference observations](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/figures/reference-observations.json) make this author example inspectable.
+Explain “registered”, “approved” and “selected” by pointing to their different records. Retain the pending rejection and the run/version/new-batch identities in your existing notes. The approval reason must describe checks you actually observed. A copied claim that tests passed is not test evidence. Do not repeat the lifecycle simply to generate another screenshot.
 
 ## Learning outcome
 
@@ -85,4 +92,4 @@ Use the provided model registry scaffold to register a new model version, record
 
 ## Summary
 
-The candidate has moved from a logged artifact to a tagged version and a verified active batch. Each lifecycle action now points back to the same source run.
+Linden’s selected training result is now a registered, validated selection backed by a new batch. You can show which action created each record and which artifact the job actually used.

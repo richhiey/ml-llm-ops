@@ -1,1 +1,53 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300"><defs><marker id="a" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="#17482E"/></marker></defs><rect width="1200" height="300" fill="#ECEBE4"/><g font-family="sans-serif"><text x="36" y="53" font-size="28" fill="#17482E" font-weight="bold">Linden: follow the evidence</text><rect x="36.0" y="105" width="360.0" height="96" rx="8" fill="#FFFFFF" stroke="#27784C" stroke-width="2"/><text x="216.0" y="159" font-size="21" text-anchor="middle" fill="#0A0A0A">Version identity</text><path d="M396.0 153 L420.0 153" stroke="#17482E" stroke-width="2" marker-end="url(#a)"/><rect x="420.0" y="105" width="360.0" height="96" rx="8" fill="#FFFFFF" stroke="#27784C" stroke-width="2"/><text x="600.0" y="159" font-size="21" text-anchor="middle" fill="#0A0A0A">Validation tags</text><path d="M780.0 153 L804.0 153" stroke="#17482E" stroke-width="2" marker-end="url(#a)"/><rect x="804.0" y="105" width="360.0" height="96" rx="8" fill="#E8FFBB" stroke="#27784C" stroke-width="2"/><text x="984.0" y="159" font-size="21" text-anchor="middle" fill="#0A0A0A">Mutable active alias</text><text x="36" y="263" font-size="20" fill="#27784C">Input and decision must connect to observable evidence.</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1030" viewBox="0 0 1440 1030" role="img" aria-labelledby="title desc">
+<title id="title">Identity, approval and selection are separate.</title><desc id="desc">Two persistent model version records retain their source-run and artifact links. Approval tags are separate from a movable active alias. A later job resolves the alias and keeps its own fixed version receipt. Current state and a retained change event answer different questions.</desc>
+<defs>
+<marker id="arrow-forest" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#17482E"/></marker>
+<marker id="arrow-green" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#27784C"/></marker>
+<marker id="arrow-gray" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#D0D0C4"/></marker>
+<marker id="arrow-white" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#FFFFFF"/></marker>
+<marker id="arrow-red" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B91C1C"/></marker>
+<marker id="arrow-amber" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B45309"/></marker>
+</defs>
+<rect width="1440" height="1030" fill="#ECEBE4"/>
+<g font-family="sans-serif">
+<text x="64" y="49" font-size="14" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="2">LINDEN / REGISTRY MENTAL MODEL</text>
+<text x="64" y="112" font-size="42" fill="#0A0A0A" font-weight="700" text-anchor="start">Identity, approval and selection are separate.</text>
+<text x="64" y="152" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">Versions keep their source. Tags describe evidence. Active chooses the next job’s version.</text>
+<path d="M64 186 L1376 186" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="64" y="239" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">REGISTERED MODEL / dev.linden-demand</text>
+<path d="M64 284 L455 284 L479 308 L479 428 L64 428 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M455 284 L455 308 L479 308" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="86" y="321" font-size="27" fill="#17482E" font-weight="700" text-anchor="start">Version A</text>
+<text x="86" y="360" font-size="19" fill="#27784C" font-weight="400" text-anchor="start">source run / fitted artifact</text>
+<rect x="85" y="382" width="372" height="29" rx="0" fill="#E8FFBB" stroke="none" stroke-width="1.5"/>
+<text x="97" y="403" font-size="16" fill="#17482E" font-weight="600" text-anchor="start">validation_status = approved</text>
+<path d="M64 496 L455 496 L479 520 L479 640 L64 640 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M455 496 L455 520 L479 520" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="86" y="533" font-size="27" fill="#17482E" font-weight="700" text-anchor="start">Version B</text>
+<text x="86" y="572" font-size="19" fill="#27784C" font-weight="400" text-anchor="start">source run / fitted artifact</text>
+<rect x="85" y="594" width="372" height="29" rx="0" fill="#E8FFBB" stroke="none" stroke-width="1.5"/>
+<text x="97" y="615" font-size="16" fill="#17482E" font-weight="600" text-anchor="start">validation_status = pending</text>
+<rect x="575" y="322" width="216" height="69" rx="5" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="683" y="367" font-size="34" fill="#FFFFFF" font-weight="700" text-anchor="middle">active</text>
+<path d="M575 356 L492 356" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<text x="575" y="435" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">mutable selection</text>
+<text x="575" y="474" font-size="21" fill="#17482E" font-weight="600" text-anchor="start">registration alone</text>
+<text x="575" y="508" font-size="19" fill="#27784C" font-weight="400" text-anchor="start">does not move this pointer</text>
+<path d="M791 356 L884 356" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<rect x="898" y="284" width="478" height="201" rx="5" fill="#E8FFBB" stroke="#17482E" stroke-width="2.5"/>
+<text x="923" y="325" font-size="29" fill="#17482E" font-weight="700" text-anchor="start">Next batch starts</text>
+<text x="923" y="369" font-size="24" fill="#17482E" font-weight="600" text-anchor="start">resolve active once</text>
+<text x="923" y="412" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">load Version A</text>
+<text x="923" y="454" font-size="20" fill="#27784C" font-weight="400" text-anchor="start">keep its version + source-run receipt</text>
+<text x="898" y="561" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">ONE CHANGE EVENT / NOT A CURRENT LOOKUP</text>
+<path d="M898 584 L1352 584 L1376 608 L1376 696 L898 696 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M1352 584 L1352 608 L1376 608" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="922" y="627" font-size="23" fill="#17482E" font-weight="600" text-anchor="start">old version + new version</text>
+<text x="922" y="669" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">source run + time + reason</text>
+<rect x="64" y="733" width="1312" height="150" rx="6" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="90" y="774" font-size="27" fill="#FFFFFF" font-weight="700" text-anchor="start">Older tutorials: Staging / Production / Archived</text>
+<text x="90" y="818" font-size="22" fill="#D7FF94" font-weight="400" text-anchor="start">Modern building blocks: aliases + validation tags + environment-specific registered models</text>
+<text x="90" y="854" font-size="20" fill="#FFFFFF" font-weight="400" text-anchor="start">Names alone do not create deployment permissions or isolated infrastructure.</text>
+<text x="64" y="984" font-size="19" fill="#17482E" font-weight="600" text-anchor="start">Version labels A/B are schematic. MLflow metadata does not itself enforce the course approval policy.</text>
+</g>
+</svg>

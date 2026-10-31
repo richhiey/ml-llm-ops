@@ -1,6 +1,6 @@
 # Compare experiments and keep the selected recipe
 
-Finish the range-contract edit and tests before running the comparison. Keep code and data fixed for the five runs. Edit `configs/experiment.json` to declare five distinct positive `alpha` values, including `1` as the logging-comparison anchor. `alpha` controls Ridge regularisation. The declared decision is lowest held-out validation `rmse_kwh`; MAE and training diagnostics help explain behavior.
+Verify the actual source changes and their tests before running the comparison. Keep code and data fixed for the five runs. Edit `configs/experiment.json` to declare the intended distinct positive `alpha` values. The supplied file contains five; the application accepts other declared population sizes. `alpha` controls Ridge regularisation. The declared decision is lowest held-out validation `rmse_kwh`; MAE and training diagnostics help explain behavior.
 
 ```sh
 uv run linden-mlops plan --config configs/experiment.json
@@ -31,16 +31,18 @@ p = Project()
 ws = Workspace(p.tracking)
 rows = p.matrix(ws)
 auto_id = rows.loc[rows.alpha.astype(float).eq(1), 'run_id'].iloc[0]
-if not p.data.get('logging_pair'):
+pair = p.data.get('logging_pair')
+if pair is None:
     manual = ws.run(Config(alpha=1, range_guard=True, autolog=False), name='manual-anchor')
-    p.save(logging_pair={'autolog': auto_id, 'manual': manual['run_id']})
-for mode, run_id in p.require('logging_pair').items():
+    pair = {'autolog': auto_id, 'manual': manual['run_id']}
+    p.save(logging_pair=pair)
+for mode, run_id in pair.items():
     run = ws.client.get_run(run_id)
     print(mode, run_id, run.data.params, run.data.metrics)
     print([a.path for a in ws.client.list_artifacts(run_id)])
 ```
 
-Put this in a local script and use `uv run python your_script.py`, or explore it in the notebook. Inspect which estimator parameters and training diagnostics autologging adds. The wrapper records validation RMSE, lineage and recovery files explicitly in both cases. Changing logging should not change held-out predictions.
+Put this in a local script and use `uv run python your_script.py`, or explore it in the notebook. The lesson, notebook and this example reuse the same `logging_pair` saved in `work/project.json`; reopening a completed comparison does not train another manual run. Inspect which estimator parameters and training diagnostics autologging adds. The application records validation RMSE, lineage and recovery files explicitly in both cases. Changing logging should not change held-out predictions.
 
 ## Review assistant advice
 

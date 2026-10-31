@@ -1,29 +1,34 @@
-# Evidence investigations
+# Course intake assets and setup responsibility
 
-These Campus exercises use your completed project records. They introduce a questionable draft or a damaged **copy** for you to investigate. They do not claim that an assistant produced a supplied note or that an altered copy was an observed execution.
+These files are outside application runtime. They provide unknown inputs and clearly labeled review material; they are not evidence that a learner has completed an app change or requested an assistant response. The app package neither imports these tools nor archives them with a model recipe.
 
-Run from the repository containing `pyproject.toml`, after completing the relevant cumulative project activity:
+## Ready input files
 
-```bash
-uv run python docs/course/exercises/prepare-evidence.py comparison --destination work/comparison-review
-uv run python docs/course/exercises/prepare-evidence.py integration --destination work/integration-review
-uv run python docs/course/exercises/prepare-evidence.py receiving --destination work/receiving-review
+- `harbor-intake.csv`: five unfamiliar feature rows for domain probes; it is not the `24`-row planned delivery.
+- `harbor-plan-a.csv`, `harbor-plan-b.csv`, `harbor-plan-c.csv`: supplied complete-plan acceptance inputs. Inspect each before deciding which contract it meets.
+- `generated-stage-candidate.py`: intentionally unsafe authored assistant-style proposal kept outside installed source.
+- `sprint-1-attempt.py`: optional unsolved review/supplier task shell. Source patches and ordinary application tests remain the actual engineering deliverable.
+- `experiment-matrix-starter.csv` and `claim-evidence-sheet.csv`: optional blank working aids.
+- `monitoring/linden/` and `monitoring/harbor/`: existing synthetic reference/current/stable/feedback inputs, policy and data-card hashes. No app input-generation step is required.
+
+## Instructor or self-study provisioning
+
+Before an isolated client investigation, the incoming store must exist. An instructor can provide it; a self-study learner can provision it explicitly using this external setup tool. This is preparation of an unknown exercise state, not the assessed response or a real production incident. Use a new destination and retain it thereafter:
+
+```sh
+uv run python docs/course/exercises/prepare-evidence.py rollback --destination work/rollback
+uv run python docs/course/exercises/prepare-evidence.py registry-assessment --destination work/harbor-registry
 ```
 
-Prepare only the exercise requested by your Campus task. Each command prints its new directory. An existing destination is rejected so you keep earlier evidence. Use `--work-dir PATH` when your cumulative project is elsewhere. The receiving command also accepts `--bundle PATH` for an existing portable export.
+Each destination is itself an MLflow store containing `mlflow.db`, artifacts and `case.json`. Open `Workspace("work/rollback")` or the actual supplied path. `case.json` records `case`, `state`, registered version IDs and the incoming requirement. Provisioning trains/registers/selects baseline versions only in that new isolated store, preserving the cumulative `work/tracking` project. Learners must still inspect the incoming active/pending states, decide, explain and carry out the recovery themselves. Never count provisioning as evidence of recovery skill.
 
-| Exercise | Required evidence | Starting assets |
-|---|---|---|
-| `comparison` | Your five saved matrix runs with their existing autologged training diagnostic at `alpha=1` | `observations.json`, `client-note.txt` |
-| `integration` | Your saved selection, registered version, matching `active` alias, and retained `tracking/batch.json` and `batch.csv` | `handoff-index.json`, `brief.txt` |
-| `receiving` | A valid `work/handoff-export`, or the export passed with `--bundle` | `candidate-bundle/`, `brief.txt` |
+For comparison/receiving acceptance, prepare a separate unknown copy from retained real work:
 
-The comparison file preserves actual run IDs, recorded metric names, evaluation bases, values, and all logged parameters under `controls`. Its observation labels identify measurements, not separate executions. The stakeholder note is authored exercise text requiring review. No model calls or training occur during preparation.
+```sh
+uv run python docs/course/exercises/prepare-evidence.py comparison --destination work/harbor-comparison
+uv run python docs/course/exercises/prepare-evidence.py receiving --bundle work/handoff-export --destination work/receiving-review
+```
 
-The integration index is explicitly a draft assembled for investigation. Registry, alias and original batch evidence remain authoritative. Repair your draft using those records; creating another model does not resolve a documentation mismatch.
+Comparison reads actual five-run evidence and emits `observations.json`/`client-note.txt`; the note is intentionally questionable fixture prose, not an actual new assistant response. Receiving copies a verified real bundle into `candidate-bundle` and changes a file in that copy; the original export/index remains trusted evidence. Reopen existing prepared inputs rather than rerunning setup. The real release descriptor is authored/verified against actual app records; no fake integration index is generated.
 
-The receiving candidate is copied from an export that passes `verify_bundle` before preparation. Only the exercise copy is changed. Its original checksum index remains intact so integrity checks can expose the damage. Keep the original export as trusted recovery evidence; do not rewrite checksums to accept an unexplained change.
-
-Preparation validates prerequisites before creating the destination, stages files in a new sibling directory, and never changes project decisions or existing model artifacts. If prerequisites are missing, return to your retained project evidence rather than repeating training simply to create an exercise.
-
-The preparation logic lives in the shared `linden_mlops.course_evidence` module, which is included in exported source archives. In restored source, you can use `uv run python -m linden_mlops.course_evidence` with the same arguments; the documentation script is a thin wrapper.
+The independent tests of these provisioning boundaries live here in `tests/test_fixture_provenance.py`; the application's own regression tests remain under root `tests/`. Optional preparation of a new synthetic cohort is available to instructors with `monitoring --destination NEW_DIR --cohort linden|harbor`. Published cohort hashes and names must match the provided static assets; no real-world performance claim follows from them.

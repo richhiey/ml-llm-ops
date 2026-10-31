@@ -1,55 +1,84 @@
 📝
 # Validating an assistant-generated experiment summary
 
-Linden Facilities has a useful result table, but an assistant can still misread metric direction or compare incompatible runs. We will ask for a recommendation and check every claim before it influences promotion.
+Linden Facilities has a selected configuration and a table supporting it. An assistant can help summarize the comparison, but fluent prose may mix training error with validation error or promise a cost advantage the table never measured. We will check the numeric recommendation and the claims around it separately.
 
+## Starting point and finished state
 
-## Notebook workspace
+Reuse your five saved run IDs, `work/runs.csv`, UI inspection and selected recipe. Use your institution-approved assistant; the project needs no provider API integration or credential. Finish with the actual prompt, input table and response, plus a compact claim-check table you can reuse at the checkpoint.
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) in your local project environment. Find the section for **Validating an assistant-generated experiment summary** using its Campus activity ID **A-S2-07**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+## Follow these steps
 
-## Work in the repository
+### Step 1 — Prepare the comparison the assistant should see
 
-Use `work/runs.csv` and your saved matrix IDs. Request the actual response from your approved assistant using the prompt below. In a local script, open `Project()` and `Workspace(p.tracking)`, then call `verify_summary(p.matrix(ws), proposed_run_id)` from `linden_mlops`. The result's `recommendation_matches_metric` must agree with your manual/UI inspection. Test the numerically worst run once as a deliberately wrong recommendation; expect `False`. Keep your claim checks in one local note or optional notebook, not a second report.
+Extend your inspection script to export only the declared matrix:
 
+```python
+from linden_mlops import Workspace, verify_summary
+from linden_mlops.project import Project
 
-## Review a recommendation against the runs
+project = Project()
+workspace = Workspace(project.tracking)
+rows = project.matrix(workspace)
+print(rows.to_csv(index=False))
+```
 
-Use the raw rows and API check described above, including a deliberately wrong recommendation. You will also inspect an actual assistant response; a passing numeric check cannot validate all its prose.
+Expect five unique IDs and five distinct alphas, shared source/data identity, guard enabled and validation evaluation. This keeps unrelated runs outside the request. Keep the final holdout closed.
 
-1. **Check the input table.** Export only your five returned IDs. Confirm unique IDs, distinct declared alphas, shared controls and finite validation RMSE before requesting advice. Leave the final holdout closed.
-2. **Direct your approved assistant.** Supply the raw table and ask: “Recommend a run using lower validation `rmse_kwh`. Name the run ID, explain comparability and controls, and separate measured findings from claims requiring more evidence.” Keep its actual response in your working notes.
-3. **Validate the numeric choice.** Run `verify_summary` against its nominated ID. Use the actual result of your declared matrix; its best alpha need not match the supplied example. The intentionally worst-run example must fail. A rejection can also mean incompatible controls; inspect the reason before ranking.
-4. **Audit the other claims.** Break the response into claims and match each to a source field. “Lowest validation RMSE” is testable from the table. “Cheapest service” needs operational cost evidence; “always the best alpha” needs broader experiments. Correct or qualify unsupported claims.
+### Step 2 — Request and retain the actual response
+
+Supply that table to your approved assistant with this request:
+
+> Recommend one run using lower validation `rmse_kwh`. Name its full run ID and raw value. Explain which recorded controls make the candidates comparable. Separate measured findings from claims that require more evidence, including serving cost and readiness for use.
+
+Keep the prompt, table and actual response in one working note, such as `work/experiment-review.md`. No second report is needed. If assistant access is unavailable, you can practice with the [labeled example](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/assistant-summary-reference.md), but the actual-request part remains unfinished.
+
+### Step 3 — Check the nominated ID, including a known wrong choice
+
+Add the response’s actual nominated ID to the script:
+
+```python
+proposed_run_id = "REPLACE_WITH_THE_RESPONSE_RUN_ID"
+result = verify_summary(rows, proposed_run_id)
+print(result)
+worst_id = rows.sort_values(["rmse_kwh", "run_id"]).iloc[-1]["run_id"]
+wrong = verify_summary(rows, worst_id)
+print("Deliberately wrong recommendation:", wrong)
+assert not wrong["recommendation_matches_metric"]
+```
+
+For a valid nomination, `recommendation_matches_metric` is `True` when the ID matches the lowest comparable unrounded validation RMSE. The deliberately worst nomination returns `False`. This **negative control** is a deliberately wrong example that checks whether our check can reject a bad choice.
+
+Incompatible input rows produce a `ValueError` rather than a winner verdict. Read the message and repair the comparison scope before ranking; do not suppress it. The [API contract](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md) lists its input checks. A `True` result checks one ID against one numeric rule. It does not validate every sentence in the response.
+
+### Step 4 — Review each claim against the evidence it needs
+
+Here is an **authored teaching example**, not a response obtained from your assistant: “Choose the smallest validation RMSE. That run must also be the cheapest to serve.”
+
+| Claim | Where to check | Verdict for this teaching example |
+|---|---|---|
+| Select the smallest comparable validation RMSE | Declared metric/direction and five raw rows | Supported selection rule; verify the nominated ID separately |
+| It is cheapest to serve | Cost or resource-use measurements | Unsupported: the error table does not measure cost |
+
+![Numeric ranking, comparison controls and serving claims require separate evidence checks](assets/validating-an-assistant-generated-experiment-summary__01__en.png)
+
+Apply that method to the actual response. Record each recommendation or factual claim, its supporting field or missing evidence, and a verdict: supported, inaccurate or unsupported. Correct an inaccurate number; qualify a claim that exceeds the evidence. If the response is accurate, record that without inventing a mistake.
 
 ## Watch out for
 
-Do not relabel training error as validation error. A close winning margin supports this fixture's ranking, not a universal recommendation. Use your institution-approved assistant and permitted data; no provider credential is required by the course helper.
+A training diagnostic cannot replace held-out validation `rmse_kwh`. A tiny winning margin on the synthetic snapshot cannot establish the best alpha for every building. The numeric verifier has no cost data and does not read or approve the response’s prose.
 
 ## Quick reference
 
-| Claim | Check |
+| Question | Required check |
 |---|---|
-| Winner | Returned ID + lowest comparable validation RMSE |
-| Fair comparison | Data/split/features/guard/evaluation controls |
-| Operational recommendation | Evidence outside the metric table, or an explicit caveat |
+| Does the nominated run win? | Full ID, raw primary metric and direction |
+| Is it a fair comparison? | Source/data, features, guard and evaluation conditions |
+| Does an operational claim follow? | Relevant measurement, or an explicit evidence gap |
 
-## Check your review
+## Check your result
 
-Keep one compact table in your working notes: claim → supporting field → accepted/corrected/unsupported. Include one supported numeric claim and any actual overclaim you corrected; if none occurred, state that the reviewed claims were supported. Reuse the table at the sprint checkpoint.
-
-![Validating an assistant-generated experiment summary: evidence path](assets/validating-an-assistant-generated-experiment-summary__01__en.png)
-
-## Check your work after attempting the task
-
-<details>
-<summary>Compare your result after the attempt</summary>
-
-**Result you should get:** The nominated ID either matches the minimum comparable validation RMSE or fails that numeric rule. Your claim table separately checks controls and unsupported operational claims. The deliberately worst recommendation returns False.
-
-**How:** Compare full IDs and unrounded fields, then evaluate each prose claim. A correct rank cannot prove serving cost or readiness. If the actual response is accurate, retain it as supported; do not manufacture a correction. If assistant access is unavailable, practice on the labeled fixture, but record the actual-request outcome as incomplete.
-
-</details>
+Your retained note contains the actual request and response, a supported numeric recommendation or correction, and a verdict for each other claim. The known wrong ID fails. Reuse this evidence when the client introduces unfamiliar observations.
 
 ## Learning outcome
 
@@ -57,4 +86,4 @@ Direct an approved assistant to generate a summary comparison across logged expe
 
 ## Summary
 
-The assistant’s recommendation is now an inspectable set of claims. Your raw-data checks distinguish a valid metric choice from unsupported promotion advice.
+You can turn assistant advice into claims someone else can inspect. Linden’s recommendation now has a checked numeric choice and clear limits on what its experiment measured.

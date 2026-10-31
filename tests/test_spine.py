@@ -12,6 +12,7 @@ def test_contract_extension_and_unchanged_pipeline():
     raw = ingest()
     original = raw.copy(deep=True)
     checked = validate_ranges(raw)
+    assert checked is not raw, 'Accepted input must return an independent table'
     pd.testing.assert_frame_equal(raw, checked)
     pd.testing.assert_frame_equal(raw, original)
     assert raw.groupby('partition').size().to_dict() == {'final': 24, 'train': 168, 'validation': 48}

@@ -13,8 +13,8 @@ from .recovery import export_run, restore_source, reproduce_bundle
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=['status', 'plan', 'train', 'matrix', 'compare', 'select',
-        'register', 'approve', 'activate', 'inspect', 'batch', 'bootstrap', 'handoff', 'final',
-        'reproduce', 'ui', 'export', 'restore-source', 'reproduce-export', 'prepare'])
+        'register', 'approve', 'activate', 'inspect', 'batch', 'final',
+        'reproduce', 'ui', 'export', 'restore-source', 'reproduce-export'])
     parser.add_argument('--work-dir', help='Project decisions directory (default: work, or LINDEN_WORK_DIR)')
     parser.add_argument('--state', help='Override tracking store for a separate investigation')
     parser.add_argument('--alpha', type=float, default=1.0)
@@ -22,6 +22,9 @@ def main(argv=None):
     parser.add_argument('--autolog', action='store_true')
     parser.add_argument('--partition', choices=['validation', 'final'], default='validation')
     parser.add_argument('--run-id')
+    parser.add_argument('--model-uri', help='Explicit logged-model URI for batch inference without a registry')
+    parser.add_argument('--release', help='Release descriptor checked against the active model and delivered job')
+    parser.add_argument('--data', help='Versioned training CSV; bundled reference snapshot by default')
     parser.add_argument('--version')
     parser.add_argument('--reason', default='')
     parser.add_argument('--config', help='Configuration JSON; takes precedence over model flags')
@@ -29,7 +32,6 @@ def main(argv=None):
     parser.add_argument('--destination', help='New destination directory')
     parser.add_argument('--input', help='Batch CSV; default is the bundled 24-row file')
     parser.add_argument('--output-name', default='batch')
-    parser.add_argument('--case', choices=['matrix', 'rollback', 'registry-assessment', 'past-run'])
     args = parser.parse_args(argv)
 
     def required(name):
@@ -43,9 +45,6 @@ def main(argv=None):
             result = str(restore_source(required('bundle'), required('destination')))
         elif args.command == 'reproduce-export':
             result = reproduce_bundle(required('bundle'), required('destination'))
-        elif args.command == 'prepare':
-            from .scenarios import prepare_case
-            result = prepare_case(required('case'), required('state'))
         else:
             project = Project(work_dir=args.work_dir)
             if args.command == 'status':
@@ -98,9 +97,17 @@ def main(argv=None):
                         print(json.dumps({'version': version.version, 'run_id': version.run_id, 'tags': version.tags, 'aliases': version.aliases}, default=str))
                     return
                 elif args.command == 'batch':
-                    _, result = batch_predict(ws, args.input, args.output_name)
+                    _, result = batch_predict(ws, args.input, args.output_name, model_uri=args.model_uri)
                 elif args.command == 'export':
-                    result = str(export_run(ws, args.run_id or project.selected()['run_id'], required('destination')))
+                    if args.release:
+                        from .release import verify_release
+                        release = verify_release(ws, args.release)
+                        if args.run_id and args.run_id != release['run_id']:
+                            raise ValueError('--run-id disagrees with --release')
+                        run_id = release['run_id']
+                    else:
+                        run_id = required('run-id')
+                    result = str(export_run(ws, run_id, required('destination'), release=args.release))
                 elif args.command == 'reproduce':
                     result = reproduce(ws, args.run_id or project.selected()['run_id'], required('destination'))
                 elif args.command == 'final':
@@ -110,14 +117,8 @@ def main(argv=None):
                     result = project.require('final_evaluation')
                 else:
                     config = Config(**json.loads(Path(args.config).read_text())) if args.config else Config(
-                        args.alpha, args.range_guard or args.command in {'bootstrap', 'handoff'}, args.autolog)
-                    result = ws.run(config, partition=args.partition)
-                    if args.command in {'bootstrap', 'handoff'}:
-                        version = register(ws, result['run_id'])
-                        approve(ws, version, 'Finite guarded validation RMSE <= 5; inspect contract tests separately')
-                        event = activate(ws, version, 'Local baseline demonstration')
-                        _, inference = batch_predict(ws)
-                        result = {'training': result, 'version': version, 'audit': event, 'inference': inference}
+                        args.alpha, args.range_guard, args.autolog)
+                    result = ws.run(config, partition=args.partition, data_path=args.data)
         print(json.dumps(result, indent=2))
     except (ValueError, FileNotFoundError, KeyError) as error:
         parser.exit(2, f'{error}\n')

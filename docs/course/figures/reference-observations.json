@@ -1,147 +1,1320 @@
 {
-  "reference_kind": "Locally executed author reference; learner IDs, chosen matrix and timing may differ",
+  "reference_kind": "Dated per-figure provenance: schematic teaching diagrams and locally executed observations; old source_revision applies to undated 21 October figures.",
   "source_revision": "sha256:76ea3db250d29684cddaf3ec45af17c0ca9c40315cbde0ca7ea4748a4389bc67",
   "lock_sha256": "ba27bb07af2c216dfcc76c170aa103c7e734671ed5041999bff75e4b12fb6f78",
   "figures": [
     {
-      "lesson": "sprint-1/03-adding-and-validating-a-bounded-pipeline-stage",
-      "stem": "validation-contract__02__en",
+      "lesson": "sprint-1/01-from-notebook-to-pipeline",
+      "stem": "from-notebook-to-pipeline__01__en",
+      "verified_on": "2026-10-22",
       "sha256": {
-        "png": "c857e3e99ddb7ba616aaaf9d5147d999e0ded0a1fc54b022c1df3350df649233",
-        "svg": "92fdf64f2e6e834390e446825d5385db7578a9ddf7706f3f9cc1521239512c12"
+        "svg": "2536bd61d3acff0276a71f5d99d357fd5f7c012a9192ff3c610f57cd2d1ebc56",
+        "png": "a2b4fbc9041746d36927aeb84ed63852c78a3cec14a556ed0744dd608c80ee55"
       },
+      "kind": "schematic educational relationship diagram",
+      "limits": "Schematic relationships and spacing; no measured request duration, supplier row verdicts, final targets or final scores.",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Learn once. Use the learned state again.",
+      "canvas": [
+        1440,
+        960
+      ],
       "observations": {
         "partition_counts": {
           "train": 168,
           "validation": 48,
           "final": 24
         },
-        "hour_probes": [
-          {
-            "hour": -1,
-            "accepted": false
-          },
-          {
-            "hour": 0,
-            "accepted": true
-          },
-          {
-            "hour": 1.5,
-            "accepted": false
-          },
-          {
-            "hour": 23,
-            "accepted": true
-          },
-          {
-            "hour": 24,
-            "accepted": false
-          }
-        ]
+        "fitted_scaler_rows": 168,
+        "planned_rows": 24
+      }
+    },
+    {
+      "lesson": "sprint-1/02-reading-the-provided-pipeline-scaffold",
+      "stem": "reading-the-provided-pipeline-scaffold__01__en",
+      "verified_on": "2026-10-22",
+      "sha256": {
+        "svg": "35178538beb0d8ea4bf07acc95ecc703b742000ad2678d3a957c1d791fae51b8",
+        "png": "d444f68a3ae0b7901df8cb223bebf8ba92a67c43612516a846e88e2448e551fd"
       },
-      "original_svg_sha256": "11ac0c1812aaee23e626ff4cbf669bb7d85f1a85908b3a595df81f308f96cbed"
+      "kind": "schematic educational relationship diagram",
+      "limits": "Schematic relationships and spacing; no measured request duration, supplier row verdicts, final targets or final scores.",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "One record. Three different responsibilities.",
+      "canvas": [
+        1440,
+        960
+      ],
+      "observations": {
+        "partition_counts": {
+          "train": 168,
+          "validation": 48,
+          "final": 24
+        },
+        "feature_order": [
+          "temperature_c",
+          "hour",
+          "occupancy"
+        ],
+        "training_record": {
+          "row_id": "D003",
+          "temperature_c": 16.65,
+          "hour": 3,
+          "occupancy": 67,
+          "demand_kwh": 69.456248,
+          "partition": "train"
+        },
+        "planned_record": {
+          "row_id": "B00",
+          "temperature_c": 12.0,
+          "hour": 0,
+          "occupancy": 20
+        },
+        "validation_metrics_kwh": {
+          "rmse_kwh": 1.4430039250255964,
+          "mae_kwh": 1.2234272153578762
+        },
+        "fitted_scaler_rows": 168,
+        "baseline_alpha": 1.0
+      }
+    },
+    {
+      "lesson": "sprint-1/03-adding-and-validating-a-bounded-pipeline-stage",
+      "stem": "adding-and-validating-a-bounded-pipeline-stage__01__en",
+      "verified_on": "2026-10-31",
+      "sha256": {
+        "svg": "912a7daeaeea5c2f4aadb19eefbee17a21026e244cb48dc7950e64352566264f",
+        "png": "9e18d41d41b3025d751232dc6f898c83049eefd37a8f2449fadb7692e09bf297"
+      },
+      "kind": "Executed private completed-stage contract probes",
+      "limits": "Constructed probes of a completed private learner implementation. Rows are counts; no final targets, future prediction quality, timing or production calibration claim.",
+      "observations": [
+        {
+          "case": "Complete daily file",
+          "rows": 24,
+          "columns": [
+            "row_id",
+            "temperature_c",
+            "hour",
+            "occupancy"
+          ],
+          "accepted": true,
+          "reason": "Exact schema,24 unique complete identifiers",
+          "caller_unchanged": true,
+          "independent_return": true
+        },
+        {
+          "case": "Short file",
+          "rows": 23,
+          "columns": [
+            "row_id",
+            "temperature_c",
+            "hour",
+            "occupancy"
+          ],
+          "accepted": false,
+          "reason": "Planned batch needs exactly 24 rows",
+          "caller_unchanged": true,
+          "independent_return": null
+        },
+        {
+          "case": "Repeated identifier",
+          "rows": 24,
+          "columns": [
+            "row_id",
+            "temperature_c",
+            "hour",
+            "occupancy"
+          ],
+          "accepted": false,
+          "reason": "Planned batch needs unique nonblank string row_id values",
+          "caller_unchanged": true,
+          "independent_return": null
+        },
+        {
+          "case": "Unexpected column",
+          "rows": 24,
+          "columns": [
+            "row_id",
+            "temperature_c",
+            "hour",
+            "occupancy",
+            "extra"
+          ],
+          "accepted": false,
+          "reason": "Planned batch columns must be ['row_id', 'temperature_c', 'hour', 'occupancy']",
+          "caller_unchanged": true,
+          "independent_return": null
+        }
+      ],
+      "design_revision": "Real planned-file validation stage; schema/count/identity distinct from existing domains",
+      "title": "A valid row is not a complete plan.",
+      "canvas": [
+        1920,
+        1040
+      ],
+      "source_revision": "sha256:8d54242d356179b8f0acda7b58f1446015866403ff14c04ef844db32f2b82170"
+    },
+    {
+      "lesson": "sprint-1/04-explain-the-code-checkpoint",
+      "stem": "explain-the-code-checkpoint__01__en",
+      "verified_on": "2026-10-22",
+      "sha256": {
+        "svg": "6e739541d070828ddf4fd659aab6f28dcabec7795c79dc71263a3d513cc3c43d",
+        "png": "455c4e9494c6c2bcd05f339014b1a7e625a8fe7bf76dd08376bff1c9b2254996"
+      },
+      "kind": "schematic educational relationship diagram",
+      "limits": "Schematic relationships and spacing; no measured request duration, supplier row verdicts, final targets or final scores.",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Follow the write, not just the values.",
+      "canvas": [
+        1440,
+        900
+      ],
+      "observations": {
+        "neutral_numeric_table": {
+          "initial_value": 12,
+          "write_through_b": 99,
+          "alias_a_after": 99,
+          "copy_a_after": 12,
+          "copy_b_after": 99
+        },
+        "candidate_verdict_shown": false
+      }
+    },
+    {
+      "lesson": "sprint-1/05-batch-vs-real-time-inference-tradeoffs",
+      "stem": "batch-vs-real-time-inference-tradeoffs__01__en",
+      "verified_on": "2026-10-22",
+      "sha256": {
+        "svg": "c55aeb611db592f1682526ec89fa2133213320e205bee687635c3e145c0b9afe",
+        "png": "599f40ed0d164be94f6489fa101485196b8993f46dcb3b1e1a256e77635cdc43"
+      },
+      "kind": "schematic educational relationship diagram",
+      "limits": "Schematic relationships and spacing; no measured request duration, supplier row verdicts, final targets or final scores.",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "What counts as \u201cfinished\u201d?",
+      "canvas": [
+        1440,
+        960
+      ]
+    },
+    {
+      "lesson": "sprint-1/06-pipeline-extension-deliverable",
+      "stem": "pipeline-extension-deliverable__01__en",
+      "verified_on": "2026-10-31",
+      "sha256": {
+        "svg": "b9dc408a1f05901a39261a4c7f3ec795b59f1a81af94b8c3fc94c8b05c28215f",
+        "png": "8ec729b83f5fcf553679ea2cced2271c97ea9cc1e82cecd201a5390afc632bed"
+      },
+      "kind": "schematic educational relationship diagram",
+      "limits": "Schematic relationships and spacing; no measured request duration, supplier row verdicts, final targets or final scores.",
+      "design_revision": "Existing feature-domain acceptance pictured separately; validated change is new module plus integration call, not a removed guard starter.",
+      "title": "A claim needs a trail of evidence.",
+      "canvas": [
+        1440,
+        960
+      ]
+    },
+    {
+      "lesson": "sprint-2/01-why-ad-hoc-tracking-breaks-down-at-scale",
+      "stem": "why-ad-hoc-tracking-breaks-down-at-scale__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "A score needs its connections.",
+      "canvas": [
+        1440,
+        960
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "456742a26d84067995d2f7a9a7d646932479a288a1bea6397a9bf54c34367baf",
+        "png": "211d3b214d2e1d60a0bc9bcdf146a779618783cdea2b8de20d13e279bd8e8d26"
+      },
+      "observations": {
+        "illustrative_copied_score": 1.44,
+        "actual_fields": [
+          "alpha",
+          "code_revision",
+          "data_sha256",
+          "evaluation_partition",
+          "rmse_kwh",
+          "mae_kwh",
+          "model_uri"
+        ]
+      }
+    },
+    {
+      "lesson": "sprint-2/02-controls-confounders-and-decision-metrics",
+      "stem": "controls-confounders-and-decision-metrics__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Keep the test steady. Notice the large miss.",
+      "canvas": [
+        1440,
+        1060
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Illustrative errors, not new training or final-partition executions. Unit tiles encode absolute miss length in kWh; no uncertainty or forecasting-quality claim.",
+      "sha256": {
+        "svg": "0151ff3a1378680dc26a2f1ca59236b7b91c6160415f957c18b14c9c87c96fa5",
+        "png": "9a7b3c98ff3b8c711ad0881084db08c4acade7671a7d511f6e83cfab0485d5f1"
+      },
+      "observations": {
+        "kind": "explicitly illustrative arithmetic",
+        "errors_kwh": {
+          "A": [
+            2,
+            2,
+            8
+          ],
+          "B": [
+            4,
+            4,
+            4
+          ]
+        },
+        "mae_kwh": {
+          "A": 4,
+          "B": 4
+        },
+        "rmse_kwh": {
+          "A": 4.898979485566356,
+          "B": 4
+        }
+      }
+    },
+    {
+      "lesson": "sprint-2/03-building-the-five-run-experiment-matrix",
+      "stem": "building-the-five-run-experiment-matrix__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Plan the difference before measuring it.",
+      "canvas": [
+        1440,
+        960
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "7a38708a4d8c5152a2d4ac07a17f2b29921a8c8606684f1ecba4f333b0e57ced",
+        "png": "091472ef5acef5dc9147b1de0d1377e31c4f5e06db4328b04c8e4e5174caa695"
+      },
+      "observations": {
+        "plan_contract": {
+          "count": 5,
+          "distinct_positive_alphas": true,
+          "anchor": 1,
+          "partition": "validation",
+          "primary_metric": "rmse_kwh",
+          "direction": "minimize"
+        },
+        "learner_alpha_choices_shown": false,
+        "scores_shown": false
+      }
+    },
+    {
+      "lesson": "sprint-2/04-revisiting-mlflow-in-a-pipeline-context",
+      "stem": "revisiting-mlflow-in-a-pipeline-context__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Record the work while it happens.",
+      "canvas": [
+        1440,
+        1040
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "890abeebce019d18a720548a3b7047d39fc4118206fc31f99030afaf74a379b5",
+        "png": "08aa1ea03affefd70b674e5d759060434c0caf18e11fee495721b4671fa1b2be"
+      },
+      "observations": {
+        "verified_semantics": "Workspace.run configures autolog before run_pipeline, explicitly logs held-out metrics/model/reproduction, and resets hook in finally",
+        "example_auto_param": "ridge__alpha",
+        "explicit_metrics": [
+          "rmse_kwh",
+          "mae_kwh"
+        ]
+      }
     },
     {
       "lesson": "sprint-2/05-comparing-multiple-runs-systematically",
       "stem": "experiment-comparison__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Small differences need the raw records.",
+      "canvas": [
+        1440,
+        1080
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Actual author reference matrix (.2,.4,1,5,20), not learner-chosen matrix. Alpha uses log spacing; discrete observations only. Y axes and close detail are deliberately restricted and labeled. No statistical significance, cost or production-readiness inference.",
       "sha256": {
-        "png": "9fe05ee51a8cf6cb6d18511dc07483200c4252d18e260e3013467649d07ddc7f",
-        "svg": "73c31f29d805abc9b129ecaf6ce47b9ae09d06ec342f01b28c10bc9289f5ef15"
+        "svg": "851ff9236430e8737c1f7c2c4730e061f98dcebe2717bcc656516532c2fce514",
+        "png": "532b109ae4eff572c00d73ad70d9a7b0b22f4b72b3e24a7c8c61edfe6a5f9940"
       },
       "observations": {
-        "winner_run_id": "df333bf5f62a41cfab86a7ce388c334e",
+        "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
         "records": [
           {
-            "run_id": "df333bf5f62a41cfab86a7ce388c334e",
+            "run_id": "23e02c85cb044b928200d8d66459bedb",
             "alpha": 0.2,
             "rmse_kwh": 1.4354294072766183,
-            "mae_kwh": 1.2060428855281489
+            "mae_kwh": 1.2060428855281489,
+            "data_sha256": "97fd0648a8277e2ae88f90bb20389745667df3df6b363beef23787ff427e5e54",
+            "code_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+            "range_guard": "True",
+            "evaluation_partition": "validation"
           },
           {
-            "run_id": "ba5064cc86ea4b829064f1af957125ee",
+            "run_id": "69995c39d28b4764925355b96af20c25",
             "alpha": 0.4,
             "rmse_kwh": 1.4369102896132988,
-            "mae_kwh": 1.2104035025048587
+            "mae_kwh": 1.2104035025048587,
+            "data_sha256": "97fd0648a8277e2ae88f90bb20389745667df3df6b363beef23787ff427e5e54",
+            "code_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+            "range_guard": "True",
+            "evaluation_partition": "validation"
           },
           {
-            "run_id": "5bf57ad4e9004e39b46409e5dc5b231c",
+            "run_id": "81eacfa626124c559304edba53a0b5b9",
             "alpha": 1.0,
+            "rmse_kwh": 1.4430039250255964,
+            "mae_kwh": 1.2234272153578762,
+            "data_sha256": "97fd0648a8277e2ae88f90bb20389745667df3df6b363beef23787ff427e5e54",
+            "code_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+            "range_guard": "True",
+            "evaluation_partition": "validation"
+          },
+          {
+            "run_id": "9703ae995ecb431498ad3da235542eff",
+            "alpha": 5.0,
+            "rmse_kwh": 1.540519673261788,
+            "mae_kwh": 1.3080824371703947,
+            "data_sha256": "97fd0648a8277e2ae88f90bb20389745667df3df6b363beef23787ff427e5e54",
+            "code_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+            "range_guard": "True",
+            "evaluation_partition": "validation"
+          },
+          {
+            "run_id": "b373fb8ba9644dd3a8ffdfb56cd3ff4f",
+            "alpha": 20.0,
+            "rmse_kwh": 2.374985025447734,
+            "mae_kwh": 1.964563810844347,
+            "data_sha256": "97fd0648a8277e2ae88f90bb20389745667df3df6b363beef23787ff427e5e54",
+            "code_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+            "range_guard": "True",
+            "evaluation_partition": "validation"
+          }
+        ],
+        "winner_run_id": "23e02c85cb044b928200d8d66459bedb"
+      }
+    },
+    {
+      "lesson": "sprint-2/06-autologging-and-reducing-manual-tracking-overhead",
+      "stem": "autologging-and-reducing-manual-tracking-overhead__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Same predictions. Different recording work.",
+      "canvas": [
+        1440,
+        1010
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "f5dd9f3d21cc296bed19930b0c37abcd1af0b155691afb91aba78cf1835e390a",
+        "png": "d0755a6be432b954e7f71990720cb2c199cefe6fdf49ee930eaeb7c05d13d287"
+      },
+      "observations": {
+        "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+        "manual": {
+          "run_id": "fca20a1c1f544f9192dbbf2cbff585e1",
+          "params": {
+            "alpha": "1",
+            "range_guard": "True",
+            "autolog": "False",
+            "evaluation_partition": "validation",
+            "data_sha256": "97fd0648a8277e2ae88f90bb20389745667df3df6b363beef23787ff427e5e54",
+            "code_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677"
+          },
+          "metrics": {
             "rmse_kwh": 1.4430039250255964,
             "mae_kwh": 1.2234272153578762
           },
-          {
-            "run_id": "d9e1ff5e58ee4c309f38beec3251320e",
-            "alpha": 5.0,
-            "rmse_kwh": 1.540519673261788,
-            "mae_kwh": 1.3080824371703947
+          "artifacts": [
+            "reproduction"
+          ]
+        },
+        "autolog": {
+          "run_id": "81eacfa626124c559304edba53a0b5b9",
+          "params": {
+            "memory": "None",
+            "steps": "[('scale', StandardScaler()), ('ridge', Ridge(alpha=1, solver='svd'))]",
+            "transform_input": "None",
+            "verbose": "False",
+            "scale": "StandardScaler()",
+            "ridge": "Ridge(alpha=1, solver='svd')",
+            "scale__copy": "True",
+            "scale__with_mean": "True",
+            "scale__with_std": "True",
+            "ridge__alpha": "1",
+            "ridge__copy_X": "True",
+            "ridge__fit_intercept": "True",
+            "ridge__max_iter": "None",
+            "ridge__positive": "False",
+            "ridge__random_state": "None",
+            "ridge__solver": "svd",
+            "ridge__tol": "0.0001",
+            "alpha": "1",
+            "range_guard": "True",
+            "autolog": "True",
+            "evaluation_partition": "validation",
+            "data_sha256": "97fd0648a8277e2ae88f90bb20389745667df3df6b363beef23787ff427e5e54",
+            "code_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677"
           },
-          {
-            "run_id": "01387ddf53824cf4843b0b418138107e",
-            "alpha": 20.0,
-            "rmse_kwh": 2.374985025447734,
-            "mae_kwh": 1.964563810844347
-          }
-        ]
+          "metrics": {
+            "training_mean_squared_error": 2.0146064251765683,
+            "training_mean_absolute_error": 1.1428971829348318,
+            "training_r2_score": 0.994421792420971,
+            "training_root_mean_squared_error": 1.419368319068933,
+            "training_score": 0.994421792420971,
+            "rmse_kwh": 1.4430039250255964,
+            "mae_kwh": 1.2234272153578762
+          },
+          "artifacts": [
+            "estimator.html",
+            "reproduction"
+          ]
+        },
+        "added_parameter_keys": [
+          "memory",
+          "ridge",
+          "ridge__alpha",
+          "ridge__copy_X",
+          "ridge__fit_intercept",
+          "ridge__max_iter",
+          "ridge__positive",
+          "ridge__random_state",
+          "ridge__solver",
+          "ridge__tol",
+          "scale",
+          "scale__copy",
+          "scale__with_mean",
+          "scale__with_std",
+          "steps",
+          "transform_input",
+          "verbose"
+        ],
+        "added_metric_keys": [
+          "training_mean_absolute_error",
+          "training_mean_squared_error",
+          "training_r2_score",
+          "training_root_mean_squared_error",
+          "training_score"
+        ],
+        "primary_metric_delta_kwh": 0.0,
+        "prediction_max_absolute_delta_kwh": 0.0
+      }
+    },
+    {
+      "lesson": "sprint-2/07-validating-an-assistant-generated-experiment-summary",
+      "stem": "validating-an-assistant-generated-experiment-summary__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "One paragraph can contain three claims.",
+      "canvas": [
+        1440,
+        1030
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "5d88caa10af1da13ae985ddd2c35155d0b91a2c69664ec32273ccfaab6d7d4e1",
+        "png": "a5af20fbd067541dbb7e37828343d751f4b397ee012add7ae74f0700a8eae37c"
       },
-      "original_svg_sha256": "a535d5afcf5f103957cb34a7f3cc60fd60354b5ee4ac32344cb02f133ffb778d"
+      "observations": {
+        "sample_kind": "explicitly authored teaching excerpt",
+        "numeric_gate": "verify_summary",
+        "operational_cost_measurement_present": false
+      }
+    },
+    {
+      "lesson": "sprint-2/08-experiment-tracking-deliverable",
+      "stem": "experiment-tracking-deliverable__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Can the recommendation survive inspection?",
+      "canvas": [
+        1440,
+        1010
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "855aa328e1ed4e072a9aae565b17a655a364ab44827f890f548cfaf6c5a42a26",
+        "png": "76fe5247fb7037d2a96847971f7ab0c77313d7875aede6a29084fb5225555ba2"
+      },
+      "observations": {
+        "assessment_answers_shown": false,
+        "observation_counts_shown": false,
+        "field_names": [
+          "run_id",
+          "metric_name",
+          "evaluation_basis",
+          "value"
+        ]
+      }
+    },
+    {
+      "lesson": "sprint-3/01-from-which-file-is-production-to-a-registry",
+      "stem": "from-which-file-is-production-to-a-registry__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Identity, approval and selection are separate.",
+      "canvas": [
+        1440,
+        1030
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "0ab74cdeeb1a9b2a346c5689dda8c0bfa2ff72c79cfa460c13db85823f47d841",
+        "png": "b559b698faa307f47d9568b1e5f1e309f4a9cb4251c47993833e2d244fef7844"
+      },
+      "observations": {
+        "registered_model_name": "dev.linden-demand",
+        "schematic_version_labels": [
+          "A",
+          "B"
+        ],
+        "alias": "active",
+        "job_resolution": "once per batch",
+        "teaching_policy_enforcement": "helper, not intrinsic MLflow metadata"
+      }
     },
     {
       "lesson": "sprint-3/02-registering-and-promoting-a-model",
-      "stem": "model-identity__02__en",
+      "stem": "registering-and-promoting-a-model__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "One version. Three separate decisions.",
+      "canvas": [
+        1440,
+        1100
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Actual private author reference; abbreviated IDs are explicitly shown with ellipsis and full ID retained below/provenance. No UI capture. Approval stores rationale; it does not execute tests. Alias affects next job, not already-running consumers.",
       "sha256": {
-        "png": "8629eeb65767879981cd0290c636edef6b8bcc4e3955dfecc2e3d4584c5f2a52",
-        "svg": "6ca7a5e53e15b1d2ee8a82e578bb3a916f5cb744ee509d8a621e017c6b4ff84e"
+        "svg": "6480b0ded8fd8ffb973be089372406d3c1c07a87e92d7701c86d08c84d6fb420",
+        "png": "fa14c87f71426ae43ce90ddbd5950be227ae82bd5f3108331e0d46b778acbd13"
       },
       "observations": {
-        "selected_run_id": "df333bf5f62a41cfab86a7ce388c334e",
-        "registered_run_id": "df333bf5f62a41cfab86a7ce388c334e",
+        "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+        "selected_run_id": "23e02c85cb044b928200d8d66459bedb",
+        "registered_source_run_id": "23e02c85cb044b928200d8d66459bedb",
         "registered_version": "1",
-        "inference": {
-          "complete_within_60s": true,
-          "elapsed_seconds": 0.008634124998934567,
-          "input_sha256": "5b74deb237ea9a085666ab0b3f865db8c7c996b935b38b24e829567d89142ee6",
-          "model": "dev.linden-demand",
+        "pending_error": "Only approved versions may be active",
+        "registry_tags": {
+          "validation_status": "approved",
+          "validation_evidence": "Actual guarded validation reference; contract established in runtime verification"
+        },
+        "batch": {
           "resolved_version": "1",
+          "run_id": "23e02c85cb044b928200d8d66459bedb",
+          "model": "dev.linden-demand",
           "rows": 24,
-          "rows_per_second": 2779.667887940185,
-          "run_id": "df333bf5f62a41cfab86a7ce388c334e"
+          "elapsed_seconds": 0.007010333007201552,
+          "rows_per_second": 3423.5178236676284,
+          "complete_within_60s": true,
+          "input_sha256": "5b74deb237ea9a085666ab0b3f865db8c7c996b935b38b24e829567d89142ee6"
         },
         "chain_matches": true
+      }
+    },
+    {
+      "lesson": "sprint-3/03-recognising-drift-and-choosing-a-response",
+      "stem": "operations-drift__01__en",
+      "verified_on": "2026-10-28",
+      "source": "Executed synthetic author reference; visual-observations.json retains raw observations",
+      "interpretation_limit": "Raw distances / thresholds; not a quality score or probability.",
+      "observations": {
+        "distances": {
+          "temperature_c": 7.999999999999998,
+          "hour": 0.0,
+          "occupancy": 0.0,
+          "prediction_kwh": 5.596025476246922
+        },
+        "ratios": {
+          "temperature_c": 2.666666666666666,
+          "hour": 0.0,
+          "occupancy": 0.0,
+          "prediction_kwh": 1.1192050952493844
+        },
+        "policy": {
+          "min_rows": 96,
+          "min_labels": 32,
+          "temperature_c": 3.0,
+          "hour": 3.0,
+          "occupancy": 8.0,
+          "prediction_kwh": 5.0,
+          "max_rmse_kwh": 3.0,
+          "min_improvement_kwh": 0.5
+        }
       },
-      "original_svg_sha256": "cf6295b97d71126620a4f727999a05e35b7141080f351680df3e2a824081ebbd"
+      "sha256": {
+        "svg": "004a2b6f2deef08bbaa53783b42ae0edc23321b9b14d6dc3bec4081b75e5ac8c",
+        "png": "43afcf6b0b82ab3dcb360eb02a9133d9733ed0d9e6555f80c9a6ba3ced4d4323"
+      },
+      "kind": "measured_chart",
+      "limits": "Raw distances / thresholds; not a quality score or probability.",
+      "title": "Distribution distance / declared threshold",
+      "canvas": [
+        740.343906,
+        323.000781
+      ]
+    },
+    {
+      "lesson": "sprint-3/04-from-a-monitoring-signal-to-an-evaluated-candidate",
+      "stem": "operations-comparison__01__en",
+      "verified_on": "2026-10-28",
+      "source": "Executed synthetic author reference; visual-observations.json retains raw observations",
+      "interpretation_limit": "Actual errors on the same 48 feedback validation IDs; no final rows.",
+      "observations": {
+        "rmse_kwh": [
+          11.829982522843249,
+          0.834431422236263
+        ],
+        "evaluation_rows": [
+          "linden-feedback-000",
+          "linden-feedback-001",
+          "linden-feedback-010",
+          "linden-feedback-011",
+          "linden-feedback-020",
+          "linden-feedback-021",
+          "linden-feedback-030",
+          "linden-feedback-031",
+          "linden-feedback-040",
+          "linden-feedback-041",
+          "linden-feedback-050",
+          "linden-feedback-051",
+          "linden-feedback-060",
+          "linden-feedback-061",
+          "linden-feedback-070",
+          "linden-feedback-071",
+          "linden-feedback-080",
+          "linden-feedback-081",
+          "linden-feedback-090",
+          "linden-feedback-091",
+          "linden-feedback-100",
+          "linden-feedback-101",
+          "linden-feedback-110",
+          "linden-feedback-111",
+          "linden-feedback-120",
+          "linden-feedback-121",
+          "linden-feedback-130",
+          "linden-feedback-131",
+          "linden-feedback-140",
+          "linden-feedback-141",
+          "linden-feedback-150",
+          "linden-feedback-151",
+          "linden-feedback-160",
+          "linden-feedback-161",
+          "linden-feedback-170",
+          "linden-feedback-171",
+          "linden-feedback-180",
+          "linden-feedback-181",
+          "linden-feedback-190",
+          "linden-feedback-191",
+          "linden-feedback-200",
+          "linden-feedback-201",
+          "linden-feedback-210",
+          "linden-feedback-211",
+          "linden-feedback-220",
+          "linden-feedback-221",
+          "linden-feedback-230",
+          "linden-feedback-231"
+        ],
+        "policy": {
+          "min_rows": 96,
+          "min_labels": 32,
+          "temperature_c": 3.0,
+          "hour": 3.0,
+          "occupancy": 8.0,
+          "prediction_kwh": 5.0,
+          "max_rmse_kwh": 3.0,
+          "min_improvement_kwh": 0.5
+        }
+      },
+      "sha256": {
+        "svg": "921ab031451b4fb89f3fe938d8713016343d2eef73a10ca0ffebd98dde5d6167",
+        "png": "0cfeec2316506f984e96c7c5a9469fc9c2bc427dd5bc2b9fa4e1038c1ba4f334"
+      },
+      "kind": "measured_chart",
+      "limits": "Actual errors on the same 48 feedback validation IDs; no final rows.",
+      "title": "Incumbent and candidate validation RMSE",
+      "canvas": [
+        737.165781,
+        323.000781
+      ]
+    },
+    {
+      "lesson": "sprint-3/05-rolling-back-a-bad-model-version",
+      "stem": "rolling-back-a-bad-model-version__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Move the pointer. Preserve the models.",
+      "canvas": [
+        1440,
+        1080
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "4a0b65e1260e1a7dcc7798cf9860af053d5c0c99f34671f031e588e5495606e1",
+        "png": "0a9ab43a015174d35e8f8af8f69f5c23330bdb120f884ebf09921ad2b81a98f8"
+      },
+      "observations": {
+        "candidate_specific_scores_or_ids_shown": false,
+        "operation": "active alias reassignment",
+        "preserved": [
+          "prior artifact",
+          "trial artifact",
+          "earlier batch evidence"
+        ],
+        "event_fields": [
+          "previous_version",
+          "new_version",
+          "run_id",
+          "timestamp_utc",
+          "reason"
+        ]
+      }
+    },
+    {
+      "lesson": "sprint-3/06-registry-lifecycle-deliverable",
+      "stem": "registry-lifecycle-deliverable__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Trace the decision through to its replay.",
+      "canvas": [
+        1440,
+        1050
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "6accfe63be57614ca512903c3395895ca81aee99f1deda1a53551bc18c3cbbbd",
+        "png": "3ca037b12fe9f53911bd35f5ec250395603c331423ab3654668ff0c44732ad31"
+      },
+      "observations": {
+        "assessment_answers_shown": false,
+        "unclassified_version_count": 3,
+        "requirements": [
+          "approval evidence",
+          "revised client threshold",
+          "source metrics",
+          "alias event",
+          "new batch identity",
+          "recorded recipe replay"
+        ],
+        "state_isolation": "explicit Harbor state; main cumulative selection preserved"
+      }
+    },
+    {
+      "lesson": "sprint-4/01-what-full-reproducibility-requires",
+      "stem": "what-full-reproducibility-requires__01__en",
+      "verified_on": "2026-10-23",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "A fingerprint cannot rebuild a missing file.",
+      "canvas": [
+        1440,
+        1080
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer. Missing fitted-model bytes block loading the original artifact; retraining may remain possible when source/data/configuration/environment are recoverable. Retain the fitted artifact as well as the recipe.",
+      "sha256": {
+        "svg": "ca735b20c460b33d7a5005ca321e3631dee0a8a07b72694db9b6e1ac7d6e2b7b",
+        "png": "516ed30283aa38d53dde6b12947c47f72039b3b3c643de70ab40f97d6dd4cedd"
+      },
+      "observations": {
+        "required_connected_elements": [
+          "Code",
+          "Data",
+          "Configuration",
+          "Environment",
+          "Model artifact"
+        ],
+        "source_archive": "reproduction/source.tar.gz",
+        "manifest": "reproduction/manifest.json",
+        "config": "reproduction/config.json",
+        "hash_is_recovery_content": false,
+        "missing_model_bytes": "explicit hypothetical loss example, not observed reference artifact deletion"
+      },
+      "asset_revised_on": "2026-10-25",
+      "semantic_correction": "Lost fitted-model bytes block original-artifact loading; intact recipe ingredients may still permit retraining. The config.json subtitle names alpha, guard and logging; evaluation partition is retained in manifest.json.",
+      "relocated_on": "2026-10-28",
+      "label_revision": "28 October 2026: selected data-aware run recovers indexed training-data.csv, including feedback; earlier geometry retained."
+    },
+    {
+      "lesson": "sprint-4/02-integrating-pipeline-tracking-and-registry",
+      "stem": "integrating-pipeline-tracking-and-registry__01__en",
+      "verified_on": "2026-10-24",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Carry the identity across every boundary.",
+      "canvas": [
+        1440,
+        1080
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "52b4a4391693c08cc1a1129746b118d8346f5d0b375a2edd20305c3eec89c44b",
+        "png": "052e3bc4a7bfa08b63418c9853c0f50f5af6c381ffb807bae0d75c6d9b4e1516"
+      },
+      "observations": {
+        "kind": "schematic identity relation, no faulty draft field identified",
+        "source_run_symbol": "R",
+        "version_symbol": "V",
+        "invalid_candidate_condition_shown": false,
+        "candidate_stop": "conditional failed validation preserves pending record and prior active selection"
+      }
+    },
+    {
+      "lesson": "sprint-4/03-proving-the-selected-serving-path-uses-the-active-version",
+      "stem": "proving-the-selected-serving-path-uses-the-active-version__01__en",
+      "verified_on": "2026-10-24",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Which model served these exact rows?",
+      "canvas": [
+        1440,
+        1120
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "c7dab0dee51f83c4d27265ed94edec964f039cc4ddf7bc5d769443fdc1f2305c",
+        "png": "a9b045326c7f43a02090534c07444fd29a4de957dd0573c836aa89e5cdf8995e"
+      },
+      "observations": {
+        "kind": "schematic execution; A/B/R are illustrative identities",
+        "planned_rows": 24,
+        "deadline_seconds": 60,
+        "time_includes": [
+          "resolve alias",
+          "load model",
+          "predict",
+          "write complete CSV"
+        ],
+        "time_excludes": [
+          "environment installation",
+          "training"
+        ],
+        "measured_seconds_shown": false,
+        "row_id_examples": [
+          "B00",
+          "B01",
+          "B23"
+        ]
+      }
+    },
+    {
+      "lesson": "sprint-4/04-setup-run-and-expected-evidence-instructions",
+      "stem": "setup-run-and-expected-evidence-instructions__01__en",
+      "verified_on": "2026-10-24",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Carry the recipe, not the old workspace.",
+      "canvas": [
+        1440,
+        1180
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "6ae874c445c43f47e63c3e12cc714ce4b4024db615fd7b6f4a55598483e7014b",
+        "png": "a3ba9bb151159f13888937167ef712e8c53fd8e8090f5da9fd3149999255ae20"
+      },
+      "observations": {
+        "portable_files": [
+          "manifest.json",
+          "source.tar.gz",
+          "config.json",
+          "environment.txt",
+          "model/",
+          "bundle.json"
+        ],
+        "supplementary_files": [
+          "HANDOFF.md",
+          "explained extension and retained checks"
+        ],
+        "four_locations": [
+          "original project",
+          "canonical export",
+          "receiving source with new .venv",
+          "receiving tracking/output state"
+        ],
+        "interpreter_bytes_bundled": false,
+        "receiver_uses_original_store": false
+      },
+      "reviewed_on": "2026-10-31",
+      "revision_note": "Package overview now identifies the separately indexed actual selected training snapshot and validated application release descriptor."
     },
     {
       "lesson": "sprint-4/05-proving-the-pipeline-reproduces",
       "stem": "recovery-checks__01__en",
+      "verified_on": "2026-10-24",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Three clean boundaries. Three separate checks.",
+      "canvas": [
+        1440,
+        1220
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Actual root-authored clean receiving proof, not learner/classroom/human signoff. Numerical ruler shows repeated validation difference in kWh, not prediction error or statistical uncertainty. Batch timing excludes setup/training. Physical spacing is schematic.",
       "sha256": {
-        "png": "368ca4bf5fa32e440d51c686b68063997d1c22bfb7e5e05155be2ee2c38fba44",
-        "svg": "7694567dd0673d26917ca27d685abfbe5adce8dd883ac268d337e9f0a6d20543"
+        "svg": "c7ff5259c05e91ce2c5a03092f8591df9779483f675fd213002ddba7a1534996",
+        "png": "a034573caf2335068b7077b084bd51cc9a4616b7d0cb56a5cc65de268c004f9f"
       },
       "observations": {
-        "checks": {
-          "Recipe: config": true,
-          "Recipe: data": true,
-          "Recipe: environment": true,
-          "Recipe: partition": true,
-          "Recipe: source": true,
-          "Report: overall recovery accepted": true,
-          "Report: batch deadline accepted": true,
-          "Lineage: batch uses reproduced run": true,
-          "Lineage: batch resolves recovered version": true,
-          "Output: recorded row count matches returned rows": true,
-          "Output: row ID order and uniqueness": true,
-          "Output: 24 planned and 24 returned rows": true,
-          "Output: finite predictions (kWh)": true,
-          "Batch: 0.007443 seconds \u2264 60 seconds": true,
-          "Validation: RMSE delta within tolerance": true
+        "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+        "data_sha256": "97fd0648a8277e2ae88f90bb20389745667df3df6b363beef23787ff427e5e54",
+        "python": "3.12.13",
+        "config": {
+          "alpha": 0.2,
+          "autolog": true,
+          "range_guard": true
         },
-        "passed": true,
-        "absolute_rmse_delta": 0.0,
+        "partition": "validation",
+        "original_run_id": "8e7a96bae68e442992fe3728ddb074ac",
+        "reproduced_run_id": "0c33c46d5c22421abc3816f9d42af4e9",
+        "registered_version": "1",
+        "registered_source_run": "0c33c46d5c22421abc3816f9d42af4e9",
+        "original_validation_rmse_kwh": 1.4354294072766183,
+        "repeated_validation_rmse_kwh": 1.4354294072766183,
+        "delta": 0.0,
         "tolerance": 1e-06,
-        "planned_rows": 24,
-        "prediction_rows": 24
+        "elapsed": 0.008714624913409352,
+        "throughput_rows_per_second": 2753.9911629553626,
+        "raw_planned": [
+          {
+            "row_id": "B00",
+            "temperature_c": 12.0,
+            "hour": 0,
+            "occupancy": 20
+          },
+          {
+            "row_id": "B01",
+            "temperature_c": 12.1,
+            "hour": 1,
+            "occupancy": 21
+          },
+          {
+            "row_id": "B02",
+            "temperature_c": 12.2,
+            "hour": 2,
+            "occupancy": 22
+          },
+          {
+            "row_id": "B03",
+            "temperature_c": 12.3,
+            "hour": 3,
+            "occupancy": 23
+          },
+          {
+            "row_id": "B04",
+            "temperature_c": 12.4,
+            "hour": 4,
+            "occupancy": 24
+          },
+          {
+            "row_id": "B05",
+            "temperature_c": 12.5,
+            "hour": 5,
+            "occupancy": 25
+          },
+          {
+            "row_id": "B06",
+            "temperature_c": 12.6,
+            "hour": 6,
+            "occupancy": 26
+          },
+          {
+            "row_id": "B07",
+            "temperature_c": 12.7,
+            "hour": 7,
+            "occupancy": 27
+          },
+          {
+            "row_id": "B08",
+            "temperature_c": 12.8,
+            "hour": 8,
+            "occupancy": 28
+          },
+          {
+            "row_id": "B09",
+            "temperature_c": 12.9,
+            "hour": 9,
+            "occupancy": 29
+          },
+          {
+            "row_id": "B10",
+            "temperature_c": 13.0,
+            "hour": 10,
+            "occupancy": 30
+          },
+          {
+            "row_id": "B11",
+            "temperature_c": 13.1,
+            "hour": 11,
+            "occupancy": 31
+          },
+          {
+            "row_id": "B12",
+            "temperature_c": 13.2,
+            "hour": 12,
+            "occupancy": 32
+          },
+          {
+            "row_id": "B13",
+            "temperature_c": 13.3,
+            "hour": 13,
+            "occupancy": 33
+          },
+          {
+            "row_id": "B14",
+            "temperature_c": 13.4,
+            "hour": 14,
+            "occupancy": 34
+          },
+          {
+            "row_id": "B15",
+            "temperature_c": 13.5,
+            "hour": 15,
+            "occupancy": 35
+          },
+          {
+            "row_id": "B16",
+            "temperature_c": 13.6,
+            "hour": 16,
+            "occupancy": 36
+          },
+          {
+            "row_id": "B17",
+            "temperature_c": 13.7,
+            "hour": 17,
+            "occupancy": 37
+          },
+          {
+            "row_id": "B18",
+            "temperature_c": 13.8,
+            "hour": 18,
+            "occupancy": 38
+          },
+          {
+            "row_id": "B19",
+            "temperature_c": 13.9,
+            "hour": 19,
+            "occupancy": 39
+          },
+          {
+            "row_id": "B20",
+            "temperature_c": 14.0,
+            "hour": 20,
+            "occupancy": 40
+          },
+          {
+            "row_id": "B21",
+            "temperature_c": 14.1,
+            "hour": 21,
+            "occupancy": 41
+          },
+          {
+            "row_id": "B22",
+            "temperature_c": 14.2,
+            "hour": 22,
+            "occupancy": 42
+          },
+          {
+            "row_id": "B23",
+            "temperature_c": 14.3,
+            "hour": 23,
+            "occupancy": 43
+          }
+        ],
+        "raw_predictions": [
+          {
+            "row_id": "B00",
+            "prediction_kwh": 47.539756281597285
+          },
+          {
+            "row_id": "B01",
+            "prediction_kwh": 48.31841399256613
+          },
+          {
+            "row_id": "B02",
+            "prediction_kwh": 49.09707170353497
+          },
+          {
+            "row_id": "B03",
+            "prediction_kwh": 49.87572941450381
+          },
+          {
+            "row_id": "B04",
+            "prediction_kwh": 50.65438712547265
+          },
+          {
+            "row_id": "B05",
+            "prediction_kwh": 51.433044836441496
+          },
+          {
+            "row_id": "B06",
+            "prediction_kwh": 52.21170254741033
+          },
+          {
+            "row_id": "B07",
+            "prediction_kwh": 52.99036025837918
+          },
+          {
+            "row_id": "B08",
+            "prediction_kwh": 53.76901796934801
+          },
+          {
+            "row_id": "B09",
+            "prediction_kwh": 54.54767568031686
+          },
+          {
+            "row_id": "B10",
+            "prediction_kwh": 55.3263333912857
+          },
+          {
+            "row_id": "B11",
+            "prediction_kwh": 56.104991102254544
+          },
+          {
+            "row_id": "B12",
+            "prediction_kwh": 56.88364881322338
+          },
+          {
+            "row_id": "B13",
+            "prediction_kwh": 57.662306524192225
+          },
+          {
+            "row_id": "B14",
+            "prediction_kwh": 58.44096423516107
+          },
+          {
+            "row_id": "B15",
+            "prediction_kwh": 59.219621946129905
+          },
+          {
+            "row_id": "B16",
+            "prediction_kwh": 59.99827965709875
+          },
+          {
+            "row_id": "B17",
+            "prediction_kwh": 60.77693736806759
+          },
+          {
+            "row_id": "B18",
+            "prediction_kwh": 61.55559507903643
+          },
+          {
+            "row_id": "B19",
+            "prediction_kwh": 62.33425279000527
+          },
+          {
+            "row_id": "B20",
+            "prediction_kwh": 63.11291050097412
+          },
+          {
+            "row_id": "B21",
+            "prediction_kwh": 63.89156821194295
+          },
+          {
+            "row_id": "B22",
+            "prediction_kwh": 64.6702259229118
+          },
+          {
+            "row_id": "B23",
+            "prediction_kwh": 65.44888363388064
+          }
+        ],
+        "independent_checks": {
+          "rows": 24,
+          "unique_ids": true,
+          "same_order": true,
+          "finite": true,
+          "input_hash": true,
+          "job_source_version": true,
+          "deadline": true,
+          "throughput": true
+        },
+        "clean_provenance": {
+          "new_source": true,
+          "new_environment": true,
+          "new_state": true,
+          "original_store_unavailable_during_execution": true,
+          "original_store_restored": true,
+          "source_and_sys_prefix_asserted_during_isolation": true,
+          "exact_taught_isolation_script": true,
+          "python_patch": "3.12.13"
+        },
+        "isolation_output_sha256": "f4f0c08de818840728be7294b731a9c75de90a463c012a18c427afcfd60da60f",
+        "private_raw_observations_sha256": "3297b46113ee5fcd52ac5c4e78072172d1753cbaf906f4fe05e866bdf9db918e",
+        "canonical_index_sha256": "b73a95541a57c07480545b5e7e758acbbdfce921365458976cba1fa5d23febc5",
+        "new_manifest_sha256": "a9bf6dc052e806a7c55929c475558ee06badb12309eaa1cfec4d270209cd0015",
+        "scope": "Actual author reference from root primary rehearsal, with raw-manifest/metric/output comparison and retained isolation assertions. Full path/command provenance stays in the private author record. Not learner/classroom/human signoff."
+      }
+    },
+    {
+      "lesson": "sprint-4/06-reproducible-pipeline-deliverable",
+      "stem": "reproducible-pipeline-deliverable__01__en",
+      "verified_on": "2026-10-24",
+      "design_revision": "teaching-first editorial redesign",
+      "title": "Find the first failed boundary.",
+      "canvas": [
+        1440,
+        1170
+      ],
+      "kind": "editable educational relationship diagram with actual or explicitly illustrative evidence",
+      "source_revision": "sha256:f2d5aea5ab76d0ecad8aa77eeac3bf279e439dffe315441616467a57db791677",
+      "limits": "Schematic relationship geometry; no UI capture, final-target access, measured serving-cost claim or assessment answer.",
+      "sha256": {
+        "svg": "f1e3cdea8daf394e8728a8460cb37b2e1790b997547c3298f359c23208ad0418",
+        "png": "18bef53cf5663b68c00f24584f4f7da6d05232c278edbc66eb135a42b579fc19"
       },
-      "original_svg_sha256": "d1498d3c0396ba3b3cb7bdff5daf91747fd1b724580eba470e8d4067f239da8d"
+      "observations": {
+        "assessment_fault_file_shown": false,
+        "failed_layer_shown": false,
+        "repair_target_shown": false,
+        "ordered_acceptance_layers": [
+          "integrity",
+          "recipe",
+          "repeated validation evaluation",
+          "delivered output"
+        ],
+        "proof_reuse_condition": "same indexed package and applicable complete earlier clean-state proof",
+        "final_metric_or_alpha_shown": false
+      }
     }
   ],
   "published_svg_formatting": "Trailing line whitespace normalized after export; XML structure, normalized attribute values and text unchanged."

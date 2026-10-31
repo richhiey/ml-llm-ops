@@ -66,14 +66,15 @@ class Workspace:
         mlflow.set_tracking_uri(self.uri)
         mlflow.set_registry_uri(self.uri)
 
-    def run(self, config=Config(), name="baseline", partition="validation"):
+    def run(self, config=Config(), name="baseline", partition="validation", data_path=None):
+        snapshot = Path(data_path or DATA / "demand-v1.csv").resolve()
         self.connect()
         mlflow.sklearn.autolog(disable=not config.autolog, log_models=False, silent=True)
         try:
             with mlflow.start_run(experiment_id=self.experiment_id, run_name=name) as run:
-                model, metrics, frame = run_pipeline(config, partition=partition)
+                model, metrics, frame = run_pipeline(config, data_path=snapshot, partition=partition)
                 mlflow.log_params({**asdict(config), "evaluation_partition": partition,
-                                   "data_sha256": sha256(DATA / "demand-v1.csv"), "code_revision": code_revision()})
+                                   "data_sha256": sha256(snapshot), "code_revision": code_revision()})
                 mlflow.log_metrics(metrics)
                 sample = frame.loc[frame.partition == partition, FEATURES].iloc[:2]
                 info = mlflow.sklearn.log_model(model, name="model", signature=infer_signature(sample, model.predict(sample)),
@@ -82,28 +83,35 @@ class Workspace:
                 evidence_dir.mkdir(parents=True)
                 manifest = {"run_id": run.info.run_id, "config": asdict(config), "metrics": metrics,
                             "evaluation_partition": partition, "code_revision": code_revision(),
-                            "data_sha256": sha256(DATA / "demand-v1.csv"), "environment": environment(),
+                            "data_sha256": sha256(snapshot), "data_artifact": "training-data.csv", "environment": environment(),
                             "model_uri": info.model_uri, "tolerance_rmse_kwh": TOLERANCE,
                             "command": f"uv run linden-mlops train --state fresh-state --alpha {config.alpha}" +
                                        (" --range-guard" if config.range_guard else "") +
-                                       (" --autolog" if config.autolog else "") + f" --partition {partition}"}
+                                       (" --autolog" if config.autolog else "") + f" --partition {partition} --data training-data.csv"}
+                import shutil
+                shutil.copy2(snapshot, evidence_dir / "training-data.csv")
                 write_json(evidence_dir / "manifest.json", manifest)
                 write_json(evidence_dir / "config.json", asdict(config))
                 (evidence_dir / "environment.txt").write_text("\n".join(sorted(f"{d.metadata['Name']}=={d.version}" for d in importlib.metadata.distributions())) + "\n")
                 with tarfile.open(evidence_dir / "source.tar.gz", "w:gz") as bundle:
-                    for file in sorted(set(source_files() + [ROOT / "README.md", ROOT / ".gitignore", ROOT / ".gitattributes"] + list(ROOT.glob("configs/*.json")) + list(ROOT.glob("tests/*.py")) + list(ROOT.glob("docs/*.md")) + list(ROOT.glob("examples/*.py")))):
+                    # Runtime and ordinary regression tests travel together.
+                    # Only application inputs and code belong to the runtime package.
+                    support = [ROOT / name for name in ["README.md", ".gitignore", ".gitattributes"]]
+                    for file in sorted(set(source_files() + support + list(ROOT.glob("configs/*.json")) + list(ROOT.glob("tests/**/*.py")) + list(ROOT.glob("docs/*.md")))):
+                        if not file.is_file():
+                            continue
                         bundle.add(file, arcname=str(file.relative_to(ROOT)))
                 mlflow.log_artifacts(str(evidence_dir), artifact_path="reproduction")
                 mlflow.set_tags({"primary_metric": "rmse_kwh", "model_uri": info.model_uri,
-                                 "comparison_group": "demand-v1-validation" if partition == "validation" else "final-holdout"})
+                                 "comparison_group": ("demand-v1-validation" if sha256(snapshot) == sha256(DATA / "demand-v1.csv") else "feedback-validation") if partition == "validation" else "final-holdout"})
         finally:
             mlflow.sklearn.autolog(disable=True)
         return manifest
 
 
-def run_matrix(workspace, range_guard=True, autolog=False):
+def run_matrix(workspace, range_guard=True, autolog=False, alphas=None):
     return [workspace.run(Config(alpha=a, range_guard=range_guard, autolog=autolog), name=f"alpha-{a}")
-            for a in [0.01, 0.1, 1.0, 10.0, 100.0]]
+            for a in (alphas if alphas is not None else [0.01, 0.1, 1.0, 10.0, 100.0])]
 
 
 def export_runs(workspace):
@@ -156,26 +164,44 @@ def activate(workspace, version, reason):
     return event
 
 
-def batch_predict(workspace, input_path=None, output_name="batch"):
-    """Resolve alias once and pin its version for this job; measure end-to-end completion."""
+def batch_predict(workspace, input_path=None, output_name="batch", *, model_uri=None):
+    """Deliver one named job from an explicit model or one pinned active version."""
+    if not output_name or Path(output_name).name != output_name or output_name in {'.', '..'}:
+        raise ValueError('Batch output name must be a simple filename stem')
+    csv_path = workspace.path / f'{output_name}.csv'
+    metadata_path = workspace.path / f'{output_name}.json'
+    if csv_path.exists() or metadata_path.exists():
+        raise ValueError('Batch output already exists; choose a new job name and retain prior evidence')
     workspace.connect()
     start = time.perf_counter()
-    mv = workspace.client.get_model_version_by_alias(MODEL_NAME, "active")
-    run = workspace.client.get_run(mv.run_id)
-    config = Config(alpha=float(run.data.params["alpha"]), range_guard=run.data.params["range_guard"] == "True")
-    inputs = pd.read_csv(input_path or DATA / "batch-v1.csv")
-    if "row_id" not in inputs or inputs.row_id.duplicated().any() or inputs.row_id.isna().any():
-        raise ValueError("Batch needs unique complete row_id values")
+    if model_uri is None:
+        mv = workspace.client.get_model_version_by_alias(MODEL_NAME, 'active')
+        run_id, version = mv.run_id, str(mv.version)
+        model_uri = f'models:/{MODEL_NAME}/{version}'
+    else:
+        if not model_uri.startswith('models:/') or '/' in model_uri[len('models:/'):]:
+            raise ValueError('Explicit model URI must identify one logged model: models:/MODEL_ID')
+        logged = workspace.client.get_logged_model(model_uri[len('models:/'):])
+        run_id, version = logged.source_run_id, None
+    run = workspace.client.get_run(run_id)
+    config = Config(alpha=float(run.data.params['alpha']), range_guard=run.data.params['range_guard'] == 'True')
+    source = Path(input_path or DATA / 'batch-v1.csv').resolve()
+    inputs = pd.read_csv(source)
+    if 'row_id' not in inputs or inputs.row_id.duplicated().any() or inputs.row_id.isna().any():
+        raise ValueError('Batch needs unique complete row_id values')
     features = preprocess(inputs, config)
-    model = mlflow.sklearn.load_model(f"models:/{MODEL_NAME}/{mv.version}")
-    output = inputs[["row_id"]].copy()
-    output["prediction_kwh"] = model.predict(features)
-    output.to_csv(workspace.path / f"{output_name}.csv", index=False)
+    model = mlflow.sklearn.load_model(model_uri)
+    output = inputs[['row_id']].copy()
+    output['prediction_kwh'] = model.predict(features)
+    output.to_csv(csv_path, index=False)
     seconds = time.perf_counter() - start
-    evidence = {"resolved_version": str(mv.version), "run_id": mv.run_id, "model": MODEL_NAME,
-                "rows": len(output), "elapsed_seconds": seconds, "rows_per_second": len(output) / seconds,
-                "complete_within_60s": seconds <= 60, "input_sha256": sha256(input_path or DATA / "batch-v1.csv")}
-    write_json(workspace.path / f"{output_name}.json", evidence)
+    evidence = {'resolved_version': version, 'run_id': run_id, 'model': MODEL_NAME if version else None,
+                'model_uri': model_uri, 'input_path': str(source),
+                'serving_code_revision': code_revision(),
+                'completed_at': datetime.now(timezone.utc).isoformat(),
+                'rows': len(output), 'elapsed_seconds': seconds, 'rows_per_second': len(output) / seconds,
+                'complete_within_60s': seconds <= 60, 'input_sha256': sha256(source)}
+    write_json(metadata_path, evidence)
     return output, evidence
 
 
@@ -183,14 +209,15 @@ def reproduce(workspace, run_id, destination):
     """Fail before rerun if loaded source/data/lock/runtime differ; compare like metrics."""
     local = Path(workspace.client.download_artifacts(run_id, "reproduction/manifest.json"))
     old = json.loads(local.read_text())
-    if old["code_revision"] != code_revision() or old["data_sha256"] != sha256(DATA / "demand-v1.csv"):
+    snapshot = Path(workspace.client.download_artifacts(run_id, "reproduction/training-data.csv")) if old.get("data_artifact") else DATA / "demand-v1.csv"
+    if old["code_revision"] != code_revision() or old["data_sha256"] != sha256(snapshot):
         raise ValueError("Restore recorded source and data before reproduction")
     if old["environment"] != environment():
         raise ValueError("Restore recorded Python/package/lock environment before reproduction")
     if Path(destination).exists():
         raise ValueError("Reproduction destination must not exist")
     fresh = Workspace(destination)
-    result = fresh.run(Config(**old["config"]), name="reproduced", partition=old["evaluation_partition"])
+    result = fresh.run(Config(**old["config"]), name="reproduced", partition=old["evaluation_partition"], data_path=snapshot)
     delta = abs(result["metrics"]["rmse_kwh"] - old["metrics"]["rmse_kwh"])
     report = {"original_run_id": run_id, "reproduced_run_id": result["run_id"], "rmse_delta": delta,
               "tolerance": TOLERANCE, "passed": delta <= TOLERANCE, "lineage_matched": True}
@@ -205,10 +232,10 @@ def verify_summary(rows, recommended_run_id):
     if not set(required).issubset(rows.columns) or rows[required].isna().any().any():
         raise ValueError("Selected run evidence is missing required fields")
     group = rows.copy()
-    if (len(group) < 5 or group.run_id.duplicated().any()
-            or group.alpha.astype(float).nunique() < 5):
-        raise ValueError("Select 5+ unique runs with 5+ distinct alpha configurations")
-    if (not group.comparison_group.eq("demand-v1-validation").all()
+    if (group.empty or group.run_id.duplicated().any()
+            or group.alpha.astype(float).nunique() != len(group)):
+        raise ValueError("Select unique runs with distinct alpha configurations")
+    if (group.comparison_group.nunique() != 1
             or not group.evaluation_partition.eq("validation").all()
             or not group.range_guard.astype(str).eq("True").all()):
         raise ValueError("Select only guarded validation runs; label excluded runs separately")

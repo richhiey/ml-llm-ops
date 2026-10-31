@@ -1,1 +1,64 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300"><defs><marker id="a" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="#17482E"/></marker></defs><rect width="1200" height="300" fill="#ECEBE4"/><g font-family="sans-serif"><text x="36" y="53" font-size="28" fill="#17482E" font-weight="bold">Linden: follow the evidence</text><rect x="36.0" y="105" width="360.0" height="96" rx="8" fill="#FFFFFF" stroke="#27784C" stroke-width="2"/><text x="216.0" y="159" font-size="21" text-anchor="middle" fill="#0A0A0A">Pipeline execution</text><path d="M396.0 153 L420.0 153" stroke="#17482E" stroke-width="2" marker-end="url(#a)"/><rect x="420.0" y="105" width="360.0" height="96" rx="8" fill="#FFFFFF" stroke="#27784C" stroke-width="2"/><text x="600.0" y="159" font-size="21" text-anchor="middle" fill="#0A0A0A">MLflow run</text><path d="M780.0 153 L804.0 153" stroke="#17482E" stroke-width="2" marker-end="url(#a)"/><rect x="804.0" y="105" width="360.0" height="96" rx="8" fill="#E8FFBB" stroke="#27784C" stroke-width="2"/><text x="984.0" y="159" font-size="21" text-anchor="middle" fill="#0A0A0A">Model + lineage</text><text x="36" y="263" font-size="20" fill="#27784C">Input and decision must connect to observable evidence.</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="title desc">
+<title id="title">Record the work while it happens.</title><desc id="desc">Inside one Workspace.run execution, the sklearn hook is enabled before fit; fitting emits estimator settings and training diagnostics. Explicit held-out evaluation logs rmse_kwh and mae_kwh, while explicit model/recovery writes retain artifacts. All records share one run identifier; the hook is reset afterward.</desc>
+<defs>
+<marker id="arrow-forest" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#17482E"/></marker>
+<marker id="arrow-green" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#27784C"/></marker>
+<marker id="arrow-gray" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#D0D0C4"/></marker>
+<marker id="arrow-white" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#FFFFFF"/></marker>
+<marker id="arrow-red" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B91C1C"/></marker>
+<marker id="arrow-amber" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B45309"/></marker>
+</defs>
+<rect width="1440" height="1040" fill="#ECEBE4"/>
+<g font-family="sans-serif">
+<text x="64" y="49" font-size="14" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="2">LINDEN / PIPELINE-INTEGRATED TRACKING</text>
+<text x="64" y="112" font-size="42" fill="#0A0A0A" font-weight="700" text-anchor="start">Record the work while it happens.</text>
+<text x="64" y="152" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">One run connects the fitted pipeline to its settings, measured results and recovery files.</text>
+<path d="M64 186 L1376 186" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="64" y="238" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">ONE TRACKED EXECUTION</text>
+<rect x="64" y="275" width="1312" height="154" rx="6" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<text x="91" y="314" font-size="16" fill="#D7FF94" font-weight="700" text-anchor="start">1</text>
+<text x="91" y="354" font-size="25" fill="#FFFFFF" font-weight="700" text-anchor="start">Open run</text>
+<text x="91" y="391" font-size="17" fill="#D7FF94" font-weight="400" text-anchor="start">unique ID</text>
+<text x="410" y="314" font-size="16" fill="#D7FF94" font-weight="700" text-anchor="start">2</text>
+<text x="410" y="354" font-size="25" fill="#FFFFFF" font-weight="700" text-anchor="start">Fit pipeline</text>
+<text x="410" y="391" font-size="17" fill="#D7FF94" font-weight="400" text-anchor="start">hook already enabled</text>
+<text x="760" y="314" font-size="16" fill="#D7FF94" font-weight="700" text-anchor="start">3</text>
+<text x="760" y="354" font-size="25" fill="#FFFFFF" font-weight="700" text-anchor="start">Evaluate</text>
+<text x="760" y="391" font-size="17" fill="#D7FF94" font-weight="400" text-anchor="start">held-out validation</text>
+<text x="1100" y="314" font-size="16" fill="#D7FF94" font-weight="700" text-anchor="start">4</text>
+<text x="1100" y="354" font-size="25" fill="#FFFFFF" font-weight="700" text-anchor="start">Retain files</text>
+<text x="1100" y="391" font-size="17" fill="#D7FF94" font-weight="400" text-anchor="start">then close run</text>
+<path d="M355 350 L389 350" fill="none" stroke="#FFFFFF" stroke-width="2" marker-end="url(#arrow-white)"/>
+<path d="M705 350 L739 350" fill="none" stroke="#FFFFFF" stroke-width="2" marker-end="url(#arrow-white)"/>
+<path d="M1045 350 L1079 350" fill="none" stroke="#FFFFFF" stroke-width="2" marker-end="url(#arrow-white)"/>
+<path d="M470 429 L470 469 L254 469 L254 516" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M470 469 L697 469 L697 516" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M811 429 L811 516" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M1162 429 L1162 516" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M64 530 L421 530 L445 554 L445 833 L64 833 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M421 530 L421 554 L445 554" fill="none" stroke="#17482E" stroke-width="2"/>
+<path d="M494 530 L875 530 L899 554 L899 833 L494 833 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M875 530 L875 554 L899 554" fill="none" stroke="#17482E" stroke-width="2"/>
+<path d="M948 530 L1352 530 L1376 554 L1376 833 L948 833 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M1352 530 L1352 554 L1376 554" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="88" y="574" font-size="30" fill="#17482E" font-weight="700" text-anchor="start">Parameters</text>
+<text x="88" y="626" font-size="24" fill="#17482E" font-weight="600" text-anchor="start">alpha + guard</text>
+<text x="88" y="668" font-size="20" fill="#27784C" font-weight="400" text-anchor="start">data + source + partition</text>
+<path d="M88 696 L419 696" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="88" y="733" font-size="17" fill="#27784C" font-weight="400" text-anchor="start">autolog adds:</text>
+<text x="88" y="775" font-size="22" fill="#17482E" font-weight="600" text-anchor="start">ridge__alpha + settings</text>
+<text x="518" y="574" font-size="30" fill="#17482E" font-weight="700" text-anchor="start">Metrics</text>
+<rect x="518" y="601" width="357" height="90" rx="0" fill="#E8FFBB" stroke="none" stroke-width="1.5"/>
+<text x="535" y="633" font-size="23" fill="#17482E" font-weight="700" text-anchor="start">rmse_kwh + mae_kwh</text>
+<text x="535" y="668" font-size="18" fill="#27784C" font-weight="400" text-anchor="start">explicit validation results</text>
+<text x="518" y="733" font-size="18" fill="#27784C" font-weight="400" text-anchor="start">autolog also records</text>
+<text x="518" y="775" font-size="24" fill="#17482E" font-weight="600" text-anchor="start">training diagnostics</text>
+<text x="972" y="574" font-size="30" fill="#17482E" font-weight="700" text-anchor="start">Artifacts</text>
+<text x="972" y="626" font-size="24" fill="#17482E" font-weight="600" text-anchor="start">fitted model</text>
+<text x="972" y="668" font-size="23" fill="#17482E" font-weight="600" text-anchor="start">reproduction/</text>
+<text x="972" y="715" font-size="20" fill="#27784C" font-weight="400" text-anchor="start">manifest + config</text>
+<text x="972" y="754" font-size="19" fill="#27784C" font-weight="400" text-anchor="start">source archive + environment</text>
+<text x="64" y="909" font-size="23" fill="#17482E" font-weight="600" text-anchor="start">The hook notices fitting. The wrapper still names the acceptance metric and saves the recipe.</text>
+<text x="64" y="994" font-size="20" fill="#17482E" font-weight="600" text-anchor="start">Reopen the same run ID in MLflow. This is an execution diagram, not an interface capture.</text>
+</g>
+</svg>

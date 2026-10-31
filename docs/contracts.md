@@ -1,29 +1,31 @@
-# Contracts and bounded extensions
+# Application input, model and delivery contracts
 
-`Config(alpha=1.0, range_guard=False, autolog=False)` is immutable. Alpha must be finite and positive. Default training selects validation evaluation. Source `demand-v1.csv` has 168 train, 48 validation and 24 final rows. Every partition is fixed in the snapshot; do not resplit during the five-run matrix.
+## Historical training input
 
-`preprocess(frame, config)` returns three numeric features ordered `temperature_c`, `hour`, `occupancy`. It preserves index and rows. `train` fits scaler statistics using train rows only. The target `demand_kwh`, `row_id` and `partition` never become model features. Both inference and training call the same feature contract.
+`ingest()` accepts the exact column order `row_id`, `temperature_c`, `hour`, `occupancy`, `demand_kwh`, `partition`. Rows must be nonempty, uniquely identified, complete and numeric/finite where required. The provided fixed snapshot has `168` train, `48` validation and `24` reserved final rows. `row_id` and `partition` are not features. Final targets remain closed during development and configuration selection.
 
-## Guided extension
+## Shared feature validation
 
-Inspect `validate_ranges`. The supported extension is enabled through `range_guard=True`. A deliberate baseline without it accepts numeric out-of-range readings; the extension rejects temperatures outside [-30,50], hours outside [0,23] or fractional hours, and occupancy outside [0,100]. It copies valid inputs rather than mutating them. This is a validation stage before preprocessing, not clipping and not learning from validation data.
+`validate_features(frame)` requires a nonempty table containing the three finite numeric features. The completed `validate_ranges(frame)` additionally rejects temperatures outside inclusive `[-30, 50]` degrees Celsius, hours outside inclusive `[0, 23]` or fractional hours, and occupancy outside inclusive `[0, 100]` percent. It rejects the whole invalid call and returns a deep independent copy of valid input, preserving columns, values, order and index. It never clips or filters.
 
-Tests must cover exact lower/upper bounds, outside each bound, NaN/inf, fractional hour, missing features, valid row/index preservation and downstream baseline-vs-extension metric equality. Keep the model, split and metric unchanged when testing the extension. For the checkpoint, inspect and explain your actual completed source addition from the finite-only starter, or another bounded validation addition, with accepted/rejected examples and an explained diff. A second extension is not required; merely changing a flag in the already solved reference is insufficient.
+`preprocess(frame, config)` applies the chosen validation boundary and selects the three features in their declared order. `train` fits a `StandardScaler` and Ridge estimator only on training rows. Inference reuses both fitted objects without fitting on planned input.
 
-## Five-run fixture
+## Planned input and delivery
 
-| alpha | Comparison |
-|---:|---|
-| 0.01 | Weak-regularization candidate |
-| 0.1 | Alpha only versus alpha 1 |
-| 1 | Logging/comparison anchor |
-| 10 | Alpha only versus alpha 1 |
-| 100 | Alpha only versus alpha 1 |
+The general `batch_predict` entrypoint reads a CSV with complete unique `row_id` and the three valid features. It supports a nonempty input of any size; the baseline does not enforce an exact planned-input column list or `24` input rows. These additional complete-plan guarantees are a concrete new intake-boundary requirement, distinct from the existing correct feature-range guard.
 
-All use the same source revision, snapshot, feature order, train/validation partition, scaling, solver and `range_guard=True`. Autologging can be enabled for all five; it changes logging, not the estimator. Changing the guard or partition requires a separately declared comparison. The helper labels the evaluation partition in its comparison_group tag; that tag alone is not proof that every control matches. `verify_summary` requires explicitly selected unique IDs and at least five distinct alpha configurations; it rejects missing fields, mixed groups, non-finite RMSE and changed data/code/guard/partition instead of silently excluding rows. It ranks RMSE; it cannot validate semantic claims such as deployment readiness.
+Linden's planner requires all `24` planned predictions in one CSV within `60` seconds. Acceptance checks verify the full `row_id` sequence, finite predictions, exact output columns `row_id`/`prediction_kwh` and actual elapsed time. The timer includes artifact loading, prediction and CSV writing, excluding environment setup and training. Whole-job throughput is delivered rows divided by seconds, not network-request latency.
 
-## Lifecycle policy
+A batch takes an explicit logged-model URI or resolves `active` once and pins that model version. Metadata records source run, model URI, resolved version when applicable, input path/hash and `serving_code_revision`. Source-run training identity and current serving source are separate facts. Existing CSV/JSON names are never overwritten.
 
-Register logs `validation_status=pending`. `approve` requires a rationale, range guard and finite validation RMSE <= 5 kWh. Passing this teaching threshold does not imply real deployment readiness. `activate` requires approved status and a reason; rollback uses the same operation to reassign `active` to the previous approved version. Current alias state proves only the current pointer. JSONL events record timestamp, old/new versions, source run and reason for helper-mediated changes; direct UI/API mutations outside the helper are not captured. Retain both registry state and the events. A failed event write after alias reassignment is possible; compare them and reconcile rather than assume atomicity.
+## Experiment and lifecycle policies
 
-The environment manifest records every installed distribution version plus Python, operating-system family and machine architecture. A lock is the installation recipe; this observation detects an altered installed dependency even if the lock file itself was not changed. Reproduction compares this manifest before running.
+Application plans accept a nonempty set of distinct positive finite `alpha` values. A particular experiment may specify five configurations; that population size is not a universal runtime constraint. Comparisons require distinct actual IDs/configurations, shared data/source identity, guarded validation rows and finite nonnegative primary error. Lower validation `rmse_kwh` decides; `mae_kwh` and training metrics diagnose behavior.
+
+Registry approval requires a rationale, `range_guard=True`, validation evaluation and finite RMSE `<=5` kWh. Only approved versions may be active. This is a local single-user application policy, not built-in MLflow authorization. The mutable audit log covers helper-mediated changes and is not a tamper-proof control plane.
+
+A release descriptor binds an approved active version to its actual source run and completed batch. Export consumes that verified descriptor or an explicitly named run. Recovery requires matching source/data/config/partition/environment and absolute validation RMSE difference `<=1e-6` kWh, plus independent delivery acceptance. See [recovery](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md).
+
+## Source identity at release
+
+An intermediate batch can investigate a new serving validation change with an existing fitted model. A final release must use one matching current training and serving source revision: the exported source is the training-time archive. If source changes afterward, revalidate/retrain the intended recipe from the completed source in a deliberate new experiment, then produce a fresh named batch before exporting. The release verifier rejects a source mismatch before creating an export directory.

@@ -1,68 +1,85 @@
 ✂️
 # Proving the pipeline reproduces
 
-Linden Facilities receives your handoff, but its reproducibility claim remains unproven until someone runs it from the declared starting state. This task tests the handoff rather than your ability to remember how you built it.
-
-
-## Notebook workspace
-
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/04-cumulative-handoff.ipynb) in your local project environment. Find the section for **Proving the pipeline reproduces** using its Campus activity ID **A-S4-05**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
-
-## Work in the repository
-
-Follow your runbook using [portable recovery](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md): restore to a new folder, run `uv sync --locked --python 3.12`, run tests and execute `reproduce-export` with the absolute export path and a new destination. Make the original store unavailable while testing portability, preserving it intact elsewhere. Inspect the receiving report, batch and alias event. Add only actual mismatches/corrections to your existing runbook. A new kernel alone is insufficient.
-
+Linden Facilities has the exported recipe and your runbook. The remaining question is whether those instructions are sufficient without your original tracking store or installed project state. This attempt tests the handoff itself.
 
 ## Starting point
 
-Use your packaged source, data snapshot, lock, recorded config, original raw run and `HANDOFF.md`. The [clean-state specification](https://github.com/richhiey/ml-llm-ops/blob/main/docs/clean-state.md) distinguishes a new environment from merely restarting a notebook kernel.
+Use the canonical selected-validation export, `HANDOFF.md` and supplementary extension evidence. A smaller replay created a new store in the existing installation; this test additionally requires restored source and a fresh environment. Keep the same recorded configuration and validation rows.
 
-| Expected to change | Must agree |
+| Context | What belongs there |
 |---|---|
-| Run ID, timestamp, path, version counter | Source/data/config/evaluation/environment |
-| Observed timing | Completion within declared budget |
-| New model execution identity | RMSE within declared absolute tolerance |
+| Original-project terminal | Prepare/verify the export; stop producer processes; isolate and later restore the original store |
+| Receiving terminal in restored source | Install the recorded environment, run contract tests and inspect outputs |
+| Receiving source/environment, invoked by isolation script | Execute `reproduce-export` once while the original store is offline |
+| Receiving store | Inspect the new run, registered version, alias event, output and recovery report |
 
 ## Your task
 
-Restore the package to a new source folder, create a fresh environment with the lock, and use a new state directory. Follow your handoff commands verbatim. Capture the complete end-to-end result: training/evaluation, tracking, registered version, validated active alias and batch evidence.
+The deliverable is a receiver that actually works from the transferred package. Follow your own runbook verbatim. Use the [receiving reference](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md) only to investigate missing instructions, then record the correction. Restore the archived application source into a new folder and confirm `.venv` does not already exist there. The receiver needs the runtime, selected data and environment; it must not depend on lesson dispatchers or an assessment generator. Read the original manifest’s Python patch before the locked installation; install that exact version. Verify the imported `linden_mlops` path belongs to the restored source and the interpreter belongs to its new `.venv`.
 
-Compare original and new source revision, data hash, config, evaluation partition and environment. Compute the absolute RMSE difference and compare with `1e-6` kWh. Verify active-version inference meets the `24`-row/`60`-second brief. Keep changed identifiers separate from invariant lineage fields.
+Make the original store unavailable during the receiving command using the reference’s reversible isolation pattern. Keep the canonical export readable and preserve the store intact. Record its original/offline locations, the absence check during execution and its restoration afterward. Stop the producer’s MLflow server and other commands that might reopen the old path; a newly created replacement store would invalidate the isolation claim. Do not delete the store or copy its SQLite database into the receiver.
 
-Add a clean-run section to your existing handoff index with commands, observed evidence, comparisons, pass/fail and any diagnosis. If a field differs or a command needed undocumented knowledge, fix the package and rerun from another fresh directory. Preserve the failed attempt as diagnosis evidence. In your diagnosis, distinguish a run that succeeds numerically but uses the wrong snapshot from one that has new IDs and matching lineage. State which is acceptable before opening the self-check; no additional execution is needed for this comparison.
+Run `uv run pytest tests/test_batch_input.py tests/test_spine.py::test_contract_extension_and_unchanged_pipeline -q` in the receiving source. This checks your added planned-batch stage and the original domain guard from transferred source. Then use your runbook’s isolation script to invoke `reproduce-export` once in that source/environment, pointing at the absolute canonical-export path and a **new** receiving destination. Do not execute it separately before running the wrapper. Recovery retrains the recorded validation recipe; it does not merely load an old model and declare success. A destination refusal protects earlier evidence: inspect it or choose a new destination instead of deleting a prior attempt.
+
+Inspect the outputs rather than stopping at a successful command:
+
+| Check | What establishes it |
+|---|---|
+| Clean starting conditions | Restored source path, newly installed `.venv`, absent output store and original-store isolation record |
+| Recipe agreement | Source/data/config/partition/environment comparisons in `recovery-check.json`, checked against the original manifest |
+| Repeated evaluation | Original/repeated validation RMSE and their absolute difference `<=0.000001` kWh |
+| Connected lifecycle | New run → registered version → `active` → batch’s recorded version/source; approval tags and alias event |
+| Actual delivery | Input hash, all `24` IDs once in order, finite predictions and complete batch within `60` seconds |
+
+The tolerance compares repeated evaluation scores; it is not an allowed error for each prediction. IDs, timestamps, paths and local version counters can change. Job timing is measured anew against the deadline, not against its old duration.
+
+`recovery-check.json` has a useful `passed` field, but that flag alone does not establish the clean-folder history or independently check prediction order/finiteness. Read the actual `batch.csv` and its matching `batch.json` alongside the planned input. Explain which facts you observed directly.
+
+Record commands, observed comparisons and pass/fail in the same `HANDOFF.md`. If something diverges, preserve the failed command/output and identify the first layer that failed: integrity, recipe/environment, evaluation or delivery. Repair the affected package/instruction and retry only the failed receiving proof from another fresh destination. Do not rerun the five-run search or widen tolerance to hide a mismatch.
+
+Before opening feedback, diagnose two hypothetical reports: one has an equal score with a different snapshot; the other has new IDs with identical recipe and an accepted score difference. State which can count as reproduction and why. No extra training is needed for this reasoning.
 
 ## Working with documentation
 
-Use the [reproduction contract](https://github.com/richhiey/ml-llm-ops/blob/main/docs/clean-state.md) to identify what must agree. Do not relax tolerance after seeing a disagreement.
+Use the [clean-state specification](https://github.com/richhiey/ml-llm-ops/blob/main/docs/clean-state.md), [recovery command/inspection reference](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md) and [`reproduce_bundle`](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/recovery.py). A failed preflight can leave later stages untested; do not infer their outcome from the failure time.
 
 ## Hints
 
-1. Snapshot bytes matter more than a familiar filename.
-2. Verify interpreter and lock before blaming numerical variation.
-3. A cached model predicting correctly cannot prove retraining was reproduced.
+<details><summary>Hint 1 — Check identities before the number</summary>
 
-## Checkpoints
+A familiar filename or equal score cannot compensate for changed source/data/environment. Start with the failed layer, not a different alpha.
 
-Both the old and new records remain inspectable. The result passes lineage and tolerance together. Your report distinguishes a fresh-source/environment test from a new-store replay. An unexplained divergence is an incomplete handoff, even if inference succeeds.
+</details>
+<details><summary>Hint 2 — Separate what the command reports from how you ran it</summary>
 
-## Check your work after attempting the task
-
-<details>
-<summary>Open the self-check after recording your own result</summary>
-
-**Result you should get:** one receiving execution from restored source, a fresh locked environment and a new store that does not depend on the original store. It has matching recorded source/data/config/partition/environment, absolute validation RMSE delta <= `0.000001` kWh, and a connected validated active version producing the accepted batch. New IDs are acceptable; a wrong snapshot fails even with the same score.
-
-**How to check:** inspect the receiving report and raw lineage, then the registry/audit and batch output. A green numeric comparison alone does not prove the original store was unavailable or the environment was new; retain the commands and directories that show those conditions. Diagnose checksum/source/data/config/environment before numerical variation. If you repair a package or undocumented command, retry only the failed receiving proof from another fresh destination and preserve the earlier attempt. Do not widen tolerance or relabel a same-environment replay as a clean installation.
+The report cannot show that you created a new environment or made the original store unavailable. Your setup/isolation observations establish those facts.
 
 </details>
 
-## Read the notebook figure
+## Checkpoints
 
-![Fresh receiving evidence: recipe invariants, delivered rows and validation RMSE tolerance](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/sprint-4/05-proving-the-pipeline-reproduces/assets/recovery-checks__01__en.png)
+The receiving execution uses only its transferred inputs and new installation/store. The original store is restored intact afterward. Both lineage and score tolerance pass, and actual output/model/timing checks agree. Keep this successful evidence for the final checkpoint; do not repeat it solely for another lesson page.
 
-This verified receiving run restored the source into a fresh locked environment and used a new store while the original store was unavailable. Its source, data, environment, config and partition invariants pass. Independently checked output contains 24 aligned, finite predictions; batch execution took about 0.007443 seconds on the author machine, within 60 seconds. The absolute validation RMSE difference is 0 kWh against the declared 0.000001 kWh tolerance. Setup and retraining time are separate. New IDs are expected; matching lineage and tolerance are required.
+## Check your work after attempting the task
 
-Regenerate this figure from your actual records in the sprint notebook. The [editable SVG](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-4/05-proving-the-pipeline-reproduces/assets/recovery-checks__01__en.svg) and [reference observations](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/figures/reference-observations.json) make this author example inspectable.
+<details><summary>Compare your receiving proof and the author reference after your attempt</summary>
+
+**Result you should get:** a new execution from restored source, a fresh exact-patch locked environment and a new store, completed while the original store was unavailable. Recipe invariants agree, absolute validation RMSE difference is within `0.000001` kWh, and a new approved active version produces `24` aligned finite predictions within the deadline. An equal score with different data fails; new execution IDs with matching lineage are expected.
+
+**How:** compare the original manifest, installation/isolation record, receiving report, raw new run/version/audit and actual output. The receiving version’s source must be the newly trained run, not the original producer run. Restore mismatched prerequisites or repair instructions before a new receiving attempt. Preserve the first failure and keep numeric agreement separate from claims about the machine setup.
+
+![Author reference shows restored source, fresh environment and state with separate lineage, score-difference and delivered-output checks](assets/recovery-checks__01__en.png)
+
+This is a verified **author reference**, not your execution. It separates recorded recipe checks from independently inspected output and the setup/isolation evidence. The delta axis is absolute validation RMSE difference in kWh; the boundary is `0.000001` kWh. Batch timing covers delivery only. Your IDs and observed duration can differ. The [reference observations](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/figures/reference-observations.json) retain the actual measured values and scope; the [optional notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/04-cumulative-handoff.ipynb) can inspect your own receiving records.
+
+</details>
+
+## Verify the selected feedback recipe
+
+If the intended active model was retrained from labeled feedback, the export's indexed `training-data.csv` must match that run's recorded hash. The receiver retrains from those bytes rather than silently substituting `demand-v1.csv`. Inspect both original and receiving manifests and calculate the validation RMSE delta on the same recorded partition. Keep the operational decision evidence beside the export; reproduction verifies that selected recipe, not the causal explanation for drift.
+
+A failed checksum must stop before training. Preserve the failed output, restore the changed file from the canonical export, verify the unchanged index and all indexed bytes, and rerun any proof whose prior conditions no longer hold. Do not rewrite a checksum to bless altered data. A changed snapshot can retain the same schema and still invalidate the handoff.
 
 ## Learning outcome
 
@@ -70,4 +87,4 @@ Re-run the completed pipeline from the declared clean state, verify its lineage 
 
 ## Summary
 
-The clean run turns a setup claim into observed evidence. Your comparison separates changed identifiers from the lineage and results that must agree.
+The handoff is now supported by an actual clean receiving execution. You can explain both what reproduced and which observations establish independence from the original installation and store.

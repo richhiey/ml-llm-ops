@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1170" viewBox="0 0 1440 1170" role="img" aria-labelledby="title desc">
+<title id="title">Find the first failed boundary.</title><desc id="desc">An unclassified Harbor candidate approaches ordered package integrity, recipe, repeated-evaluation and delivery gates. The first failing gate and file remain unknown. Below, a preserved canonical export and earlier clean proof connect to a comparison of indexed bytes and demonstrated conditions; evidence may be reused only when it still applies, otherwise a new clean receiving test is needed.</desc>
+<defs>
+<marker id="arrow-forest" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#17482E"/></marker>
+<marker id="arrow-green" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#27784C"/></marker>
+<marker id="arrow-gray" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#D0D0C4"/></marker>
+<marker id="arrow-white" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#FFFFFF"/></marker>
+<marker id="arrow-red" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B91C1C"/></marker>
+<marker id="arrow-amber" markerWidth="7" markerHeight="7" refX="6.5" refY="3.5" orient="auto"><path d="M0 0 L7 3.5 L0 7 Z" fill="#B45309"/></marker>
+</defs>
+<rect width="1440" height="1170" fill="#ECEBE4"/>
+<g font-family="sans-serif">
+<text x="64" y="49" font-size="14" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="2">HARBOR / FINAL RECEIVING CHECKPOINT</text>
+<text x="64" y="112" font-size="42" fill="#0A0A0A" font-weight="700" text-anchor="start">Find the first failed boundary.</text>
+<text x="64" y="152" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">Keep the original failure. Inspect the copy without changing the acceptance contract.</text>
+<path d="M64 186 L1376 186" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="64" y="239" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">CLIENT COPY / UNCLASSIFIED FAULT</text>
+<path d="M64 279 L351 279 L375 303 L375 502 L64 502 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M351 279 L351 303 L375 303" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="88" y="324" font-size="29" fill="#17482E" font-weight="700" text-anchor="start">Candidate bundle</text>
+<path d="M88 367 L335 367" fill="none" stroke="#D0D0C4" stroke-width="3"/>
+<path d="M88 402 L335 402" fill="none" stroke="#D0D0C4" stroke-width="3"/>
+<path d="M88 437 L335 437" fill="none" stroke="#D0D0C4" stroke-width="3"/>
+<text x="88" y="479" font-size="18" fill="#27784C" font-weight="400" text-anchor="start">file + failed layer unknown</text>
+<path d="M375 390 L458 390" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<rect x="491" y="339" width="10" height="116" rx="0" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<circle cx="496" cy="390" r="25" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="496" y="398" font-size="25" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="496" y="306" font-size="18" fill="#27784C" font-weight="700" text-anchor="middle">1</text>
+<text x="496" y="493" font-size="24" fill="#17482E" font-weight="700" text-anchor="middle">Integrity</text>
+<text x="496" y="534" font-size="17" fill="#27784C" font-weight="400" text-anchor="middle">indexed files</text>
+<path d="M524 390 L709 390" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<rect x="748" y="339" width="10" height="116" rx="0" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<circle cx="753" cy="390" r="25" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="753" y="398" font-size="25" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="753" y="306" font-size="18" fill="#27784C" font-weight="700" text-anchor="middle">2</text>
+<text x="753" y="493" font-size="24" fill="#17482E" font-weight="700" text-anchor="middle">Recipe</text>
+<text x="753" y="534" font-size="17" fill="#27784C" font-weight="400" text-anchor="middle">source / data / config</text>
+<text x="753" y="565" font-size="17" fill="#27784C" font-weight="400" text-anchor="middle">partition / environment</text>
+<path d="M781 390 L966 390" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<rect x="1005" y="339" width="10" height="116" rx="0" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<circle cx="1010" cy="390" r="25" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="1010" y="398" font-size="25" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="1010" y="306" font-size="18" fill="#27784C" font-weight="700" text-anchor="middle">3</text>
+<text x="1010" y="493" font-size="24" fill="#17482E" font-weight="700" text-anchor="middle">Evaluation</text>
+<text x="1010" y="534" font-size="17" fill="#27784C" font-weight="400" text-anchor="middle">validation delta</text>
+<path d="M1038 390 L1223 390" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<rect x="1262" y="339" width="10" height="116" rx="0" fill="#17482E" stroke="none" stroke-width="1.5"/>
+<circle cx="1267" cy="390" r="25" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<text x="1267" y="398" font-size="25" fill="#17482E" font-weight="700" text-anchor="middle">?</text>
+<text x="1267" y="306" font-size="18" fill="#27784C" font-weight="700" text-anchor="middle">4</text>
+<text x="1267" y="493" font-size="24" fill="#17482E" font-weight="700" text-anchor="middle">Delivery</text>
+<text x="1267" y="534" font-size="17" fill="#27784C" font-weight="400" text-anchor="middle">rows / model / time</text>
+<path d="M64 621 L351 621 L375 645 L375 830 L64 830 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M351 621 L351 645 L375 645" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="88" y="665" font-size="28" fill="#17482E" font-weight="700" text-anchor="start">Canonical export</text>
+<text x="88" y="712" font-size="22" fill="#27784C" font-weight="400" text-anchor="start">preserved unchanged</text>
+<text x="88" y="759" font-size="22" fill="#17482E" font-weight="600" text-anchor="start">trusted repair source</text>
+<text x="88" y="800" font-size="20" fill="#27784C" font-weight="400" text-anchor="start">retain checksum index</text>
+<path d="M451 621 L822 621 L846 645 L846 830 L451 830 Z" fill="#FFFFFF" stroke="#17482E" stroke-width="2"/>
+<path d="M822 621 L822 645 L846 645" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="475" y="665" font-size="28" fill="#17482E" font-weight="700" text-anchor="start">Investigation record</text>
+<text x="475" y="712" font-size="22" fill="#27784C" font-weight="400" text-anchor="start">first rejection + diagnosis</text>
+<text x="475" y="759" font-size="22" fill="#27784C" font-weight="400" text-anchor="start">repair source + byte checks</text>
+<text x="475" y="800" font-size="21" fill="#17482E" font-weight="600" text-anchor="start">what is still untested?</text>
+<path d="M375 729 L437 729" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<path d="M922 621 L1352 621 L1376 645 L1376 830 L922 830 Z" fill="#E8FFBB" stroke="#17482E" stroke-width="2"/>
+<path d="M1352 621 L1352 645 L1376 645" fill="none" stroke="#17482E" stroke-width="2"/>
+<text x="946" y="665" font-size="29" fill="#17482E" font-weight="700" text-anchor="start">Earlier clean proof</text>
+<text x="946" y="712" font-size="23" fill="#17482E" font-weight="600" text-anchor="start">exact accepted package</text>
+<text x="946" y="759" font-size="21" fill="#27784C" font-weight="400" text-anchor="start">actual source / environment / state</text>
+<text x="946" y="800" font-size="20" fill="#27784C" font-weight="400" text-anchor="start">lineage + delta + delivered output</text>
+<path d="M64 882 L1376 882" fill="none" stroke="#D0D0C4" stroke-width="1"/>
+<text x="64" y="927" font-size="15" fill="#27784C" font-weight="700" text-anchor="start" letter-spacing="1.2">AFTER REPAIR / COMPARE INDEXED BYTES AND PROVEN CONDITIONS</text>
+<path d="M360 964 L360 1006 L492 1006" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<text x="64" y="976" font-size="24" fill="#17482E" font-weight="700" text-anchor="start">Same applicable proof?</text>
+<text x="516" y="1014" font-size="26" fill="#17482E" font-weight="700" text-anchor="start">Reuse the retained evidence</text>
+<path d="M360 1025 L360 1080 L492 1080" fill="none" stroke="#17482E" stroke-width="2.5" marker-end="url(#arrow-forest)"/>
+<text x="516" y="1088" font-size="25" fill="#17482E" font-weight="700" text-anchor="start">Changed recipe or conditions? Run a new clean receiving test.</text>
+<text x="64" y="1124" font-size="21" fill="#17482E" font-weight="600" text-anchor="start">A checksum pass does not prove retraining, row identity, or timely delivery.</text>
+</g>
+</svg>

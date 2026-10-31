@@ -30,6 +30,10 @@ def test_selected_configuration_survives_new_sessions_and_portable_recovery(tmp_
     source = restore_source(bundle, tmp_path/'restored')
     assert (source/'src/linden_mlops/pipeline.py').is_file()
     assert (source/'uv.lock').is_file()
+    assert not (source/'examples').exists(), 'Course demonstrations must not be runtime export dependencies'
+    assert not (source/'docs/course').exists(), 'Course fixture tools must not travel as application source'
+    assert (source/'src/linden_mlops/release.py').is_file()
+    assert (source/'tests/test_batch.py').is_file()
     with pytest.raises(ValueError, match='must not exist'):
         restore_source(bundle, source)
     # The replay reads exported recipe files, not original database/artifact paths.
@@ -48,12 +52,13 @@ def test_selected_configuration_survives_new_sessions_and_portable_recovery(tmp_
 
 def test_project_requires_valid_plan_and_explicit_progress(tmp_path):
     project = Project(work_dir=tmp_path)
-    for values in [[1]*5,[.1,.2,.3,.4,.5],[-1,.2,1,2,3],[.1,.2,1,2,float('nan')]]:
+    for values in [[], [1,1],[-1,.2,1,2,3],[.1,.2,1,2,float('nan')]]:
         with pytest.raises(ValueError):project.plan(values)
-    with pytest.raises(ValueError, match='earlier selection'):
+    with pytest.raises(ValueError, match='selection'):
         project.selected()
-    project.save(stage_complete={'source':'observed'})
-    assert Project(work_dir=tmp_path).require('stage_complete')['source']=='observed'
+    assert project.plan([.2,.4]) == [.2,.4], 'Application policy must not require five values or alpha1'
+    project.save(experiment_note={'source':'observed'})
+    assert Project(work_dir=tmp_path).require('experiment_note')['source']=='observed'
 
 
 def test_cli_reuses_matrix_and_selected_config(tmp_path, capsys):
@@ -90,3 +95,20 @@ def test_cli_reuses_matrix_and_selected_config(tmp_path, capsys):
     final = json.loads(command('final'))
     assert json.loads(command('final'))['run_id'] == final['run_id']
     assert len(export_runs(ws)) == 6
+
+
+def test_record_matrix_rejects_unavailable_run_before_saving_decisions(tmp_path, monkeypatch):
+    import pandas as pd
+    from linden_mlops.lifecycle import code_revision
+    project = Project(work_dir=tmp_path)
+    project.plan([.2, .4])
+    before = project.file.read_bytes()
+    rows = pd.DataFrame([dict(run_id=run_id, alpha=str(alpha), rmse_kwh=score,
+        comparison_group='declared-validation', data_sha256='fixed',
+        code_revision=code_revision(), range_guard='True', evaluation_partition='validation')
+        for run_id, alpha, score in [('actual-a', .2, 1.), ('actual-b', .4, 2.)]])
+    monkeypatch.setattr('linden_mlops.project.export_runs', lambda workspace: rows)
+    with pytest.raises(ValueError, match='Requested run IDs are missing'):
+        project.record_matrix(None, [{'run_id': 'actual-a'}, {'run_id': 'actual-b'}, {'run_id': 'missing'}])
+    assert project.file.read_bytes() == before
+    assert 'matrix_run_ids' not in Project(work_dir=tmp_path).data

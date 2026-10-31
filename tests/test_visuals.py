@@ -58,8 +58,10 @@ def test_experiments_plot_only_validated_raw_values():
         plotted = np.concatenate([collection.get_offsets() for collection in ax.collections])
         expected = list(zip(records.alpha.astype(float), records[metric]))
         assert sorted(map(tuple, plotted)) == sorted(expected)
-    with pytest.raises(ValueError, match='exactly'):
-        plot_experiments(records.iloc[:4])
+    smaller = plot_experiments(records.iloc[:2])
+    assert len(smaller.linden_data['records']) == 2
+    with pytest.raises(ValueError, match='comparable'):
+        plot_experiments(records.iloc[:0])
     with pytest.raises(ValueError, match='guarded validation'):
         plot_experiments(records.assign(evaluation_partition='final'))
     changed = records.copy()

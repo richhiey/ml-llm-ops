@@ -1,0 +1,21 @@
+{
+  "case": "linden",
+  "feedback_partitions": {
+    "final": 24,
+    "train": 168,
+    "validation": 48
+  },
+  "files": {
+    "current.csv": "fb0dee2878e6a6de858f603a124083c0286c55aa399ab30a66e2fa7c4800baec",
+    "feedback.csv": "cf7a747def7c7e39beddadc5e92a993f4b8aef773cfaa1a5ecf88218816e9afc",
+    "reference.csv": "7b264a91fef0d65c1bba14c3b63de88ca018d6638296a22140a26ad169b24951",
+    "shift-feedback.csv": "413dabceb481e86496978b18f69465ec0ac9c4e74dd6a6644551aae980df72f8",
+    "stable.csv": "8cce88063593fe4b70153ac2556f6dca1e88e22c96f0f95f2743675159559385"
+  },
+  "limits": "Constructed independent teaching cohorts; no real chronology, calibration or production claim.",
+  "monitoring_rows": 192,
+  "reference_rows": 192,
+  "seed": 817,
+  "shift": "temperature +8 C; stable output law in shift-feedback; intercept +12/+10 kWh in feedback",
+  "synthetic": true
+}

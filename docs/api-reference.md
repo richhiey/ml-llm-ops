@@ -1,43 +1,53 @@
-# API lookup for independent work
+# Application API reference
 
-This page names interfaces and failure conditions; choose and connect them yourself. Work in the repository root after `uv sync --locked`. Use a Python script, editor or notebook kernel with that environment.
+Use the repository root after `uv sync --locked`. Each operation consumes actual inputs and returned run/version identities. The application has no course progression API.
 
-| Need | Public interface | Return / check |
+| Need | Interface | Result / contract |
 |---|---|---|
-| Declare model/logging settings | `Config(alpha=1, range_guard=False, autolog=False)` | Immutable settings; alpha finite and positive |
-| Read the snapshot | `ingest()` | Table with row_id, temperature_c, hour, occupancy, demand_kwh, partition |
-| Build features | `preprocess(frame, config)` | Three ordered numeric features; guard optional |
-| Train/evaluate without tracking | `run_pipeline(config, partition='validation')` | model, metric dictionary, source table |
-| Open a local store | `Workspace(path)` | `ws.path`, `ws.uri`, `ws.client`, experiment_id; an existing path reopens evidence |
-| Track the pipeline | `ws.run(config, name='baseline', partition='validation')` | Manifest containing actual run ID, metrics and recovery lineage |
-| Prepare the reference matrix | `run_matrix(ws, range_guard=True, autolog=False)` | Five manifests; retain returned run IDs |
-| Inspect records | `export_runs(ws)` / `ws.client.get_run(run_id)` | Table / raw MLflow record; select your declared IDs explicitly |
-| Register a logged artifact | `register(ws, run_id)` | Version string with pending validation tag |
-| Validate a candidate | `approve(ws, version, evidence)` | Tags or ValueError; rationale, guard and finite validation RMSE<=5 required |
-| Select or roll back | `activate(ws, version, reason)` | Active alias reassigned to an approved version plus audit event |
-| Exercise serving | `batch_predict(ws, input_path=None, output_name='batch')` | Output table and observed completion/version evidence |
-| Rebuild a past result | `reproduce(ws, run_id, destination)` | New-state comparison; loaded source/data/environment must match; destination must not exist |
-| Check numeric advice | `verify_summary(selected_rows, recommended_run_id)` | Winner check; requires 5+ distinct guarded validation configurations, unique IDs and consistent controls |
+| Model settings | `Config(alpha=1, range_guard=False, autolog=False)` | Immutable config; finite positive alpha |
+| Historical input | `ingest(path=None)` | Checked ordered historical schema |
+| Feature input | `preprocess(frame, config)` | Validated three features in fixed order |
+| Train/evaluate | `run_pipeline(config, partition="validation", data_path=None)` | Fitted model, metrics, historical table; train rows fit, validation rows score |
+| Tracking | `Workspace(path)` | Explicit SQLite/artifact store; `path`, `uri`, `client`, `experiment_id` |
+| Tracked training | `ws.run(config, name="baseline", partition="validation", data_path=None)` | Manifest with actual run ID, logged-model URI, metrics and recipe |
+| Declared experiment | `run_matrix(ws, range_guard=True, autolog=False, alphas=None)` | Runs supplied alpha values; default range is a convenience, no five-run population gate |
+| Raw records | `export_runs(ws)` / `ws.client.get_run(run_id)` | Actual params/metrics/tags; select intended IDs before comparing |
+| Registration | `register(ws, run_id)` | Pending registered version string |
+| Approval | `approve(ws, version, evidence)` | Rationale plus guarded finite validation RMSE `<=5` |
+| Selection/rollback | `activate(ws, version, reason)` | Explicit approved alias target and audit event |
+| Batch job | `batch_predict(ws, input_path=None, output_name="batch", model_uri=None)` | Output table and metadata; new output name required |
+| Numeric recommendation | `verify_summary(rows, recommended_run_id)` | Argmin check on a nonempty declared comparable population; does not review prose |
+| Same-environment replay | `reproduce(ws, run_id, destination)` | New store and validation score agreement; exact recipe required |
 
-Lookup reminder: `get_model_version` and `get_model_version_by_alias` are methods on `ws.client`; `MODEL_NAME` is imported from `linden_mlops.lifecycle`. Tagging approval is a course policy, not built-in authorization from MLflow. The helper log covers helper-mediated alias changes only.
+The public functions above are imported from `linden_mlops`, except `run_pipeline`/feature helpers also live in `linden_mlops.pipeline`. `MODEL_NAME` is in `linden_mlops.lifecycle`.
 
-## Project continuity and portable recovery
+## Artifact serving and registry serving
 
-`Project` from `linden_mlops.project` persists decisions in `work/project.json`. `plan(alphas)` records the five configurations; `record_matrix(ws, records)` saves their actual IDs; `matrix(ws)` reopens only those runs; `select(ws, run_id)` checks your explicit choice against the declared metric; `selected()` checks its source/data identity. Use `Project(work_dir=...)` for a deliberate separate project.
+An explicit `model_uri` must be an actual logged-model address such as `models:/m-...`, obtained from `Workspace.run`. Its source run is resolved through MLflow; a registry is unnecessary. Metadata has `resolved_version=None` in that mode. With no explicit URI, the job resolves the `active` registry alias once and records its actual version/source run. `input_path` identifies the file whose bytes were hashed. `serving_code_revision` identifies loaded application source independently from the model's training-source record.
 
-`export_run(ws, run_id, destination)`, `verify_bundle(bundle)`, `restore_source(bundle, destination)` and `reproduce_bundle(bundle, destination)` are in `linden_mlops.recovery`. Exports include a checksum index, recorded recipe, source and fitted model. See [recovery](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md) for the complete receiving procedure.
+## Durable experiment decisions
 
-## Shared exercise and visualization modules
+`Project` from `linden_mlops.project` persists actual experiment decisions in `work/project.json`. `plan(alphas)` accepts distinct positive values; `record_matrix(ws, manifests)` retains actual IDs; `matrix(ws)` reopens them under the same controls/source; `select(ws, run_id)` checks the declared lowest validation RMSE; `selected()` checks retained data/source identity. A completed plan cannot be silently replaced: use a deliberate new `work_dir` for another comparison. It has no lesson-completion flags or required alpha anchor.
 
-The notebooks reuse these core modules rather than duplicate pipeline or lifecycle logic.
+## Release and recovery
 
-| Need | Core interface | Evidence boundary |
-|---|---|---|
-| Prepare an investigation | `prepare(case, destination, work_dir=None, bundle=None)` from `linden_mlops.course_evidence` | Reads retained records; creates a new exercise copy. Cases are comparison, integration and receiving. Original project evidence remains unchanged. |
-| Inspect input roles/contract | `plot_contract(frame)` from `linden_mlops.visuals` | Counts partitions and executes separate feature probes; does not inspect final targets. |
-| Compare controlled results | `plot_experiments(rows)` | Exactly five comparable validation records; rejects incompatible controls. |
-| Trace a batch artifact | `plot_identity(run_id, model_version, registered_run_id, inference)` | Requires the selected, registered and resolved run/version chain to agree. |
-| Check receiving proof | `plot_recovery(report, planned, predictions)` | Explicit recorded acceptance plus independently checked output identity/finiteness and numeric tolerance. |
-| Export a figure | `save_figure(fig, destination_base)` | Writes SVG and PNG from the same figure layout to the caller's path. |
+`verify_release(ws, path)` and `write_release(ws, version, batch_name, destination)` are in `linden_mlops.release`. A user-authored descriptor requires `model_name`, `version`, `run_id`, `batch_name`. Verification checks current active/approved identity, guarded validation lineage and the corresponding actual input/output job. Optional `config`, `data_sha256`, `code_revision`, `serving_code_revision` and `batch_input_sha256` must agree if present; the writer includes these observed fields.
 
-Each plot returns a Figure with inspectable `linden_data`. See [figure interpretation](https://github.com/richhiey/ml-llm-ops/blob/main/docs/visualizations.md) and [exercise provenance](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/README.md). The core modules are included in portable source exports; a receiving environment does not need the documentation wrapper script.
+`export_run(ws, run_id, destination, release=None)`, `verify_bundle(bundle)`, `restore_source(bundle, destination)` and `reproduce_bundle(bundle, destination)` are in `linden_mlops.recovery`. A supplied release is verified and its run must match; the enriched descriptor is indexed in the export. CLI export requires `--release FILE` or `--run-id ID`; it never chooses a historical selection implicitly.
+
+```sh
+uv run linden-mlops export --release work/release.json --destination work/operational-export
+uv run linden-mlops reproduce --state CLIENT_STORE --run-id CLIENT_SOURCE_RUN_ID --destination NEW_REPLAY_STORE
+```
+
+Use actual observed values for placeholders. `--state` chooses a store; `--run-id` chooses a recipe. Replay in the installed environment does not prove a new source/environment receiving setup.
+
+## Operational evidence and figures
+
+`monitor`, `train_candidate`, `compare_candidate`, `promote_candidate` and `write_incident` in `linden_mlops.operations` consume explicit file paths and actual candidate versions. See [operations](https://github.com/richhiey/ml-llm-ops/blob/main/docs/operations.md). Input generation and invented incident setup are outside application runtime.
+
+`plot_contract`, `plot_experiments`, `plot_identity`, `plot_recovery`, `save_figure` in `linden_mlops.visuals` return actual Figures with inspectable `linden_data`; monitoring/candidate plots are in `operations`. `save_figure` exports SVG and PNG from one layout. Plots reject missing/incompatible data rather than showing invented passing evidence. See [figure interpretation](https://github.com/richhiey/ml-llm-ops/blob/main/docs/visualizations.md).
+
+## Source identity at release
+
+An intermediate batch can investigate a new serving validation change with an existing fitted model. A final release must use one matching current training and serving source revision: the exported source is the training-time archive. If source changes afterward, revalidate/retrain the intended recipe from the completed source in a deliberate new experiment, then produce a fresh named batch before exporting. The release verifier rejects a source mismatch before creating an export directory.

@@ -1,76 +1,82 @@
 ✂️
 # Integrating pipeline, tracking, and registry
 
-Linden Facilities can demonstrate each component, but a handoff needs a connected execution. Your task is to integrate existing behavior and prove that the same run reaches registration and inference.
+Linden Facilities has training, registry and operational-response records. Another engineer needs a release that identifies the model actually intended for service and the recipe behind it. A plausible run ID or collection of successful files is insufficient.
 
+## Start with an evidence inventory
 
-## Notebook workspace
+Continue the same clone and cumulative workspace. Begin `work/HANDOFF.md` with criterion, existing record, observed or missing state, dependency and next check. Reuse the explained extension, distinguishing tests and original experiment comparison. Keep the historical five-run choice distinct from the operationally active model: a justified response can select a feedback-trained version without rewriting that experiment.
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/04-cumulative-handoff.ipynb) in your local project environment. Find the section for **Integrating pipeline, tracking, and registry** using its Campus activity ID **A-S4-02**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
-
-## Work in the repository
-
-Prepare a draft evidence index from your existing cumulative project:
-
-```sh
-uv run python docs/course/exercises/prepare-evidence.py integration --destination work/integration-review
-```
-
-The exercise copies actual matrix IDs, active registry identity and retained batch metadata into review material, with one deliberately mismatched identity link. It does not change runtime state. Open `work/integration-review/handoff-index.json`. Locate and repair the inconsistent identity using the raw registry and the files named by `batch_evidence_path` and `batch_predictions_path`, then complete your own handoff index. Preserve the original raw evidence. The selected recipe is in `work/selected-config.json`; use it for any genuinely missing execution.
-
-For a negative check, plan a separate local candidate run with `range_guard=False`. Before executing, predict which gate should fail, what should remain pending, and which existing identity must stay active. Choose and connect the public interfaces yourself, then retain the actual rejection and before/after evidence. Do not activate the rejected candidate. Complete only missing links, then add their actual identities to your existing handoff note. The fresh receiving run later supplies the complete new execution; there is no need for an extra full reference pipeline now.
-
-
-## Starting point
-
-Use your chosen validation configuration, validated extension and the [API lookup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md). An **end-to-end run** connects the stages so its output artifact can be traced through the lifecycle.
-
-| Boundary | Identity to carry |
+| Criterion | Question your evidence must answer |
 |---|---|
-| Training to registration | Actual run ID and model URI |
-| Registration to selection | Returned version and validation tags |
-| Selection to inference | Resolved version and matching source run |
+| Connected execution | Which run trained the intended registered artifact? |
+| Explained extension | What application behavior did you add and how do its tests distinguish correct from incomplete behavior? |
+| Response | Which signal, labels and candidate comparison justified the action? |
+| Delivery | Which intended version produced a complete, ordered planner file within the brief? |
+| Reproducibility | Can the exact selected recipe be replayed, then received from fresh source/environment/state? |
 
-## Your task
+Order the remaining checks by dependency. Keep missing evidence visible; a planned command is not a completed result.
 
-Begin with the deliberately inconsistent draft. Identify the exact link that conflicts with the raw registry and batch evidence. Write your diagnosis before editing it: name the two conflicting IDs, the authoritative records and why a similar score or shared display name cannot repair the chain. Correct the draft, then build a connected index for train → evaluate/log → register → validated active alias → batch. Use existing successful execution records where they meet the same contracts; implement or run only a genuinely missing connection. You may call the public helper API; keep reusable behavior in the helper rather than duplicate it in a notebook.
+## Your task — declare a usable release
 
-Reuse the existing cumulative store. Capture a single evidence index naming the training run ID, model URI, registered version, validation tags, alias event and batch-resolved version/source run. Include your extension and chosen alpha. Keep pending registration separate from validated activation; a failed gate must stop selection.
+Create `work/release.json` as the application's release descriptor. This file will be consumed by export; it is not a worksheet invented for this lesson. Use the actual intended active artifact and the job that served it.
 
-Explain which function owns each stage and what happens if validation fails. Demonstrate a negative case without activating a rejected model, then inspect the successful path already recorded. Preserve evidence of both outcomes.
+| Required field | Value to establish from the application |
+|---|---|
+| `model_name` | Registered model name, here `dev.linden-demand` |
+| `version` | Actual intended active version as a string |
+| `run_id` | That registered artifact's actual source run |
+| `batch_name` | Existing job name without the extension, such as `response-batch` |
+
+Inspect the registry and raw run/job records before writing values. Do not substitute the matrix winner by habit. A source run and batch from different models do not become consistent merely because their predictions look similar.
+
+Use `verify_release(workspace, path)` from the [release source](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/release.py) to check your descriptor against approved/current model state, source lineage and the actual batch CSV/JSON. Read the failure and repair your declared selection or genuinely missing evidence. Do not edit raw model, run or job records to make a descriptor pass. Preserve an unsuccessful attempt when it reveals a mismatch.
+
+The release also requires the training run, serving job and current application source to agree. If you change application code after fitting, deliberately revalidate the intended recipe in a new run/version and produce a fresh named batch before export. Preserve the earlier records; do not relabel an old run as current or rerun a parameter search merely to repair lineage.
+
+The application can record/check additional `config`, `data_sha256`, `code_revision` and `batch_input_sha256` fields. Inspect those actual values; a field copied from another release must be rejected. `write_release` provides an application-generated descriptor when you later automate the same operation, but your first task is to establish the correct identities yourself.
+
+## Replay the release's actual source
+
+Resolve the intended version using the [registry/API interfaces](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md). Predict which recipe invariants should match before invoking `reproduce(workspace, release_run_id, new_destination)` from the [lifecycle source](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/lifecycle.py). The source ID must be the one in your validated release descriptor.
+
+A feedback-trained run retains `training-data.csv` among its reproduction artifacts. Replay consumes those bytes. It refuses changed source/environment and never tunes from final rows. If a retained run belongs to older application code, restore its exported source separately; do not edit a manifest to claim the current checkout is identical.
+
+Open `reproduction-check.json`, inspect the new raw validation run and independently calculate the absolute RMSE difference. It must be at most `0.000001` kWh on the same validation population. Record the new run ID. This replay uses a new store in the current source/environment. A fresh-source/fresh-environment receiving proof remains a separate boundary.
 
 ## Working with documentation
 
-| Use it when… | Reference |
-|---|---|
-| You need the public sequence | [API lookup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md) |
-| You need exact setup/flags | [Helper README](https://github.com/richhiey/ml-llm-ops/blob/main/README.md) |
+The [release source](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/release.py) defines descriptor fields and checks. The [recovery runbook](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md) explains replay versus clean receiving. Use those contracts to choose arguments; do not ask an assistant to invent a missing interface.
 
 ## Hints
 
-1. Carry the returned run ID into registration; do not select a run by display name.
-2. Carry the returned version into approval and activation; do not assume the counter.
-3. Compare the batch source run with the registered version's source run.
+<details><summary>Hint 1 — Follow the artifact backward</summary>
+
+Start with the current intended registered version, then its raw source run, training snapshot and configuration. Keep the old experiment decision as historical evidence.
+
+</details>
+<details><summary>Hint 2 — Follow the job forward</summary>
+
+The descriptor must name a real job whose version and source agree with the release. If you have only stale output, run a distinctly named new batch from the intended version; do not alter an old job's metadata.
+
+</details>
 
 ## Checkpoints
 
-All corrected links resolve to actual records in the cumulative store. A rejected candidate remains inspectable and does not become active. The success path uses the selected configuration, not whichever baseline happened to be easiest to run.
+Your inventory has evidence or a bounded next action for every criterion. `release.json` describes one approved/current artifact and its actual output. The selected snapshot/configuration/source/environment support replay within tolerance. Export will read this same descriptor, so the work carries forward into the actual handoff.
 
-## Check your work after attempting the task
+<details><summary>Check after creating the release and inspecting your replay</summary>
 
-<details>
-<summary>Open the self-check after recording your own result</summary>
+**Result you should get:** a valid application release descriptor, a dependency-ordered handoff inventory and a new-store replay of its exact recorded recipe. The original experiment decision may differ from the operational release without either record being rewritten.
 
-**Result you should get:** your corrected index connects the registered model's actual source run to its model URI, validation tags, alias event and batch-resolved version/source run. The deliberately substituted training ID may be a real matrix run, but it is not the run that produced that registered artifact. The negative candidate remains `pending`, approval raises an error for the missing range guard, and the previously active version stays selected.
-
-**How to check:** obtain the registered version with `ws.client.get_model_version` and compare its `run_id` with the raw run, the job metadata and your draft. Follow identities rather than choosing whichever matrix row has a plausible score. For the negative case, use `Workspace.run`, `register` and `approve`; inspect the alias before and after the failed approval without invoking `activate`. A successful training call does not establish a passed release gate. If your records disagree, fix the index or missing boundary and retain the rejection evidence; rerunning a finished wrapper would hide the reasoning this task asks you to supply.
+**How:** join version → source run → data/configuration → actual job and inspect every supplied descriptor field against those records. Calculate the repeated validation-score delta independently. An equal score cannot compensate for different data or code. If verification refuses a mismatched field or stale job, preserve that failure and repair the actual declaration/evidence before export.
 
 </details>
 
 ## Learning outcome
 
-Integrate the existing pipeline stages, MLflow tracking, registry aliases/tags, and inference-mode decision into one end-to-end run that trains, evaluates, logs, and registers a model version.
+Scope the remaining handoff work, connect pipeline, tracking, registry and operational-response evidence, then replay the selected run from its recorded source, data, configuration and environment within the declared result tolerance.
 
 ## Summary
 
-The project now links one execution through tracking, registration, validated selection and inference. A failed gate has an observable stopping point instead of an unexplained partial handoff.
+Your remaining work is scoped around a real release. Its model, run, data and serving record form one inspectable chain, and its recorded recipe has a replay result while the broader clean receiving proof remains to be established.

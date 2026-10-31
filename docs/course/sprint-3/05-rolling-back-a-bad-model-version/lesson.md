@@ -1,72 +1,71 @@
 ✂️
 # Rolling back a bad model version
 
-Linden Facilities trialed a version that met the original RMSE gate of `5` kWh. A revised acceptance review now requires validation RMSE <= `1.6` kWh. Inspect the trial and prior approval evidence to decide what can remain active. Preserve both artifacts while restoring a qualifying selection.
+Linden Facilities has a working monitoring response. Now decide which incoming observations justify a candidate, reject an unsuitable one and recover an already active model under a changed acceptance requirement. These are different operational decisions.
 
+## What you will work with
 
-## Notebook workspace
+Use the supplied [Linden monitoring inputs and policy](https://github.com/richhiey/ml-llm-ops/tree/main/docs/course/exercises/monitoring/linden). They are explicitly synthetic acceptance data. Work in a new investigation store, such as `work/response-investigation`, keeping the cumulative `work/tracking` project unchanged.
 
-Use the [sprint notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/03-registry-and-reproduction.ipynb) in your local project environment. Find the section for **Rolling back a bad model version** using its Campus activity ID **A-S3-05**. It imports the shared core modules for the demonstrations; keep your own decisions and checks in the attempt cells. Reuse this same clone and saved work between activities.
+Use the already taught `Workspace.run`, registration, observed approval and activation interfaces to establish one guarded incoming baseline in that store. Keep the returned version and source run. Do not run another five-run search. The [operational reference](https://github.com/richhiey/ml-llm-ops/blob/main/docs/operations.md) documents the application interfaces; use explicit store, data, policy and output paths.
 
-## Work in the repository
+For recovery, the exercise intake supplies a separate store at `work/rollback` containing `case.json`, raw runs and registered versions. Open its intake before acting. The [intake instructions](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/README.md) distinguish setup of supplied starting records from your recovery task. Reopen an existing intake rather than regenerating it.
 
-Prepare an isolated incident once:
+## Your task — decide before taking action
 
-```sh
-uv run linden-mlops prepare --case rollback --state work/rollback
-uv run linden-mlops inspect --state work/rollback
-```
+Write the expected action and missing/available evidence for each condition:
 
-Read `work/rollback/case.json`. Choose the qualifying prior version from actual tags and source metrics. Use `activate --state work/rollback --version ACTUAL_VERSION --reason 'YOUR OBSERVED INCIDENT REASON'`, then `batch --state work/rollback`. Use the registry client to tag the trial's incident. Keep both models and the before/after event in `work/rollback/audit.jsonl`. No rollback is performed by preparation, and the main project is unchanged.
+- Stable reference/current distributions.
+- A warmer feature-only window.
+- The warmer window with independent `shift-feedback.csv` labels.
+- The warmer window with independent `feedback.csv` labels.
+- A separate input copy containing only `24` current rows.
 
+Call `monitor` for each condition with the same incoming model and policy, using different new report destinations. Reconcile predictions against actual actions, counts, distances and validation errors. A report with no labels cannot establish demand error. A valid shifted input is not an invalid input.
 
-## Starting point
+For the observed labeled retraining trigger, deliberately use `alpha=1000000` as an intentionally unsuitable candidate. Use `train_candidate` and `compare_candidate` with that actual report and feedback file. Inspect both model errors and each declared acceptance criterion before deciding whether the candidate may become active. Retain its failed comparison and prove the alias unchanged. Successful fitting is not a successful response.
 
-Create the isolated incident described above. Read `work/rollback/case.json`, then inspect the actual version tags and source runs using the [API lookup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md). The preparation stops before rollback; the learner must perform that operation. An **audit event** records a change; the current alias lookup records only the present selection.
+Your useful output is a defensible retain/change decision with raw evidence. Do not edit a `passed` field, change thresholds after seeing scores or open final rows to make a preferred model win.
 
-| Before learner work | Required observation after work |
-|---|---|
-| Trial is active | Alias points to a suitable prior approved version |
-| Original gate still recorded | Client incident and changed requirement explained |
-| Prior batch may exist | New job records the restored version |
+## Recover an already active version
 
-## Your task
+Inventory `work/rollback` using its actual client/model records. Use `Workspace("work/rollback")` or pass `--state work/rollback` to application commands. Keep every version and artifact.
 
-Record the active version and source run before the rollback. Find the previous approved version by its actual validation evidence. Record your target version, score, approval status and reason before changing the alias; a low version number alone does not establish suitability. Confirm the revised RMSE requirement against both raw runs. Reassign `active` to that previous version using the helper, with a reason that names the acceptance failure.
+The revised client requirement is validation RMSE at most `1.6` kWh. Identify the actual active version, each source run, raw validation error and approval status. Explain which previously approved model is suitable now. A prior approval under a looser criterion is insufficient.
 
-Run a new representative batch and prove its resolved version/source run match the restored version. Save the before/after alias evidence, application audit event and batch output. Mark the trial's incident using a version tag; do not delete it to make the history look cleaner.
+Use the real `activate` operation with the suitable actual version and an observed reason, then run a new uniquely named batch against the same isolated store. The [API reference](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md) gives argument details. Reconcile the helper's old/new versions, reason and timestamp with the new job's resolved version/source and actual CSV.
 
-Explain what the audit captured: time, old/new versions, source run and reason. Also explain its limits: helper-mediated changes only, mutable local evidence, no guarantee that an already-running job reloaded a model, and no atomic transaction across alias change and event persistence.
-
-## Working with documentation
-
-Use the [MLflow alias API example](https://mlflow.org/docs/3.5.1/ml/model-registry/workflow/) to distinguish reassignment from registering another artifact.
+Check all `24` IDs once in input order, finite predictions and complete delivery within `60` seconds. Confirm the main project's active version is unchanged. The recovered job is an actual application result; creating the incoming case is not the accomplishment.
 
 ## Hints
 
-1. A rollback changes the selection pointer; it does not undo training.
-2. Read the old/new fields before interpreting the event as a reversal.
-3. Batch inference must be invoked again after reassignment to prove the next job follows it.
+<details><summary>Hint 1 — Look for missing evidence</summary>
+
+No labels means no observed demand error. Enough independent labels can reveal degradation even when a distribution distance is small. A small monitoring window does not become adequate because it produces a dramatic chart.
+
+</details>
+<details><summary>Hint 2 — Separate rejection from recovery</summary>
+
+A pending candidate that never became active can be rejected without rollback. Recovery changes an already active selection to a suitable approved alternative, then verifies a new job.
+
+</details>
 
 ## Checkpoints
 
-Both versions remain inspectable. The event's previous version is the trial and new version is the approved version. A new batch records the restored version. If registry and log disagree, report the inconsistency and reconcile it rather than claiming a complete audit.
+Your five predictions distinguish the situations using actual evidence. The failed candidate stays pending/inactive. The recovery store ends with a suitable approved version and new valid planner output. Retained history explains the change, and the cumulative project is intact.
 
-## Check your work after attempting the task
+<details><summary>Check after recording your decisions and inspecting actual results</summary>
 
-<details>
-<summary>Open the self-check after recording your own result</summary>
+**Result you should get:** stable data continues monitoring; an unlabeled shift and an accurately predicted shifted cohort support investigation; the degraded labeled cohort permits evaluating a candidate; `24` current rows require more observations. The deliberately over-regularized candidate fails acceptance and remains inactive. In the recovery intake, the alpha-10 trial fails the revised `1.6` gate while the earlier alpha-1 version qualifies.
 
-**Result you should get:** the trial's source run has validation RMSE about `1.766063` kWh and fails the revised `1.6` requirement; the prior approved run has about `1.443004` kWh and qualifies. In this prepared case those runs use alpha `10` and `1` respectively. Use the actual version IDs in your store. The final alias and new batch must identify the restored prior version; both model artifacts remain available.
-
-**How to check:** read version tags and source-run metrics, then reconcile `previous_version`, `new_version`, `run_id` and reason in the helper audit with your before/after record. The original `approved` tag only proves the old `5` kWh policy; it does not automatically satisfy the revised rule. An older batch cannot prove post-rollback serving. If you chose by age or reused the old batch, correct that evidence, invoke one new batch after the restored selection, and retain the failed reasoning as an incident note.
+**How:** inspect action, counts and validation RMSE before interpreting distribution flags. Join each actual version to its raw run and approval. Select the qualifying previous version with a reason, then compare its change event and fresh job records. If you trained without justified labels or confused an old CSV with a new job, preserve that failure and repeat only the missing decision/verification. The helper log is mutable and covers helper-mediated changes; it is not a tamper-proof production audit.
 
 </details>
 
 ## Learning outcome
 
-Reassign the active-model alias from a bad version to the previous approved version, and document what the registry audit evidence captured during the rollback.
+Apply a declared feedback policy to unfamiliar monitoring evidence, retain or qualify a retrained candidate using separate validation data, and restore a suitable previously approved active version in a supplied rollback incident, documenting the resulting audit and new inference evidence.
 
 ## Summary
 
-The restored alias is backed by a reasoned event and a new batch using the previous approved version. Both artifacts remain available to explain the incident.
+You can distinguish continued investigation, rejection of an inactive candidate and recovery from an already active version. Each decision produces an inspectable system state and useful evidence rather than a copied reference verdict.

@@ -2,7 +2,7 @@
 
 Every plot returns a Figure and exposes its plotted evidence in `linden_data`.
 Figures use no global pyplot state or backend setting. Callers choose where to
-save them; displaying a figure never updates published lesson assets.
+save them; displaying a figure never changes retained report files.
 """
 from pathlib import Path
 import math
@@ -87,7 +87,7 @@ def plot_contract(frame):
     probes_ax.set_ylim(-.5, 1.7)
     probes_ax.set_xlim(-.5, 4.5)
     probes_ax.set_xlabel('Hour probe (hours; discrete cases)')
-    probes_ax.set_ylabel('Executed exercise outcome')
+    probes_ax.set_ylabel('Observed validation outcome')
     probes_ax.set_title('Integer and boundary probes', loc='left', fontsize=11)
     probes_ax.legend(frameon=False, loc='upper center', ncols=2, fontsize=8)
     fig.linden_data = {'partition_counts': counts, 'hour_probes': probes}
@@ -95,9 +95,9 @@ def plot_contract(frame):
 
 
 def plot_experiments(rows):
-    """Plot precisely five comparable validation records as discrete points."""
-    if len(rows) != 5:
-        raise ValueError('Supply exactly the five saved matrix records')
+    """Plot a declared comparable set of validation records as discrete points."""
+    if rows.empty:
+        raise ValueError('Supply comparable validation records')
     result = verify_summary(rows, rows.iloc[0]['run_id'])
     values = rows.copy().sort_values('alpha', key=lambda series: series.astype(float))
     alpha = values['alpha'].astype(float).to_numpy()

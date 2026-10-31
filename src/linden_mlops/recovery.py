@@ -10,7 +10,13 @@ from .lifecycle import (Workspace, code_revision, environment, register, approve
                         activate, batch_predict, TOLERANCE, write_json)
 
 
-def export_run(workspace, run_id, destination):
+def export_run(workspace, run_id, destination, release=None):
+    release_record = None
+    if release is not None:
+        from .release import verify_release
+        release_record = verify_release(workspace, release)
+        if release_record['run_id'] != run_id:
+            raise ValueError('Export run differs from the verified release')
     destination = Path(destination).resolve()
     if destination.exists():
         raise ValueError('Export destination must not exist; retain earlier evidence')
@@ -20,8 +26,12 @@ def export_run(workspace, run_id, destination):
     for name in ['manifest.json', 'config.json', 'environment.txt', 'source.tar.gz']:
         shutil.copy2(reproduction / name, destination / name)
     manifest = json.loads((destination / 'manifest.json').read_text())
+    if manifest.get('data_artifact'):
+        shutil.copy2(reproduction / 'training-data.csv', destination / 'training-data.csv')
     model = Path(mlflow.artifacts.download_artifacts(artifact_uri=manifest['model_uri']))
     shutil.copytree(model, destination / 'model')
+    if release_record is not None:
+        write_json(destination / 'release.json', release_record)
     files = {str(p.relative_to(destination)): sha256(p)
              for p in sorted(destination.rglob('*')) if p.is_file()}
     write_json(destination / 'bundle.json', {'schema_version': 1, 'run_id': run_id, 'files': files})
@@ -43,7 +53,13 @@ def verify_bundle(bundle):
         file = bundle / relative
         if not file.is_file() or sha256(file) != expected:
             raise ValueError(f'Recovery file missing or changed: {name}')
-    return json.loads((bundle / 'manifest.json').read_text())
+    manifest = json.loads((bundle / 'manifest.json').read_text())
+    if manifest.get('data_artifact'):
+        if manifest['data_artifact'] != 'training-data.csv' or 'training-data.csv' not in index['files']:
+            raise ValueError('Recovery bundle needs its indexed training-data.csv')
+        if sha256(bundle / 'training-data.csv') != manifest['data_sha256']:
+            raise ValueError('Recovery training-data hash differs from the manifest')
+    return manifest
 
 
 def restore_source(bundle, destination):
@@ -64,8 +80,9 @@ def restore_source(bundle, destination):
 def reproduce_bundle(bundle, destination):
     """Run from restored source/environment; never consult the original tracking store."""
     original = verify_bundle(bundle)
+    snapshot = Path(bundle) / 'training-data.csv' if original.get('data_artifact') else DATA / 'demand-v1.csv'
     invariants = {'source': original['code_revision'] == code_revision(),
-                  'data': original['data_sha256'] == sha256(DATA / 'demand-v1.csv'),
+                  'data': original['data_sha256'] == sha256(snapshot),
                   'environment': original['environment'] == environment()}
     if not all(invariants.values()):
         raise ValueError(f'Restore the recorded recipe before training: {invariants}')
@@ -75,7 +92,7 @@ def reproduce_bundle(bundle, destination):
     if destination.exists():
         raise ValueError('Receiving state must not exist')
     ws = Workspace(destination)
-    result = ws.run(Config(**original['config']), name='received-validation', partition='validation')
+    result = ws.run(Config(**original['config']), name='received-validation', partition='validation', data_path=snapshot)
     invariants.update(config=result['config'] == original['config'],
                       partition=result['evaluation_partition'] == original['evaluation_partition'])
     delta = abs(result['metrics']['rmse_kwh'] - original['metrics']['rmse_kwh'])
