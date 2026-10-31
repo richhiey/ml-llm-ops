@@ -1,15 +1,17 @@
 # Read notebook figures as evidence
 
-The four local notebooks import shared plotting functions from [linden_mlops.visuals](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/visuals.py). A figure displays the supplied records; it does not fit another model, change a selection or establish production readiness.
+Notebooks 01 and 02 use [linden_mlops.visuals](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/visuals.py) for contract and experiment plots. Notebook 03 uses `plot_monitoring` from [linden_mlops.operations](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/operations.py). Notebook 04 leaves the handoff investigation to your own attempt; it does not supply a plotting cell. A figure displays the supplied records; it does not fit another model, change a selection or establish production readiness.
 
-Each function returns a Matplotlib Figure. Its linden_data attribute contains the exact observations or checks used by the plot. Notebook cells display those values next to the figure. save_figure writes the same layout as editable SVG and PNG under the caller's chosen work/figures folder.
+The plotting functions return Matplotlib Figures. Each figure's `linden_data` attribute contains its plotted observations or checks. Inspect those fields alongside the underlying records. `save_figure` from `visuals` writes the same layout as editable SVG and PNG under the caller's chosen `work/figures` folder.
 
-| Notebook figure | Read these labels | What the evidence supports |
+| Available helper | Use in the supplied notebooks | Labels and interpretation |
 |---|---|---|
-| Partition and contract | Rows by fixed partition; discrete hour cases and accepted/rejected markers | Data roles and observed domain validation. Final rows are counted only; their targets are not plotted. |
-| Experiment comparison | Positive alpha on a logarithmic horizontal axis; validation RMSE and MAE in kWh in separate panels | Ranking among the supplied comparable validation runs. The RMSE winner's marker also identifies it on the diagnostic panel. |
-| Artifact identity | Full selected/source run IDs, registered version and batch-resolved version/run | The recorded batch used the selected artifact. The drawing rejects an inconsistent chain. |
-| Receiving checks | Explicit lineage and output acceptance results; absolute RMSE delta in kWh and tolerance | Whether these actual receiving records satisfy the shown checks. Missing required evidence cannot become a passing default. |
+| `visuals.plot_contract` | Notebook 01 | Fixed partition row counts and discrete hour probes show data roles and observed domain validation. Final targets are not plotted. |
+| `visuals.plot_experiments` | Notebook 02 | Positive alpha on a logarithmic axis; validation RMSE and MAE in kWh in separate panels. Ranking applies to the supplied comparable runs. |
+| `operations.plot_monitoring` | Notebook 03 | Distances divided by their declared thresholds are dimensionless. A ratio of 1 reaches an alert boundary; an alert alone does not establish model degradation. |
+| `operations.plot_candidate` | Optional helper; no supplied notebook call | Incumbent and candidate RMSE in kWh use the same independent labeled feedback cohort and declared maximum-error boundary. |
+| `visuals.plot_identity` | Optional helper; no supplied notebook call | Selected/source run IDs, registered version and batch-resolved identity must agree. This does not establish approval by itself. |
+| `visuals.plot_recovery` | Optional helper; no supplied notebook call | Actual lineage/output checks and absolute RMSE delta in kWh show whether the supplied receiving records satisfy their tolerance. Missing evidence cannot become a passing default. |
 
 ## Compare before concluding
 
