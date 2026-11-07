@@ -1,6 +1,6 @@
 """Record the existing CNN pipeline in MLflow without changing its learning recipe."""
 
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from datetime import datetime, timezone
 from pathlib import Path
 import re
@@ -28,6 +28,22 @@ _TRACKING_LOCK = threading.Lock()
 def tracking_uri(state: Path) -> str:
     state.mkdir(parents=True, exist_ok=True)
     return "sqlite:///" + (state.resolve() / "tracking.db").as_posix()
+
+
+
+@contextmanager
+def tracking_store(state: Path):
+    """Use the same local tracking and registry store for native MLflow operations."""
+    with _TRACKING_LOCK:
+        previous_tracking, previous_registry = mlflow.get_tracking_uri(), mlflow.get_registry_uri()
+        uri = tracking_uri(state)
+        try:
+            mlflow.set_tracking_uri(uri)
+            mlflow.set_registry_uri(uri)
+            yield MlflowClient(tracking_uri=uri, registry_uri=uri)
+        finally:
+            mlflow.set_tracking_uri(previous_tracking)
+            mlflow.set_registry_uri(previous_registry)
 
 
 def experiment_id(client: MlflowClient, state: Path, name: str) -> str:

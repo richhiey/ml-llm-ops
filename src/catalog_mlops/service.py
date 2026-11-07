@@ -17,7 +17,11 @@ class PredictionRequest(BaseModel):
 
 
 def create_app(run_directory: Path) -> FastAPI:
-    predictor = Predictor(run_directory)
+    return create_prediction_app(Predictor(run_directory))
+
+
+def create_prediction_app(predictor) -> FastAPI:
+    """Serve the saved or registry-resolved model already loaded at startup."""
     app = FastAPI(title="Catalog thumbnail classifier", version="1.0.0")
 
     @app.get("/health")

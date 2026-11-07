@@ -16,7 +16,7 @@ from catalog_mlops.tracking import download_recipe, tracking_uri, verify_logged_
 from catalog_mlops.training import verify_run
 
 
-def _snapshot(client: MlflowClient, run_id: str, destination: Path) -> dict:
+def inspect_tracked_run(client: MlflowClient, run_id: str, destination: Path) -> dict:
     if not re.fullmatch(r"[0-9a-f]{32}", run_id):
         raise ValueError("Use a full 32-character MLflow run ID")
     observed = client.get_run(run_id)
@@ -71,7 +71,7 @@ def compare_runs(state: Path, baseline_run_id: str, run_ids: list[str]) -> dict:
     client = MlflowClient(tracking_uri=tracking_uri(state))
     with tempfile.TemporaryDirectory(prefix="catalog-comparison-") as temporary:
         destination = Path(temporary)
-        baseline = _snapshot(client, baseline_run_id, destination)
+        baseline = inspect_tracked_run(client, baseline_run_id, destination)
         baseline.update(kind="baseline", comparable=True, reasons=[], changed_field=None, delta_macro_f1=0.0)
         rows = [baseline]
         seen_ids = {baseline_run_id}
@@ -83,7 +83,7 @@ def compare_runs(state: Path, baseline_run_id: str, run_ids: list[str]) -> dict:
                 continue
             seen_ids.add(run_id)
             try:
-                row = _snapshot(client, run_id, destination)
+                row = inspect_tracked_run(client, run_id, destination)
             except (ValueError, KeyError, OSError, MlflowException) as error:
                 rows.append({"run_id": run_id, "kind": "excluded", "comparable": False, "reasons": [str(error)]})
                 continue

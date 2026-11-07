@@ -79,21 +79,33 @@ def read_batch_manifest(path: Path, content: bytes | None = None) -> list[dict]:
 
 
 def predict_batch(run_directory: Path, manifest_path: Path, output: Path) -> dict:
+    started = time.perf_counter()
     if output.exists():
         raise FileExistsError(f"Batch output already exists: {output}")
-    started = time.perf_counter()
+    return deliver_batch(Predictor(run_directory), manifest_path, output, started)
+
+
+def deliver_batch(predictor, manifest_path: Path, output: Path, started: float | None = None) -> dict:
+    """Publish one complete delivery using the model pinned by its consumer."""
+    if output.exists():
+        raise FileExistsError(f"Batch output already exists: {output}")
+    if started is None:
+        started = time.perf_counter()
     manifest_bytes = manifest_path.read_bytes()
     rows = read_batch_manifest(manifest_path, manifest_bytes)
-    predictor = Predictor(run_directory)
     predictions = []
     input_hashes = []
+    image_observations = []
     for start in range(0, len(rows), 64):
         chunk = rows[start:start + 64]
         arrays = []
         for row in chunk:
             content = row["path"].read_bytes()
-            arrays.append(decode_thumbnail(content, row["path"].name))
+            pixels = decode_thumbnail(content, row["path"].name)
+            arrays.append(pixels)
             input_hashes.append({"image_id": row["image_id"], "sha256": bytes_digest(content)})
+            image_observations.append({"image_id": row["image_id"],
+                                       "mean_brightness": float(pixels.mean() / 255.0)})
         predictions.extend(predictor.predict(np.stack(arrays), [row["image_id"] for row in chunk]))
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = Path(tempfile.mkdtemp(prefix=f".{output.name}-", dir=output.parent))
@@ -105,6 +117,7 @@ def predict_batch(run_directory: Path, manifest_path: Path, output: Path) -> dic
         report = {"created_at": datetime.now(timezone.utc).isoformat(), "count": len(predictions),
                   "model": predictor.identity, "manifest_sha256": bytes_digest(manifest_bytes),
                   "inputs": input_hashes, "predictions_sha256": sha256(temporary / "predictions.csv"),
+                  "image_observations": image_observations,
                   "elapsed_seconds": time.perf_counter() - started}
         write_json(temporary / "batch.json", report)
         reservation = output.parent / f".{output.name}.lock"

@@ -1,0 +1,1356 @@
+{
+  "kind": "actual author pilot; these native IDs are reference observations, not preloaded in a learner store",
+  "raw_export_scope": "input-observations.csv extracts image identities, consumed PNG fingerprints and measured mean brightness from actual batch records; prediction/label CSV bytes are retained unchanged. Digests of full native observation records identify the private author proof.",
+  "registered_name": "threadline-catalog-4x8_8isi",
+  "selected_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+  "selected_model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+  "selected_checkpoint_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+  "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+  "inference_source_sha256": "72a9569a897dc52337badf953bed8b31021ba6a3a1209b6fb7307c083eaa8ba2",
+  "inference_source_archive_sha256": "607158ef6d51129529a99c35991705ef9d4badf0e8281e54d848f8ffa73e6ac5",
+  "version_before_incident": "1",
+  "bad_version": "2",
+  "restored_version": "1",
+  "bad_service_model": {
+    "local_run": "recipe",
+    "model_sha256": "396f4c9d3750f958969c5cdb95a47143fe22e88e559bc352360d85b36a4cce68",
+    "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+    "inference_source_sha256": "72a9569a897dc52337badf953bed8b31021ba6a3a1209b6fb7307c083eaa8ba2",
+    "registered_name": "threadline-catalog-4x8_8isi",
+    "registered_version": "2",
+    "alias_at_startup": "active",
+    "source_run_id": "a8a29bfff80945c9b488b3008021ec6c",
+    "model_uri": "models:/m-0affab36c95b41a68adfaf0568f4978d",
+    "validation_status_at_startup": "pending",
+    "loaded_at": "2026-11-07T14:49:32.145455+00:00"
+  },
+  "old_service_after_rollback": {
+    "local_run": "recipe",
+    "model_sha256": "396f4c9d3750f958969c5cdb95a47143fe22e88e559bc352360d85b36a4cce68",
+    "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+    "inference_source_sha256": "72a9569a897dc52337badf953bed8b31021ba6a3a1209b6fb7307c083eaa8ba2",
+    "registered_name": "threadline-catalog-4x8_8isi",
+    "registered_version": "2",
+    "alias_at_startup": "active",
+    "source_run_id": "a8a29bfff80945c9b488b3008021ec6c",
+    "model_uri": "models:/m-0affab36c95b41a68adfaf0568f4978d",
+    "validation_status_at_startup": "pending",
+    "loaded_at": "2026-11-07T14:49:32.145455+00:00"
+  },
+  "restored_service_model": {
+    "local_run": "recipe",
+    "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+    "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+    "inference_source_sha256": "72a9569a897dc52337badf953bed8b31021ba6a3a1209b6fb7307c083eaa8ba2",
+    "registered_name": "threadline-catalog-4x8_8isi",
+    "registered_version": "1",
+    "alias_at_startup": "active",
+    "source_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+    "model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+    "validation_status_at_startup": "passed",
+    "loaded_at": "2026-11-07T14:49:39.653407+00:00"
+  },
+  "local_audit_extract": [
+    {
+      "action": "register",
+      "actor": "catalog-engineer",
+      "at": "2026-11-07T14:49:06.596816+00:00",
+      "name": "threadline-catalog-4x8_8isi",
+      "operation_id": "f5b75aa334954061b44bb2c2d19c1851",
+      "reason": "Retain the selected Threadline experiment",
+      "run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+      "status": "requested"
+    },
+    {
+      "action": "register",
+      "actor": "catalog-engineer",
+      "at": "2026-11-07T14:49:08.343573+00:00",
+      "name": "threadline-catalog-4x8_8isi",
+      "operation_id": "f5b75aa334954061b44bb2c2d19c1851",
+      "reason": "Retain the selected Threadline experiment",
+      "reused": false,
+      "run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+      "source": "models:/m-43467a9009974f27af80167ddb71d1c2",
+      "status": "completed",
+      "version": "1"
+    },
+    {
+      "action": "validate",
+      "actor": "catalog-engineer",
+      "at": "2026-11-07T14:49:10.013506+00:00",
+      "evidence_sha256": "c3bb3ff4dc5dbaf8ebfb43d0a9282810a3feb36e2bc2e136e5901103b11d5732",
+      "name": "threadline-catalog-4x8_8isi",
+      "operation_id": "38eac92090534d0581603ced7714a1b1",
+      "reason": "Clean archived-source replay passed",
+      "status": "requested",
+      "version": "1"
+    },
+    {
+      "action": "validate",
+      "actor": "catalog-engineer",
+      "at": "2026-11-07T14:49:10.325310+00:00",
+      "evidence_sha256": "c3bb3ff4dc5dbaf8ebfb43d0a9282810a3feb36e2bc2e136e5901103b11d5732",
+      "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+      "name": "threadline-catalog-4x8_8isi",
+      "operation_id": "38eac92090534d0581603ced7714a1b1",
+      "reason": "Clean archived-source replay passed",
+      "status": "completed",
+      "validation_status": "passed",
+      "version": "1"
+    },
+    {
+      "action": "assign_alias",
+      "actor": "catalog-engineer",
+      "alias": "active",
+      "at": "2026-11-07T14:49:11.807571+00:00",
+      "expected_current": null,
+      "name": "threadline-catalog-4x8_8isi",
+      "operation_id": "905e5584a39f4f1fad5b0ec45c9f4432",
+      "reason": "Highest comparable Threadline macro F1; category regressions reviewed",
+      "status": "requested",
+      "target_version": "1"
+    },
+    {
+      "action": "assign_alias",
+      "actor": "catalog-engineer",
+      "alias": "active",
+      "at": "2026-11-07T14:49:12.095287+00:00",
+      "expected_current": null,
+      "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+      "name": "threadline-catalog-4x8_8isi",
+      "observed_version": "1",
+      "operation_id": "905e5584a39f4f1fad5b0ec45c9f4432",
+      "previous_version": null,
+      "reason": "Highest comparable Threadline macro F1; category regressions reviewed",
+      "run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+      "status": "completed",
+      "target_version": "1"
+    },
+    {
+      "action": "rollback",
+      "actor": "catalog-engineer",
+      "alias": "active",
+      "at": "2026-11-07T14:49:37.550881+00:00",
+      "expected_current": "2",
+      "name": "threadline-catalog-4x8_8isi",
+      "operation_id": "51d3184b8cf845a99d8050a9c84b8adb",
+      "reason": "Restore previous approved model after paired quality regression",
+      "status": "requested",
+      "target_version": "1"
+    },
+    {
+      "action": "rollback",
+      "actor": "catalog-engineer",
+      "alias": "active",
+      "at": "2026-11-07T14:49:37.843860+00:00",
+      "expected_current": "2",
+      "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+      "name": "threadline-catalog-4x8_8isi",
+      "observed_version": "1",
+      "operation_id": "51d3184b8cf845a99d8050a9c84b8adb",
+      "previous_version": "2",
+      "reason": "Restore previous approved model after paired quality regression",
+      "run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+      "status": "completed",
+      "target_version": "1"
+    }
+  ],
+  "audit_scope": "Local recorded operations; external alias changes and file rewriting require separate evidence",
+  "ordinary_unlabeled": {
+    "brightness_alert": false,
+    "brightness_total_variation": 0.018999999999999982,
+    "current_sha256": "5656f34dbad00074e0d5dfae664cb3393e8f1b2f0255c47aa091970197862782",
+    "interpretation": "Distribution differences are investigation signals; unlabeled data does not measure correctness.",
+    "policy": {
+      "brightness_total_variation_alert": 0.2,
+      "macro_f1_drop_alert": 0.05,
+      "mean_brightness_bin_edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.30000000000000004,
+        0.4,
+        0.5,
+        0.6000000000000001,
+        0.7000000000000001,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "name": "catalog-cohort-v1"
+    },
+    "predicted_category_total_variation": 0.022999999999999993,
+    "quality_comparison_available": false,
+    "reference_sha256": "d3dcf123307822514b7516e6d8c0e3f2edb44221d39d8cff05af4c5553fe838c"
+  },
+  "shifted_unlabeled": {
+    "brightness_alert": true,
+    "brightness_total_variation": 0.573,
+    "current_sha256": "642f068e6e79a8b83b6a03784a75e3ab84568bde297cb132a49aeb8b89d305e7",
+    "interpretation": "Distribution differences are investigation signals; unlabeled data does not measure correctness.",
+    "policy": {
+      "brightness_total_variation_alert": 0.2,
+      "macro_f1_drop_alert": 0.05,
+      "mean_brightness_bin_edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.30000000000000004,
+        0.4,
+        0.5,
+        0.6000000000000001,
+        0.7000000000000001,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "name": "catalog-cohort-v1"
+    },
+    "predicted_category_total_variation": 0.101,
+    "quality_comparison_available": false,
+    "reference_sha256": "d3dcf123307822514b7516e6d8c0e3f2edb44221d39d8cff05af4c5553fe838c"
+  },
+  "shifted_labeled": {
+    "brightness_alert": true,
+    "brightness_total_variation": 0.573,
+    "current_sha256": "1d6cbe21da30c05308c20b7b751c495b1978c70f478c8d72d61e9ae1129e845f",
+    "interpretation": "Distribution differences are investigation signals; unlabeled data does not measure correctness.",
+    "macro_f1_drop": 0.053287784811984484,
+    "policy": {
+      "brightness_total_variation_alert": 0.2,
+      "macro_f1_drop_alert": 0.05,
+      "mean_brightness_bin_edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.30000000000000004,
+        0.4,
+        0.5,
+        0.6000000000000001,
+        0.7000000000000001,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "name": "catalog-cohort-v1"
+    },
+    "predicted_category_total_variation": 0.101,
+    "quality_alert": true,
+    "quality_comparison_available": true,
+    "reference_sha256": "bc9823008ab939e37469731a4e8f799a0fc947869f84af479f2e7fbba51563c1"
+  },
+  "paired_brightness_change": {
+    "brightness_alert": true,
+    "brightness_total_variation": 0.5860000000000001,
+    "current_sha256": "1d6cbe21da30c05308c20b7b751c495b1978c70f478c8d72d61e9ae1129e845f",
+    "interpretation": "Distribution differences are investigation signals; unlabeled data does not measure correctness.",
+    "macro_f1_drop": 0.06931211302433082,
+    "policy": {
+      "brightness_total_variation_alert": 0.2,
+      "macro_f1_drop_alert": 0.05,
+      "mean_brightness_bin_edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.30000000000000004,
+        0.4,
+        0.5,
+        0.6000000000000001,
+        0.7000000000000001,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "name": "catalog-cohort-v1"
+    },
+    "predicted_category_total_variation": 0.10699999999999998,
+    "quality_alert": true,
+    "quality_comparison_available": true,
+    "reference_sha256": "d84359e450919e2b8cbc8dc6e4068f7e33391c952056811ff8b03744e643b72b"
+  },
+  "paired_model_change": {
+    "first_model": {
+      "alias_at_startup": "active",
+      "inference_source_sha256": "72a9569a897dc52337badf953bed8b31021ba6a3a1209b6fb7307c083eaa8ba2",
+      "loaded_at": "2026-11-07T14:49:18.563885+00:00",
+      "local_run": "recipe",
+      "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+      "model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+      "registered_name": "threadline-catalog-4x8_8isi",
+      "registered_version": "1",
+      "source_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+      "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+      "validation_status_at_startup": "passed"
+    },
+    "first_sha256": "d84359e450919e2b8cbc8dc6e4068f7e33391c952056811ff8b03744e643b72b",
+    "interpretation": "Paired quality observations on the same supplied images and labels; no universal performance claim.",
+    "macro_f1_change": -0.10121802779796063,
+    "policy": {
+      "brightness_total_variation_alert": 0.2,
+      "macro_f1_drop_alert": 0.05,
+      "mean_brightness_bin_edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.30000000000000004,
+        0.4,
+        0.5,
+        0.6000000000000001,
+        0.7000000000000001,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "name": "catalog-cohort-v1"
+    },
+    "quality_regression_alert": true,
+    "second_model": {
+      "alias_at_startup": "active",
+      "inference_source_sha256": "72a9569a897dc52337badf953bed8b31021ba6a3a1209b6fb7307c083eaa8ba2",
+      "loaded_at": "2026-11-07T14:49:33.719127+00:00",
+      "local_run": "recipe",
+      "model_sha256": "396f4c9d3750f958969c5cdb95a47143fe22e88e559bc352360d85b36a4cce68",
+      "model_uri": "models:/m-0affab36c95b41a68adfaf0568f4978d",
+      "registered_name": "threadline-catalog-4x8_8isi",
+      "registered_version": "2",
+      "source_run_id": "a8a29bfff80945c9b488b3008021ec6c",
+      "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+      "validation_status_at_startup": "pending"
+    },
+    "second_sha256": "3716e0985c2932ef4b2d8d1c78119a4e754dd77edd1e0dac4e1612b881cac117"
+  },
+  "final_holdout": {
+    "accuracy": 0.8552,
+    "class_names": [
+      "T-shirt/top",
+      "Trouser",
+      "Pullover",
+      "Dress",
+      "Coat",
+      "Sandal",
+      "Shirt",
+      "Sneaker",
+      "Bag",
+      "Ankle boot"
+    ],
+    "confusion_matrix": [
+      [
+        641,
+        0,
+        21,
+        71,
+        5,
+        1,
+        246,
+        0,
+        15,
+        0
+      ],
+      [
+        0,
+        954,
+        0,
+        36,
+        3,
+        0,
+        6,
+        0,
+        1,
+        0
+      ],
+      [
+        7,
+        0,
+        823,
+        17,
+        65,
+        0,
+        84,
+        0,
+        4,
+        0
+      ],
+      [
+        2,
+        3,
+        4,
+        932,
+        13,
+        1,
+        43,
+        0,
+        2,
+        0
+      ],
+      [
+        1,
+        1,
+        138,
+        60,
+        692,
+        0,
+        105,
+        0,
+        3,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        955,
+        0,
+        26,
+        3,
+        15
+      ],
+      [
+        65,
+        1,
+        105,
+        50,
+        74,
+        0,
+        687,
+        0,
+        18,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        23,
+        0,
+        946,
+        1,
+        30
+      ],
+      [
+        0,
+        1,
+        2,
+        9,
+        3,
+        2,
+        5,
+        4,
+        973,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        6,
+        1,
+        42,
+        1,
+        949
+      ]
+    ],
+    "count": 10000,
+    "evaluation_evidence": {
+      "cohort": "official-test; report only, configuration already fixed",
+      "image_archive_sha256": "346e55b948d973a97e58d2351dde16a484bd415d4595297633bb08f03db6a073",
+      "label_archive_sha256": "67da17c76eaffca5446c3361aaab5c3cd6d1c2608764d35dfb1850b086bf8dd5",
+      "model": {
+        "alias_at_startup": "active",
+        "inference_source_sha256": "72a9569a897dc52337badf953bed8b31021ba6a3a1209b6fb7307c083eaa8ba2",
+        "loaded_at": "2026-11-07T14:49:43.086980+00:00",
+        "local_run": "recipe",
+        "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+        "model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+        "registered_name": "threadline-catalog-4x8_8isi",
+        "registered_version": "1",
+        "source_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+        "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+        "validation_status_at_startup": "passed"
+      }
+    },
+    "loss": 0.39762293887138367,
+    "macro_f1": 0.8553040811661556,
+    "per_class": {
+      "Ankle boot": {
+        "f1": 0.9513784461152882,
+        "precision": 0.9537688442211055,
+        "recall": 0.949,
+        "support": 1000
+      },
+      "Bag": {
+        "f1": 0.962889658584859,
+        "precision": 0.9529872673849168,
+        "recall": 0.973,
+        "support": 1000
+      },
+      "Coat": {
+        "f1": 0.7460916442048517,
+        "precision": 0.8093567251461988,
+        "recall": 0.692,
+        "support": 1000
+      },
+      "Dress": {
+        "f1": 0.8562241616903996,
+        "precision": 0.7918436703483432,
+        "recall": 0.932,
+        "support": 1000
+      },
+      "Pullover": {
+        "f1": 0.7864309603440038,
+        "precision": 0.7529734675205856,
+        "recall": 0.823,
+        "support": 1000
+      },
+      "Sandal": {
+        "f1": 0.9607645875251509,
+        "precision": 0.9665991902834008,
+        "recall": 0.955,
+        "support": 1000
+      },
+      "Shirt": {
+        "f1": 0.6311437758383096,
+        "precision": 0.5836873406966865,
+        "recall": 0.687,
+        "support": 1000
+      },
+      "Sneaker": {
+        "f1": 0.9375619425173439,
+        "precision": 0.9292730844793713,
+        "recall": 0.946,
+        "support": 1000
+      },
+      "T-shirt/top": {
+        "f1": 0.747086247086247,
+        "precision": 0.8952513966480447,
+        "recall": 0.641,
+        "support": 1000
+      },
+      "Trouser": {
+        "f1": 0.9734693877551021,
+        "precision": 0.99375,
+        "recall": 0.954,
+        "support": 1000
+      }
+    }
+  },
+  "cohort_quality": {
+    "reference": {
+      "accuracy": 0.865,
+      "class_names": [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+      ],
+      "confusion_matrix": [
+        [
+          71,
+          0,
+          1,
+          7,
+          0,
+          0,
+          21,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          98,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          82,
+          3,
+          7,
+          0,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          2,
+          89,
+          3,
+          0,
+          5,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          11,
+          5,
+          75,
+          0,
+          8,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          91,
+          0,
+          6,
+          0,
+          3
+        ],
+        [
+          4,
+          0,
+          15,
+          3,
+          4,
+          0,
+          71,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          94,
+          0,
+          4
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          98,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          96
+        ]
+      ],
+      "count": 1000,
+      "macro_f1": 0.8657606143509445,
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9458128078817734,
+          "precision": 0.9320388349514563,
+          "recall": 0.96,
+          "support": 100
+        },
+        "Bag": {
+          "f1": 0.9702970297029703,
+          "precision": 0.9607843137254902,
+          "recall": 0.98,
+          "support": 100
+        },
+        "Coat": {
+          "f1": 0.7894736842105263,
+          "precision": 0.8333333333333334,
+          "recall": 0.75,
+          "support": 100
+        },
+        "Dress": {
+          "f1": 0.8516746411483254,
+          "precision": 0.8165137614678899,
+          "recall": 0.89,
+          "support": 100
+        },
+        "Pullover": {
+          "f1": 0.7772511848341233,
+          "precision": 0.7387387387387387,
+          "recall": 0.82,
+          "support": 100
+        },
+        "Sandal": {
+          "f1": 0.9381443298969072,
+          "precision": 0.9680851063829787,
+          "recall": 0.91,
+          "support": 100
+        },
+        "Shirt": {
+          "f1": 0.6666666666666666,
+          "precision": 0.6283185840707964,
+          "recall": 0.71,
+          "support": 100
+        },
+        "Sneaker": {
+          "f1": 0.9215686274509803,
+          "precision": 0.9038461538461539,
+          "recall": 0.94,
+          "support": 100
+        },
+        "T-shirt/top": {
+          "f1": 0.8068181818181818,
+          "precision": 0.9342105263157895,
+          "recall": 0.71,
+          "support": 100
+        },
+        "Trouser": {
+          "f1": 0.98989898989899,
+          "precision": 1.0,
+          "recall": 0.98,
+          "support": 100
+        }
+      }
+    },
+    "current": {
+      "accuracy": 0.881,
+      "class_names": [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+      ],
+      "confusion_matrix": [
+        [
+          69,
+          0,
+          3,
+          6,
+          0,
+          0,
+          22,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          97,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          79,
+          3,
+          7,
+          0,
+          10,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          93,
+          2,
+          0,
+          3,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          5,
+          77,
+          0,
+          11,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          98,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          7,
+          0,
+          7,
+          7,
+          3,
+          0,
+          75,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          96,
+          0,
+          4
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          99,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          98
+        ]
+      ],
+      "count": 1000,
+      "macro_f1": 0.8817849425632909,
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9655172413793104,
+          "precision": 0.9514563106796117,
+          "recall": 0.98,
+          "support": 100
+        },
+        "Bag": {
+          "f1": 0.9850746268656716,
+          "precision": 0.9801980198019802,
+          "recall": 0.99,
+          "support": 100
+        },
+        "Coat": {
+          "f1": 0.8148148148148148,
+          "precision": 0.8651685393258427,
+          "recall": 0.77,
+          "support": 100
+        },
+        "Dress": {
+          "f1": 0.8571428571428571,
+          "precision": 0.7948717948717948,
+          "recall": 0.93,
+          "support": 100
+        },
+        "Pullover": {
+          "f1": 0.8061224489795918,
+          "precision": 0.8229166666666666,
+          "recall": 0.79,
+          "support": 100
+        },
+        "Sandal": {
+          "f1": 0.98989898989899,
+          "precision": 1.0,
+          "recall": 0.98,
+          "support": 100
+        },
+        "Shirt": {
+          "f1": 0.6787330316742082,
+          "precision": 0.6198347107438017,
+          "recall": 0.75,
+          "support": 100
+        },
+        "Sneaker": {
+          "f1": 0.964824120603015,
+          "precision": 0.9696969696969697,
+          "recall": 0.96,
+          "support": 100
+        },
+        "T-shirt/top": {
+          "f1": 0.770949720670391,
+          "precision": 0.8734177215189873,
+          "recall": 0.69,
+          "support": 100
+        },
+        "Trouser": {
+          "f1": 0.9847715736040609,
+          "precision": 1.0,
+          "recall": 0.97,
+          "support": 100
+        }
+      }
+    },
+    "shifted-current": {
+      "accuracy": 0.826,
+      "class_names": [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+      ],
+      "confusion_matrix": [
+        [
+          79,
+          0,
+          4,
+          8,
+          0,
+          0,
+          8,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          90,
+          0,
+          10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          87,
+          3,
+          0,
+          3,
+          5,
+          0,
+          1,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          97,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          45,
+          12,
+          25,
+          1,
+          16,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          96,
+          0,
+          3,
+          0,
+          1
+        ],
+        [
+          15,
+          0,
+          13,
+          8,
+          1,
+          0,
+          61,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          97,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          99,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          4,
+          0,
+          95
+        ]
+      ],
+      "count": 1000,
+      "macro_f1": 0.81247282953896,
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9644670050761421,
+          "precision": 0.979381443298969,
+          "recall": 0.95,
+          "support": 100
+        },
+        "Bag": {
+          "f1": 0.9658536585365853,
+          "precision": 0.9428571428571428,
+          "recall": 0.99,
+          "support": 100
+        },
+        "Coat": {
+          "f1": 0.3968253968253968,
+          "precision": 0.9615384615384616,
+          "recall": 0.25,
+          "support": 100
+        },
+        "Dress": {
+          "f1": 0.8151260504201681,
+          "precision": 0.7028985507246377,
+          "recall": 0.97,
+          "support": 100
+        },
+        "Pullover": {
+          "f1": 0.6987951807228916,
+          "precision": 0.5838926174496645,
+          "recall": 0.87,
+          "support": 100
+        },
+        "Sandal": {
+          "f1": 0.9411764705882353,
+          "precision": 0.9230769230769231,
+          "recall": 0.96,
+          "support": 100
+        },
+        "Shirt": {
+          "f1": 0.6421052631578947,
+          "precision": 0.6777777777777778,
+          "recall": 0.61,
+          "support": 100
+        },
+        "Sneaker": {
+          "f1": 0.9509803921568627,
+          "precision": 0.9326923076923077,
+          "recall": 0.97,
+          "support": 100
+        },
+        "T-shirt/top": {
+          "f1": 0.8020304568527918,
+          "precision": 0.8144329896907216,
+          "recall": 0.79,
+          "support": 100
+        },
+        "Trouser": {
+          "f1": 0.9473684210526315,
+          "precision": 1.0,
+          "recall": 0.9,
+          "support": 100
+        }
+      }
+    },
+    "bad-current": {
+      "accuracy": 0.799,
+      "class_names": [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+      ],
+      "confusion_matrix": [
+        [
+          86,
+          0,
+          6,
+          2,
+          1,
+          0,
+          4,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          98,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          63,
+          1,
+          29,
+          0,
+          6,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          1,
+          0,
+          80,
+          8,
+          0,
+          2,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          4,
+          1,
+          93,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          80,
+          0,
+          18,
+          0,
+          2
+        ],
+        [
+          33,
+          0,
+          12,
+          4,
+          37,
+          0,
+          13,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          89,
+          0,
+          11
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          97,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          100
+        ]
+      ],
+      "count": 1000,
+      "macro_f1": 0.7805669147653302,
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9345794392523364,
+          "precision": 0.8771929824561403,
+          "recall": 1.0,
+          "support": 100
+        },
+        "Bag": {
+          "f1": 0.97,
+          "precision": 0.97,
+          "recall": 0.97,
+          "support": 100
+        },
+        "Coat": {
+          "f1": 0.6940298507462687,
+          "precision": 0.5535714285714286,
+          "recall": 0.93,
+          "support": 100
+        },
+        "Dress": {
+          "f1": 0.8421052631578947,
+          "precision": 0.8888888888888888,
+          "recall": 0.8,
+          "support": 100
+        },
+        "Pullover": {
+          "f1": 0.6737967914438503,
+          "precision": 0.7241379310344828,
+          "recall": 0.63,
+          "support": 100
+        },
+        "Sandal": {
+          "f1": 0.8888888888888888,
+          "precision": 1.0,
+          "recall": 0.8,
+          "support": 100
+        },
+        "Shirt": {
+          "f1": 0.20634920634920634,
+          "precision": 0.5,
+          "recall": 0.13,
+          "support": 100
+        },
+        "Sneaker": {
+          "f1": 0.8599033816425121,
+          "precision": 0.8317757009345794,
+          "recall": 0.89,
+          "support": 100
+        },
+        "T-shirt/top": {
+          "f1": 0.7510917030567685,
+          "precision": 0.6666666666666666,
+          "recall": 0.86,
+          "support": 100
+        },
+        "Trouser": {
+          "f1": 0.9849246231155779,
+          "precision": 0.98989898989899,
+          "recall": 0.98,
+          "support": 100
+        }
+      }
+    }
+  },
+  "limits": [
+    "Reference/current are disjoint 1000-image research cohorts.",
+    "Shifted-current is constructed by multiplying current brightness by 0.45 and rounding; labels are retained.",
+    "Single-model brightness comparison changes input bytes; paired model-quality comparison keeps input bytes and labels fixed.",
+    "The separate incident fixture performs a real native alias change outside the reviewed local journal.",
+    "Author machine observations do not certify Windows or 8 GB hardware.",
+    "Final official-test result was measured only after selection and rollback restored the approved model."
+  ]
+}
