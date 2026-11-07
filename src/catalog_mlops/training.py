@@ -40,6 +40,16 @@ def configure_cpu(config: TrainingConfig) -> None:
     torch.use_deterministic_algorithms(True)
 
 
+def model_state_sha256(model: nn.Module) -> str:
+    """Identify named weight values independently of a serialization container."""
+    parameters = []
+    for name, tensor in sorted(model.state_dict().items()):
+        values = tensor.detach().cpu().contiguous().numpy()
+        parameters.append({"name": name, "shape": list(values.shape), "dtype": str(values.dtype),
+                           "values_sha256": bytes_digest(values.tobytes())})
+    return json_digest(parameters)
+
+
 def translate_batch(inputs: torch.Tensor, pixels: int, generator: torch.Generator) -> torch.Tensor:
     if pixels == 0:
         return inputs
@@ -118,6 +128,7 @@ def train(data_root: Path, output: Path, config: TrainingConfig, telemetry=None)
         write_json(temporary / "dataset.json", manifest)
         write_json(temporary / "environment.json", environment_record())
         model = CatalogCNN(dropout=config.dropout)
+        initial_state_sha256 = model_state_sha256(model)
         optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
         augmentation_rng = torch.Generator().manual_seed(config.seed + 1)
         history = []
@@ -149,6 +160,7 @@ def train(data_root: Path, output: Path, config: TrainingConfig, telemetry=None)
         training_seconds = time.perf_counter() - training_started
         checkpoint = {"schema": 1, "architecture": "catalog-cnn-v1", "class_names": list(CLASS_NAMES),
                       "preprocessing": "uint8-grayscale-28x28-div255-v1", "config": config.to_dict(),
+                      "state_sha256": model_state_sha256(model),
                       "state_dict": model.state_dict()}
         torch.save(checkpoint, temporary / "model.pt")
         restored, _ = load_model(temporary / "model.pt")
@@ -172,6 +184,8 @@ def train(data_root: Path, output: Path, config: TrainingConfig, telemetry=None)
                   "primary_metric": "validation_macro_f1", "validation_macro_f1": metrics["macro_f1"],
                   "validation_accuracy": metrics["accuracy"], "train_count": len(training.dataset),
                   "validation_count": len(validation_ids), "parameters": sum(p.numel() for p in model.parameters()),
+                  "initial_state_sha256": initial_state_sha256,
+                  "trained_state_sha256": checkpoint["state_sha256"],
                   "training_seconds": training_seconds, "total_seconds": time.perf_counter() - started,
                   "checkpoint_reload_exact": True}
         write_json(temporary / "run.json", record)
@@ -201,6 +215,8 @@ def load_model(path: Path) -> tuple[CatalogCNN, dict]:
     config = TrainingConfig(**checkpoint["config"])
     model = CatalogCNN(dropout=config.dropout)
     model.load_state_dict(checkpoint["state_dict"], strict=True)
+    if checkpoint.get("state_sha256") is not None and model_state_sha256(model) != checkpoint["state_sha256"]:
+        raise ValueError("Checkpoint weight values differ from the declared model state")
     model.eval()
     return model, checkpoint
 
@@ -222,4 +238,13 @@ def verify_run(path: Path) -> dict:
         raise ValueError("Run dataset identity differs")
     if sha256(path / "source.zip") != record["source"]["archive_sha256"]:
         raise ValueError("Run source archive checksum mismatch")
+    file_hashes = record["source"]["file_sha256"]
+    if json_digest(file_hashes) != record["source"]["source_sha256"]:
+        raise ValueError("Source identity differs from its declared file hashes")
+    with zipfile.ZipFile(path / "source.zip") as archive:
+        if len(archive.namelist()) != len(file_hashes) or set(archive.namelist()) != set(file_hashes):
+            raise ValueError("Source archive files differ from the recorded snapshot")
+        for filename, digest in file_hashes.items():
+            if bytes_digest(archive.read(filename)) != digest:
+                raise ValueError(f"Archived source bytes differ for {filename}")
     return record

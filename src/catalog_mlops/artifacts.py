@@ -28,7 +28,7 @@ def read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def write_json(path: Path, value: object) -> None:
+def write_json(path: Path, value: object, overwrite: bool = True) -> None:
     """Publish a complete record, including when another process is reading it."""
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
@@ -42,4 +42,10 @@ def write_json(path: Path, value: object) -> None:
         except BaseException:
             temporary.unlink(missing_ok=True)
             raise
-    temporary.replace(path)
+    try:
+        if overwrite:
+            temporary.replace(path)
+        else:
+            os.link(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
