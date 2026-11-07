@@ -24,7 +24,7 @@ The supplied [intake checks](https://github.com/richhiey/ml-llm-ops/blob/main/do
 
 ```bash
 cp docs/course/exercises/test_intake_quality.py tests/test_intake_quality.py
-uv run --frozen pytest -q tests/test_intake_quality.py
+pytest -q tests/test_intake_quality.py
 ```
 
 Expect three failures and one pass before the change: the starter accepts the three images the new policy should reject. The checks also verify that an accepted image produces an identified prediction, a rejected delivery remains unpublished and the original image file is preserved.
@@ -62,8 +62,8 @@ Keep the remaining tensor conversion and normalization unchanged. This call conn
 # 4. Check the decision and its effect
 
 ```bash
-uv run --frozen pytest -q tests/test_intake_quality.py
-uv run --frozen pytest -q
+pytest -q tests/test_intake_quality.py
+pytest -q
 git diff -- src/catalog_mlops/preprocessing.py
 ```
 
@@ -76,8 +76,8 @@ You have changed which incoming images may reach the classifier. You have not ch
 Create a deliberately flat thumbnail and run it through the ordinary prediction script.
 
 ```bash
-uv run --frozen python docs/course/exercises/prepare_quality_intake.py
-uv run --frozen python scripts/predict_batch.py --run work/runs/baseline --manifest work/quality-intake/manifest.csv --output work/batches/quality-rejection
+python docs/course/exercises/prepare_quality_intake.py
+python scripts/predict_batch.py --run work/runs/baseline --manifest work/quality-intake/manifest.csv --output work/batches/quality-rejection
 ```
 
 The fixture contains one constant-gray image, its manifest and a JSON request body. Expect the batch command to fail with insufficient contrast at position `0`. Confirm that `work/batches/quality-rejection` was not published. This failure is the intended policy response.
@@ -85,7 +85,7 @@ The fixture contains one constant-gray image, its manifest and a JSON request bo
 Now run the original valid intake into a new destination.
 
 ```bash
-uv run --frozen python scripts/predict_batch.py --run work/runs/baseline --manifest work/intake/manifest.csv --output work/batches/after-quality-stage
+python scripts/predict_batch.py --run work/runs/baseline --manifest work/intake/manifest.csv --output work/batches/after-quality-stage
 ```
 
 Expect `20` predictions. Compare them with `work/batches/baseline/predictions.csv`: identifiers, classes and scores should agree. Accepted pixels and saved weights are unchanged.
@@ -94,10 +94,10 @@ In `batch.json`, the training source identity still describes the code that trai
 
 # 6. Check the HTTP route
 
-In a second terminal, restart the web server so it imports your edited source.
+In your already activated second terminal, restart the web server so it imports your edited source.
 
 ```bash
-uv run --frozen uvicorn scripts.api:app --host 127.0.0.1 --port 8000
+uvicorn scripts.api:app --host 127.0.0.1 --port 8000
 ```
 
 In the first terminal, send the constructed low-range input directly with `curl`.

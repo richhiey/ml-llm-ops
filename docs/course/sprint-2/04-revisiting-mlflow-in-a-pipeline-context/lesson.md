@@ -3,7 +3,7 @@
 
 Threadline has five hypotheses and configuration files. Now the team needs every training attempt to retain its settings, learning observations and evaluated model together. You will run the planned study through MLflow and inspect what was actually recorded.
 
-Keep your completed intake source fixed for this study. The [README](https://github.com/richhiey/ml-llm-ops/blob/main/README.md) repeats the commands below. Work in your local clone; keep the original untracked baseline as historical evidence.
+Keep your completed intake source fixed for this study. The [README](https://github.com/richhiey/ml-llm-ops/blob/main/README.md) repeats the commands below. Work in your local clone with its `.venv` activated; keep the original untracked baseline as historical evidence.
 
 # 1. Connect the familiar pipeline to MLflow
 
@@ -22,7 +22,7 @@ For project assembly, [track_experiment.py](https://github.com/richhiey/ml-llm-o
 # 2. Confirm a baseline under the frozen source
 
 ```bash
-uv run --frozen python scripts/track_experiment.py --config configs/baseline.json --output work/experiments/baseline --state work/mlflow --name baseline
+python scripts/track_experiment.py --config configs/baseline.json --output work/experiments/baseline --state work/mlflow --name baseline
 ```
 
 Expect four epochs, a completed local result and `work/experiments/baseline.tracking.json`. The receipt records a full run ID and a native MLflow model URI. Keep these actual values; another machine creates different IDs. The source, split and initial weights are recorded so later comparisons can check their controls.
@@ -34,11 +34,11 @@ The author reference reproduced accuracy `0.8380` and macro F1 `0.8322` after th
 This guided sequence adopts the reference matrix. Before running, keep your original proposal and record a reconciled plan in `work/experiment-plan.md`: either confirm that your five files match the reference values, or explain each difference and why you are adopting the reference setting for this shared study. Then execute the named reference files below. Each candidate starts from the same baseline settings, with only its named factor changed.
 
 ```bash
-uv run --frozen python scripts/track_experiment.py --config configs/experiments/longer-training.json --output work/experiments/longer-training --state work/mlflow --name longer-training
-uv run --frozen python scripts/track_experiment.py --config configs/experiments/lower-learning-rate.json --output work/experiments/lower-learning-rate --state work/mlflow --name lower-learning-rate
-uv run --frozen python scripts/track_experiment.py --config configs/experiments/weight-decay.json --output work/experiments/weight-decay --state work/mlflow --name weight-decay
-uv run --frozen python scripts/track_experiment.py --config configs/experiments/dropout.json --output work/experiments/dropout --state work/mlflow --name dropout
-uv run --frozen python scripts/track_experiment.py --config configs/experiments/translation.json --output work/experiments/translation --state work/mlflow --name translation
+python scripts/track_experiment.py --config configs/experiments/longer-training.json --output work/experiments/longer-training --state work/mlflow --name longer-training
+python scripts/track_experiment.py --config configs/experiments/lower-learning-rate.json --output work/experiments/lower-learning-rate --state work/mlflow --name lower-learning-rate
+python scripts/track_experiment.py --config configs/experiments/weight-decay.json --output work/experiments/weight-decay --state work/mlflow --name weight-decay
+python scripts/track_experiment.py --config configs/experiments/dropout.json --output work/experiments/dropout --state work/mlflow --name dropout
+python scripts/track_experiment.py --config configs/experiments/translation.json --output work/experiments/translation --state work/mlflow --name translation
 ```
 
 Expect five additional run IDs and five retained result directories. Each starts from fresh weights. Leave the code and evaluation conditions fixed between commands. A candidate's score can decrease; retain that result too.
@@ -48,7 +48,8 @@ Expect five additional run IDs and five retained result directories. Each starts
 In a second terminal at the same repository root, start the native MLflow service.
 
 ```bash
-uv run --frozen mlflow ui --backend-store-uri sqlite:///work/mlflow/tracking.db --host 127.0.0.1 --port 5001
+source .venv/bin/activate
+mlflow ui --backend-store-uri sqlite:///work/mlflow/tracking.db --host 127.0.0.1 --port 5001
 ```
 
 Open `http://127.0.0.1:5001` in your browser. Choose **Experiments → threadline-cnn**, then open `baseline`. Keep this terminal running while using the UI. The SQLite file stores tracking records; the experiment's file artifact directory retains its files. Both are local and needed to retrieve the study.

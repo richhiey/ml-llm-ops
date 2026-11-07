@@ -22,7 +22,7 @@ The [comparison implementation](https://github.com/richhiey/ml-llm-ops/blob/main
 Replace the six capitalized ID tokens below with the full IDs from your ledger. These tokens identify your runs; they are not filenames or literal values to submit.
 
 ```bash
-uv run --frozen python scripts/compare_runs.py --state work/mlflow --baseline BASELINE_ID --runs LONGER_ID LOWER_LR_ID WEIGHT_DECAY_ID DROPOUT_ID TRANSLATION_ID --output work/comparison.json
+python scripts/compare_runs.py --state work/mlflow --baseline BASELINE_ID --runs LONGER_ID LOWER_LR_ID WEIGHT_DECAY_ID DROPOUT_ID TRANSLATION_ID --output work/comparison.json
 ```
 
 Expect five distinct eligible candidates and a selected run/model URI. Reconcile the output with your UI decision. If a control is mismatched, preserve the exclusion reason and repair the experiment before making a comparative claim. Do not overwrite an earlier comparison decision.

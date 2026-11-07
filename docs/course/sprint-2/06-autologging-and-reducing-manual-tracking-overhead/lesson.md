@@ -24,7 +24,7 @@ Final decision metrics, data/source identities, recipe artifacts and the verifie
 Configure the project's autologging option for a baseline repeat. Choose a new output destination and retain its receipt. Use this documented execution after tracing the option into the source configuration above.
 
 ```bash
-uv run --frozen python scripts/track_experiment.py --config configs/baseline.json --output work/experiments/baseline-autolog --state work/mlflow --name baseline-autolog --autolog
+python scripts/track_experiment.py --config configs/baseline.json --output work/experiments/baseline-autolog --state work/mlflow --name baseline-autolog --autolog
 ```
 
 Compare its native MLflow record with the manually instrumented baseline. Verify `auto/train_loss`, `auto/validation_loss`, `auto/validation_accuracy` and `auto/validation_macro_f1` all contain steps `1–4`. Verify the proof parameter and distinguish automatically captured fields from explicitly logged fields.

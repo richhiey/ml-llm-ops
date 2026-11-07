@@ -8,9 +8,23 @@ Follow the complete sequence in the [README](https://github.com/richhiey/ml-llm-
 
 `uv sync --frozen` installs the committed dependency lock into `.venv`. The project selects Python `3.12.12`. Run every command from the repository root. CPU PyTorch wheels are selected on Windows/Linux; macOS uses the standard wheel with application tensors kept on CPU.
 
+On macOS or Linux, activate the installed environment from the repository root:
+
+```bash
+source .venv/bin/activate
+```
+
+On Windows PowerShell, use:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+On Windows Command Prompt, use `.venv\Scripts\activate.bat`. Each new terminal needs activation; restarting a service in an already activated terminal does not. The walkthrough shows the macOS/Linux command. Substitute your platform's activation command at that point. In VS Code notebooks, select `.venv` as the kernel.
+
 If you have an older course clone, preserve personal work elsewhere and start with a fresh clone. An older environment does not establish this setup. Use a short writable path on Windows. If `uv` or Git is unavailable, check your terminal's path and reopen it after installation.
 
-`uv run --frozen` selects the locked environment; the executable after it is the actual tool. `python scripts/train.py` runs the named Python file. `uvicorn scripts.api:app` starts the web server. `curl` is a separate HTTP client already available on many systems. Use curl 7.76 or newer for `--fail-with-body`, and use `curl.exe` in Windows PowerShell.
+Activate `.venv` once in each terminal. After activation, run the tools directly. `python scripts/train.py` runs the named Python file. `uvicorn scripts.api:app` starts the web server. `curl` is a separate HTTP client already available on many systems. Use curl 7.76 or newer for `--fail-with-body`, and use `curl.exe` in Windows PowerShell.
 
 ## Data and retained outputs
 
@@ -23,7 +37,7 @@ Existing run, intake, request and batch destinations are protected. Resume by in
 ## Checks and optional notebook
 
 ```bash
-uv run --frozen pytest -q
+pytest -q
 ```
 
 The mechanics tests use explicitly synthetic fixtures. They check implementation behavior, not Fashion-MNIST quality. Your real-data training and evaluation establish model quality.

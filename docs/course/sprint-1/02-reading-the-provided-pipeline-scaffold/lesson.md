@@ -15,11 +15,12 @@ Get the repository and install its locked environment.
 git clone https://github.com/richhiey/ml-llm-ops.git
 cd ml-llm-ops
 uv sync --frozen
-uv run --frozen python scripts/prepare_data.py
-uv run --frozen python scripts/inspect_dataset.py
+source .venv/bin/activate
+python scripts/prepare_data.py
+python scripts/inspect_dataset.py
 ```
 
-`uv` selects the project environment. `python` executes the named file, which you can open in your editor. Preparation downloads and verifies Fashion-MNIST, then records fixed image indices. Inspection reads the image arrays with NumPy and plots examples with Matplotlib.
+`uv sync --frozen` installs the locked environment once. Activate `.venv` once in each terminal, then run the tools directly. On Windows, use the activation command in the [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). `python` executes the named file, which you can open in your editor. Preparation downloads and verifies Fashion-MNIST, then records fixed image indices. Inspection reads the image arrays with NumPy and plots examples with Matplotlib.
 
 Expect the original array to have shape `(60000, 28, 28)` and dtype `uint8`. The bounded CPU profile uses `12,000` training images and `3,000` separate validation images: `1200` and `300` per category respectively. The official test split stays reserved for reporting after model selection.
 
@@ -57,7 +58,7 @@ Open [model.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlo
 Inspect `configs/baseline.json`. It specifies four **epochs**—four passes through the training examples—a batch size of `64`, learning rate `0.001` and seed `426`. The learning rate controls the size of weight updates.
 
 ```bash
-uv run --frozen python scripts/train.py --config configs/baseline.json --output work/runs/baseline
+python scripts/train.py --config configs/baseline.json --output work/runs/baseline
 ```
 
 The script starts with fresh CNN weights. It uses PyTorch's Adam optimizer. The essential update, inside the existing batch loop, is:
@@ -79,8 +80,8 @@ Expect four epoch observations and a completed `work/runs/baseline` directory. K
 Reload the saved model, evaluate it on the fixed validation images and inspect its results.
 
 ```bash
-uv run --frozen python scripts/evaluate.py --run work/runs/baseline
-uv run --frozen python scripts/inspect_results.py --run work/runs/baseline
+python scripts/evaluate.py --run work/runs/baseline
+python scripts/inspect_results.py --run work/runs/baseline
 ```
 
 The first script evaluates the saved weights. The second recomputes metrics from the retained prediction CSV and draws your own plots. Expect `3000` predictions. The author's reference run reached accuracy `0.8380` and macro F1 `0.8322`; inspect your own result rather than treating those numbers as a guarantee across computers.
@@ -116,8 +117,8 @@ This is a useful stopping point. You can close your editor and resume from the s
 Export a small unlabeled intake from the separate incoming-image pool and run prediction.
 
 ```bash
-uv run --frozen python scripts/export_samples.py --count 20 --output work/intake
-uv run --frozen python scripts/predict_batch.py --run work/runs/baseline --manifest work/intake/manifest.csv --output work/batches/baseline
+python scripts/export_samples.py --count 20 --output work/intake
+python scripts/predict_batch.py --run work/runs/baseline --manifest work/intake/manifest.csv --output work/batches/baseline
 ```
 
 Expect `20` rows in `work/batches/baseline/predictions.csv`, plus `batch.json`. Match identifiers and order to the intake manifest. Each result contains a category and a top softmax score. **Softmax** turns logits into normalized scores; its largest value is not a calibrated guarantee of correctness.
@@ -129,7 +130,8 @@ Open [inference.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog
 In a **second terminal**, at the repository root, start the actual web server.
 
 ```bash
-uv run --frozen uvicorn scripts.api:app --host 127.0.0.1 --port 8000
+source .venv/bin/activate
+uvicorn scripts.api:app --host 127.0.0.1 --port 8000
 ```
 
 Uvicorn loads the FastAPI application declared in [scripts/api.py](https://github.com/richhiey/ml-llm-ops/blob/main/scripts/api.py). That file explicitly selects `work/runs/baseline`. Wait for startup to complete and keep the terminal running.
@@ -137,7 +139,7 @@ Uvicorn loads the FastAPI application declared in [scripts/api.py](https://githu
 Back in the **first terminal**, prepare the request body and send it using `curl`.
 
 ```bash
-uv run --frozen python scripts/prepare_request.py --image work/intake/56368.png --image-id train:56368 --output work/intake/request.json
+python scripts/prepare_request.py --image work/intake/56368.png --image-id train:56368 --output work/intake/request.json
 curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary @work/intake/request.json http://127.0.0.1:8000/predict
 ```
 

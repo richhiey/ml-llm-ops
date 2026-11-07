@@ -10,7 +10,7 @@ Use your existing saved CNN and the same local helper repository. Your task is t
 Create the constructed acceptance intake from the repository root.
 
 ```bash
-uv run --frozen python docs/course/exercises/prepare_intake.py --output work/morrow-intake
+python docs/course/exercises/prepare_intake.py --output work/morrow-intake
 ```
 
 The script exports `24` identified records to `work/morrow-intake/intake.csv`. Product examples come from the independent research-image pool. Additional format/quality conditions are deliberately constructed for this exercise. Creating the intake does not verify or repair it.
