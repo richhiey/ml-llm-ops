@@ -1,23 +1,32 @@
-# Linden energy-demand application
+# Catalog MLOps
 
-A local Python application for training an energy-demand model, tracking comparable experiments in MLflow, delivering identified prediction CSVs, managing approved model versions and recovering a recorded recipe. It uses a fixed synthetic demand snapshot; the fixture demonstrates engineering behavior rather than real building forecasting quality.
+Train, evaluate and operate a small Fashion-MNIST CNN on a local CPU. The running case follows Threadline Retail as its catalog team investigates category suggestions, controlled improvements and reproducible operation.
 
-```sh
-uv sync --locked --python 3.12
-uv run pytest tests/test_spine.py::test_contract_extension_and_unchanged_pipeline -q
-uv run linden-mlops train --config configs/baseline.json
+Start with the [local setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md), then read the [project story](https://github.com/richhiey/ml-llm-ops/blob/main/docs/project-story.md) and [Campus lessons](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/README.md).
+
+```bash
+git clone https://github.com/richhiey/ml-llm-ops.git
+cd ml-llm-ops
+uv sync --frozen
+uv run --frozen catalog-mlops prepare
+uv run --frozen catalog-mlops train --config configs/baseline.json --output work/runs/baseline
+uv run --frozen catalog-mlops evaluate --run work/runs/baseline
 ```
 
-Training returns an actual run ID, logged-model URI, validation metrics and source/data/environment manifest. To predict without a registry, pass that actual URI:
+The two-convolution CNN has 55,338 parameters. Its CPU profile uses 12,000 training and 3,000 validation images with recorded indices. The official test split is reserved for reporting after selection. Every run retains weights, configuration, data/split identities, code snapshot, environment, validation predictions and metrics.
 
-```sh
-uv run linden-mlops batch --model-uri ACTUAL_LOGGED_MODEL_URI --output-name first-delivery
-```
+## Application layout
 
-Replace the placeholder with the training result's `model_uri`. A batch job never overwrites a prior CSV or its metadata. Use a fresh job name for another execution. The default planned input contains `24` rows; the planner's acceptance contract requires a complete aligned file within `60` seconds.
+| Location | Purpose |
+|---|---|
+| `src/catalog_mlops/` | Reusable ingestion, preprocessing, training, evaluation and inference operations |
+| `configs/` | Explicit training recipes |
+| `tests/` | Contract and artifact-integrity regression checks |
+| `notebooks/` | Local companion notebooks importing the reusable core |
+| `docs/course/` | Campus lessons and clearly labeled exercise material |
+| `work/` | Your ignored run artifacts, intake files and observations |
+| `data/` | Your ignored verified dataset cache |
 
-[Setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) · [Contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) · [Experiments](https://github.com/richhiey/ml-llm-ops/blob/main/docs/experiments.md) · [API](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md)
+Use [the inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) to compare batch and HTTP delivery. Read [the dataset card](https://github.com/richhiey/ml-llm-ops/blob/main/docs/dataset-card.md) for task limits and attribution.
 
-[Operations](https://github.com/richhiey/ml-llm-ops/blob/main/docs/operations.md) covers explicit monitoring inputs and candidate decisions. [Recovery](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md) covers verified release descriptors, explicit exports and a new receiving source/environment/store.
-
-Application code contains no lesson progression, source resetter or assessment generator. [Campus lessons](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/README.md), four optional notebooks and clearly labeled course intake assets are separate from the runtime source archive. Work on a Git feature branch, write ordinary regression tests and retain actual run/job identities. Course fixture preparation is external instructor tooling and cannot establish a learner's work.
+Development proceeds sequentially through the three sprints. Published revision evidence will identify which project stages have been verified.

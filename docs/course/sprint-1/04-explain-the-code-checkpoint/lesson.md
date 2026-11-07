@@ -1,108 +1,76 @@
 ✂️
 # Explain-the-code checkpoint
 
-Linden Facilities receives a proposed guard from a coding assistant. Before merging it, the team needs more than a plausible explanation or a successful ordinary input. Your job is to establish what each statement actually does and whether the proposal meets the pipeline's contract.
+Threadline receives an AI-authored proposal claiming to prepare supplier thumbnails on the saved CNN's expected scale. It produces the right-looking shape for an ordinary image. Your job is to decide whether the claim survives examples chosen to distinguish it from the documented preparation.
 
-Keep your new `batch_input.py` stage, its lifecycle call and tests. The existing correct domain guard remains in `src/linden_mlops/pipeline.py`. The [candidate](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/generated-stage-candidate.py) is deliberately unsafe assistant-style exercise material, kept outside the installed source. It is an authored review fixture, not a record of a new assistant interaction.
+The [review candidate](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/generated_preprocessing.py) is a deliberately flawed, inactive course proposal. It is outside application source. Keep it separate while you investigate.
 
-## Starting point
-
-Use the same clone and locked environment. The proposed patch concerns domain validation. Its contract accepts temperature in `-30..50`, integer hour in `0..23`, and occupancy in `0..100`. It rejects invalid inputs, preserves accepted values/order/index, and returns an independent table.
-
-Copy the [attempt starter](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/sprint-1-attempt.py) into `work/sprint-1/attempt.py` using VS Code. Complete only `review_candidate()` now; retain the other function for the supplier checkpoint. The starter imports the candidate separately and leaves your reasoning and probes unwritten.
-
-## Your task
-
-Before execution, explain every executable line in the candidate. For each line, identify what it reads, any condition it checks, what it writes, and what it returns or raises. A **side effect** changes state outside the returned value; **mutation** changes an existing object.
-
-Record your predictions for one valid input, `hour=24`, a negative hour, and a fractional hour. For every case, distinguish:
-
-| Question | Observation to record |
-|---|---|
-| Does the call accept or reject? | Returned table or raised exception |
-| Which values remain in the caller's table? | Before/after comparison |
-| What table does the caller receive? | Values/index and returned-object identity |
-
-Write your probes, then run:
-
-```sh
-uv run python work/sprint-1/attempt.py review
-```
-
-Keep a fresh input for each case. Show at least one failed assertion against the required contract and contrast that same case with the application's existing `validate_ranges()`. Preserve the observed failure in your notes, including any prediction you corrected after running it.
-
-Finish with a merge recommendation: name every correction needed and the contract check supporting it. A statement such as “this validates the data” is insufficient unless you explain which invalid inputs it actually rejects. Reuse the existing feature tests and your new planned-batch tests. If the real source changes, rerun affected tests and make a freshly named delivery before relying on its evidence.
-
-## Working with documentation
-
-| Use it when… | Reference |
-|---|---|
-| You need the meaning of clipping | [pandas Series.clip](https://pandas.pydata.org/docs/reference/api/pandas.Series.clip.html) |
-| You need to compare a copy with its source | [pandas DataFrame.copy](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.copy.html) |
-| You need to compare values, index and types | [pandas assert_frame_equal](https://pandas.pydata.org/docs/reference/api/pandas.testing.assert_frame_equal.html) |
-| You need the declared pipeline guarantees | [Contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) |
-
-## Keep values and ownership separate
-
-![Writing through b changes the value read by a when both names share one table; an independent copy leaves a's table unchanged](assets/explain-the-code-checkpoint__01__en.png)
-
-Both examples start with the same value. Follow the write through `b`: two names for one table observe the same change, while an independent copy leaves the original table untouched. Equal values before a call do not establish ownership. Use separate observations of values and identity to investigate the candidate yourself.
-
-## Hints
-
-<details>
-<summary>Hint 1 — choose a distinguishing input</summary>
-
-Which contract rule would still be untested if every example used an ordinary integer hour?
-
-</details>
-
-<details>
-<summary>Hint 2 — observe more than the return value</summary>
-
-Retain a deep copy before each call. Compare the caller's table afterward, then test whether the returned object `is` the input object.
-
-</details>
-
-<details>
-<summary>Hint 3 — inspect the direction of a check</summary>
-
-An upper limit does not establish a lower limit or an integer requirement. Read the assignment and return as well as the condition.
-
-</details>
-
-## Checkpoints
-
-You are finished when your review predicts behavior line by line, exposes a failure that an ordinary input misses, and justifies the correction using the contrast with your working guard. Keep this review beside your stage explanation in the same script comments or `notes.md`. No second pipeline implementation is needed.
-
-<details>
-<summary>Solution — open after recording your review and observed probes</summary>
-
-**Result you should get:** The candidate rejects an empty table, clips `hour=24` to `23` in the caller's table, accepts a negative or fractional hour unchanged, and returns the caller's same object. It lacks temperature/occupancy checks and the other required feature checks. Even an ordinary valid input exposes the independent-copy failure if you inspect identity. Request changes before merging.
-
-**How:** In `proposed_guard`, `len(frame)` reads row count; the condition and `raise` address only emptiness. The assignment reads `hour`, applies `clip(upper=23)`, and writes into `frame`. `return frame` returns that same object. For a concrete refutation:
+The full proposed implementation is visible here. Copy it into your probe script and investigate the behavior before connecting any proposal to application source.
 
 ```python
-sample = pd.DataFrame({"temperature_c": [12.0], "hour": [24.0], "occupancy": [40.0]})
-original = sample.copy(deep=True)
-returned = proposed_guard(sample)
-assert returned is sample
-assert sample.loc[0, "hour"] == 23  # observed silent repair
-try:
-    pd.testing.assert_frame_equal(sample, original)
-except AssertionError as error:
-    print("Candidate violates input preservation:", error)
-else:
-    raise AssertionError("This candidate should expose a changed input")
-try:
-    validate_ranges(original)
-except ValueError as error:
-    print("Working guard rejects:", error)
-else:
-    raise AssertionError("Invalid hour was accepted")
+import numpy as np
+
+def prepare_candidate(images):
+    raw = np.asarray(images, dtype=np.float32)
+    maximum = raw.max(axis=(1, 2), keepdims=True)
+    normalized = raw / maximum
+    return normalized[:, None, :, :]
 ```
 
-Check negative/fractional hours and valid-object identity separately. If your review says “all valid values change,” narrow it: an assignment targets the caller's object, but already-valid numeric values can remain equal. Replace silent repair with explicit rejection and retain all taught feature checks before an independent-copy return.
+# Your task
+
+Review every executable line in `prepare_candidate()` and explain the input, intermediate shape, scaling rule and returned shape. Create `work/review_candidate.py` with your own probes and retain the output.
+
+Your evidence must address all three questions.
+
+- Does the candidate preserve the saved model's intensity scale across different thumbnails?
+- Does it always produce finite numeric values for structurally valid raw arrays?
+- What belongs at the intake boundary when an image fails Threadline's quality policy?
+
+Use the [pipeline contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) as the acceptance basis. Include at least one plausible input on which the proposal appears to work and two counterexamples that test different assumptions. Compare its output with the shared preparation where the input is accepted. State your expected result before running each probe.
+
+Finish with a merge recommendation, a precise correction and a check that would prevent this failure from returning. If an assistant helps you review, validate its claims against the actual arrays and code.
+
+# Working with documentation
+
+| Investigate | Documentation |
+|---|---|
+| Which axes are reduced and kept | [NumPy maximum](https://numpy.org/doc/stable/reference/generated/numpy.max.html) |
+| Whether every output is a usable finite value | [NumPy isfinite](https://numpy.org/doc/stable/reference/generated/numpy.isfinite.html) |
+| How raw pixels enter the real model | [Shared preprocessing source](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/preprocessing.py) |
+
+# Hints
+
+<details>
+<summary>Hint 1</summary>
+
+The proposal chooses a scale from each input. Consider what happens when two files have different brightest pixels but their numbers use the same documented raw scale.
+
+</details>
+
+<details>
+<summary>Hint 2</summary>
+
+Check the value used as the divisor. A shape test can pass while a division produces unusable values.
+
+</details>
+
+# Checkpoints
+
+Record the original input values and whether they changed. Inspect shape and dtype, but also inspect numeric values and finiteness. Explain how a passing example could conceal the error. Keep your attempt and recommendation before opening the feedback.
+
+<details>
+<summary>Reference feedback</summary>
+
+**Result you should get**
+
+A thumbnail containing pixel `128` as its maximum becomes `1.0` in the candidate, whereas the saved scale maps that value to approximately `0.502`. An all-zero raw image causes division by zero and non-finite values. A thumbnail whose maximum is `255` can make the proposal appear correct. The proposed replacement should be rejected until its preparation matches the declared model contract.
+
+**How**
+
+The conversion creates a float32 array. `max(axis=(1, 2), keepdims=True)` produces one divisor per image with shape `(N, 1, 1)`. Division therefore rescales each image differently. The final slice adds a channel dimension and can conceal that numeric mismatch behind a correct `(N, 1, 28, 28)` shape.
+
+Use fixed scaling by `255` through the shared preparation. Keep intake-quality rejection before model input. The all-zero probe tests the proposal directly, while the operational policy should reject such a file before prediction. Test a valid lower-maximum thumbnail with sufficient range to separate scaling correctness from intake rejection.
 
 </details>
 
@@ -112,4 +80,4 @@ Given an AI-generated addition to the pipeline, explain line by line what it doe
 
 ## Summary
 
-You have an evidence-backed review of a proposed pipeline addition. Your explanation connects statements to rejection, preservation and ownership, so a plausible description cannot substitute for the required behavior.
+Threadline's merge decision is supported by input values, executable counterexamples and a correction tied to the saved model contract. Your review explains what the code actually does and why an ordinary passing example is insufficient evidence for deployment.

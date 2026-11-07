@@ -1,62 +1,57 @@
-🏷️
+🏷
 # Batch vs real-time inference tradeoffs
 
-Linden Facilities can now reject invalid inputs and produce a complete prediction file. The planner asks whether the team should replace that job with a permanent prediction endpoint. Before choosing an architecture, read what the planner actually needs.
+Threadline's saved CNN can already produce categories through a batch job and a local HTTP service. The supplier-import team wants a complete result for a manifest each evening. A catalog specialist wants to inspect one suggestion while reviewing an individual item. The model is the same, but the delivery obligations differ.
 
-All 24 planned hourly inputs arrive together. One complete CSV must be ready within 60 seconds. There is no interactive caller. Your existing batch files let you connect a recommendation to an observed delivery, rather than a preference for a familiar technology.
+# Match the arrival pattern to the delivery
 
-## Identify what is waiting
+**Batch inference** processes a collected group of inputs as one job. Threadline can validate the manifest, pin one saved model and publish a complete prediction CSV for the review team. The output preserves every accepted identifier and its order.
 
-**Batch inference** processes a bounded group of inputs as one job. **Real-time inference** responds to requests as they arrive, within a response-time budget. Neither name guarantees that a particular implementation is fast or inexpensive.
+**Real-time inference** responds to an individual request while a client waits. The local HTTP process loads its model at startup and returns a suggestion for a submitted thumbnail. Serving this way introduces an availability obligation because a client can arrive while the process is unavailable.
 
-**Latency** is elapsed time until the required result is available. For Linden, the waiting party is the planner waiting for the complete file. For an interactive application, it may be a person waiting for one response. These are different completion events.
-
-![Architectural timelines contrast all inputs arriving together and a whole-file deadline with separate request arrivals and individual response deadlines](assets/batch-vs-real-time-inference-tradeoffs__01__en.png)
-
-The spacing and route lengths illustrate the two contracts; they are not benchmarks. Overlapping request lanes show that callers can arrive before earlier requests finish. The `60 s` batch deadline belongs to the supplied brief. No request-serving implementation or measured request latency is supplied.
-
-| Dimension | Batch job | Request service | Linden's requirement |
-|---|---|---|---|
-| Arrival | Inputs collected together | Requests arrive individually | 24 rows together |
-| Latency | Time to complete the required job | Time from each request to its response | Complete file within 60 seconds |
-| Throughput | Completed rows per unit time over the job | Completed requests per unit time under stated load | All planned rows delivered |
-| Resource obligations | Load/process/write during the job | Maintain the required availability and handle concurrent callers | A bounded local job |
-
-**Throughput** counts completed records per unit time. Linden's metadata records `rows_per_second` for the whole timed batch. Dividing job duration by 24 gives an average time per completed row within that job; it does not establish the response latency of 24 independent network requests.
-
-## Compare resource obligations before price
-
-A batch can load a fitted model once, process the input and exit. A request service often keeps the model in memory to avoid loading it per request. It also needs to handle its availability window, startup, queuing and failures. A busy service may use resources efficiently; an infrequent batch may avoid idle capacity.
-
-Those observations identify what to investigate, not a universal price ranking. An actual cost claim requires workload, resource consumption and pricing evidence. The [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) supports batch because it meets a shared-arrival, whole-file need with fewer availability obligations. Model size alone does not justify an endpoint.
-
-The fitted scaler and regressor could support either pattern. Changing the delivery pattern changes how inputs arrive, execution is scheduled, and outputs are returned. It does not require fitting preprocessing again on new requests.
-
-## Use the evidence you already have
-
-Open your actual `work/baseline-state/validated-batch.json` and matching CSV, or the new job name you used after a repair. These files record delivery through the source you edited. Its `run_id` must match the fitted baseline artifact you deliberately supplied; the model was not retrained merely to validate the new input boundary.
-
-| Evidence | Supported conclusion | Limit |
+| Question | Evening supplier import | Individual staff review |
 |---|---|---|
-| 24 finite predictions with matching `row_id` order | Complete, aligned output | Does not establish future prediction accuracy |
-| `elapsed_seconds` and `complete_within_60s` | Measured batch met its deadline | Excludes environment setup and training |
-| `rows_per_second` | Observed throughput for that job | Does not establish service throughput under load |
-| `run_id` and `model_uri`; registered version when using an alias | Which fitted artifact produced the file | `resolved_version=None` is expected for your direct-artifact job; it does not establish price or availability |
+| When do images arrive? | A completed manifest | One at a time |
+| When is the output needed? | Before the next review batch starts | During the current interaction |
+| What is success? | Complete, identified output and recoverable failure | An identified response within the client's acceptable wait |
+| What must be operated? | A job and retained result | A continuously reachable process while clients need it |
 
-Inspect the actual figures; do not generate another batch just for this page. If the record is missing or source changed, return to the saved-source verification before claiming completion.
+The [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) identifies the evening import as the primary client. A batch route fits that arrival pattern. The staff-review route has a different reason to use request/response delivery.
 
-## Check for Understanding
+# Measure the right work
 
-Write a short recommendation in the same working notes. Address latency, throughput and resource cost, citing your retained batch evidence. Then consider a changed brief: inputs arrive separately and each caller must receive an answer within 200 ms. Explain which part of your recommendation changes and what new measurements would be required. The 200 ms budget is hypothetical, not a measured result.
+**Latency** is the time a client waits for one result. **Throughput** is how many images a system processes per unit time. A batch can have good throughput while its last item waits for the job to complete. A request service can have short processing time for one image while its capacity is limited by many concurrent clients.
+
+The batch record's `elapsed_seconds` includes loading the model, reading images, predicting and writing the result inside the batch function. Divide delivered images by those seconds to describe observed throughput for that run. The HTTP response's `inference_seconds` measures work inside the already-running process. It excludes network/client time and the earlier model startup.
+
+These timers answer different questions. Use them with their boundaries stated. One warm HTTP request and one small cold batch cannot establish which architecture handles a production workload better. Check input size, hardware, model identity and concurrency before comparing performance observations.
+
+# Cost follows operating requirements
+
+A batch worker can run when a manifest is ready. A request service needs provisioned capacity and operational attention during the hours clients depend on it. Retries, peaks, storage and monitoring also affect resource use.
+
+The local exercise can measure elapsed time and process memory. It does not supply provider pricing or a production traffic trace. Explain the relevant cost drivers qualitatively, and name the missing evidence before estimating a hosting bill.
+
+# Failure handling belongs in the recommendation
+
+Threadline's batch contract publishes a complete output only after every accepted input has been processed. An invalid thumbnail causes the job to fail before that result is published. The team can inspect and quarantine rejected files, preserve their identities, then submit an accepted manifest.
+
+A request service handles validation at the request boundary and returns HTTP `422` for an invalid input. A client must also handle an unavailable service or timeout. Model identity remains important in both patterns so the team can determine which saved weights produced a suggestion.
+
+# Check for Understanding
+
+The import team suggests sending every evening thumbnail as a separate HTTP request because one interactive demonstration felt fast. Write a recommendation for the primary brief. Name two measurements you would collect before claiming that this delivery change improves performance or cost. Explain how the staff-review client's recommendation can differ.
 
 <details>
-<summary>Solution — compare after writing both decisions</summary>
+<summary>Solution</summary>
 
-**Result you should get:** Batch fits the actual brief: all 24 inputs arrive together and a complete file is needed within 60 seconds. Cite your observed completion, aligned rows and throughput. Cost remains a qualitative resource comparison unless you have consumption/pricing data.
+**Result you should get**
 
-For the changed brief, request serving becomes a candidate because each caller has its own deadline. The existing batch result does not prove a 200 ms response budget can be met.
+A defensible recommendation keeps batch delivery for the completed nightly manifest and supports request/response for interactive staff review. Evidence should cover a representative manifest's complete delivery time/throughput and the request service's end-to-end latency and capacity under a stated workload. Cost claims also need resource/pricing and operating-hours assumptions.
 
-**How:** Match the waiting party and completion event to the architecture. The changed brief needs end-to-end request latency, including queue/network time, under the expected arrival rate and concurrency, plus availability and resource-cost evidence. Reuse the fitted artifact; do not substitute local per-row compute time for those measurements.
+**How**
+
+Start with each client's arrival pattern and deadline. Check what the demonstration timer included. A single quick response demonstrates a working request path, while the primary client needs complete, identified batch delivery. Compare the whole proposed workload before changing that architecture.
 
 </details>
 
@@ -66,4 +61,4 @@ Compare batch and real-time inference patterns - latency, cost, throughput - and
 
 ## Summary
 
-Your inference choice follows Linden's input arrival and delivery deadline. You can support it with the completed batch while naming the measurements still missing for a request service. Keep that recommendation with the validated stage and code explanation for the acceptance task.
+Threadline can choose delivery patterns from client needs and measured behavior while keeping its saved classifier and input contract consistent. Your recommendation identifies latency, throughput, cost drivers and failure handling in terms the catalog team can evaluate.

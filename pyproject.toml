@@ -3,28 +3,35 @@ requires = ["hatchling==1.27.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "linden-mlops"
-version = "0.2.0"
-description = "Energy-demand pipeline with experiment tracking, model lifecycle and reproducible recovery"
+name = "catalog-mlops"
+version = "1.0.0"
+description = "A local CPU image-classification pipeline for reproducible MLOps practice"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "mlflow==3.5.1",
-    "scikit-learn==1.7.2",
-    "pandas==2.3.3",
+    "torch==2.8.0",
     "numpy==2.3.3",
+    "scikit-learn==1.7.2",
+    "mlflow==3.5.1",
     "matplotlib==3.11.2",
-    "sqlalchemy==2.0.44",
+    "pillow==11.3.0",
     "fastapi==0.119.0",
     "uvicorn==0.37.0",
-    "pydantic==2.12.3",
-    "scipy==1.18.1",
+    "tensorboard==2.20.0",
 ]
 
 [dependency-groups]
-dev = ["pytest==8.4.2", "nbformat==5.10.4", "nbclient==0.10.2", "ipykernel==6.30.1", "cairosvg==2.8.2", "pillow==11.3.0"]
+dev = ["pytest==8.4.2", "httpx==0.28.1", "nbformat==5.10.4", "nbclient==0.10.2", "ipykernel==6.30.1"]
 
 [project.scripts]
-linden-mlops = "linden_mlops.cli:main"
+catalog-mlops = "catalog_mlops.cli:main"
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

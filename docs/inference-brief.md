@@ -1,12 +1,19 @@
-# Linden inference decision brief
+# Threadline's inference brief
 
-Fictional acceptance brief: all 24 planned hourly inputs arrive together. A planner needs a complete CSV within 60 seconds on the learner's local machine. There is no interactive caller. Record one output row per unique `row_id`, finite `prediction_kwh`, the fitted artifact's source run, its model URI and the serving-source revision. The primary model-selection metric is validation RMSE in kWh because large demand errors matter more than small errors in this teaching brief; MAE is diagnostic. The initial teaching validation threshold is RMSE <= 5 kWh.
+Threadline's catalog specialists have reviewed category labels for prepared product thumbnails. The ML prototype suggests one of ten categories for a new thumbnail so a specialist can check the suggestion alongside the catalog record.
 
-A **run** identifies the training execution; a **model URI** identifies the stored fitted artifact. Before registry work, `batch_predict(..., model_uri=record["model_uri"])` loads that explicit artifact and legitimately records `resolved_version=None`. Once the registry selects an active model, omit `model_uri`: the job must also record its actual resolved registered version and matching source run. Both routes must satisfy the same row, identity, finiteness and measured completion checks. A registry version is additional identity evidence for alias-based delivery, not a prerequisite for the initial direct-artifact batch.
+The primary client is the supplier-import team. Each evening, it receives a completed manifest and wants one output row for every accepted image before the next catalog review begins. A second client is a specialist reviewing an individual upload who needs a response while the item is open.
 
-| Pattern | Latency | Cost | Throughput | Fit here |
-|---|---|---|---|---|
-| Batch (implemented) | Job completion including model load and output write | Work during scheduled job, no idle HTTP server | Amortizes model loading across 24 rows | Chosen: inputs and deadline are shared |
-| Request serving (prepared architectural comparison) | Per-request queue/network/model latency; usually requires warm process | Always-available service, monitoring and concurrency | Depends on workers, batching and resource limits | Useful if planner needs individual immediate responses; not this brief |
+| Requirement | Nightly import | Individual review |
+|---|---|---|
+| Input arrival | A completed manifest of many images | One thumbnail at a time |
+| Output | A CSV preserving every unique image identifier and its order | A response tied to the submitted image identifier |
+| Priority | Complete delivery and throughput | Response latency and service availability |
+| Model identity | Pin one verified model for the whole batch | Identify the model loaded by the running process |
+| Failure handling | Reject invalid intake before publishing a partial result | Return an explicit validation response for that request |
 
-No measured request-serving benchmark is supplied. Do not invent a speedup or price. The batch implementation records observed elapsed seconds and rows/second in the named job's JSON; timings vary with hardware and cache. `complete_within_60s` is the acceptance check. In alias mode, `active` resolves once before loading the version URI, so a later alias update affects the next job, not rows in the current job.
+For the local exercise, use a 20-image sample to verify mechanics and measure elapsed time. This is an exercise sample size, not a measured daily business volume. Record timing units and the work included in the timer. Batch elapsed time covers model loading, reading, prediction and writing inside the application function. The HTTP response's `inference_seconds` measures processing inside the running service and excludes client/network time.
+
+All images must already satisfy the documented grayscale thumbnail contract. Category suggestions require human review. A top softmax score is not a calibrated guarantee of correctness. The team gives each of the ten known categories equal importance when comparing candidates, so validation macro F1 is the primary decision metric.
+
+Recommend an inference pattern for the primary brief and explain the tradeoff for the other client. Local timing alone cannot establish cloud hosting costs or production availability. [Input and output contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md)

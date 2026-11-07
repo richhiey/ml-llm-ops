@@ -1,1 +1,10 @@
-{"alpha": 1.0, "range_guard": true, "autolog": true}
+{
+  "seed": 426,
+  "epochs": 4,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0,
+  "dropout": 0.0,
+  "translation_pixels": 0,
+  "cpu_threads": 2
+}

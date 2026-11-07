@@ -1,58 +1,60 @@
-🏷️
+🏷
 # From notebook to pipeline
 
-Linden Facilities has an energy-demand model that works in an analyst's notebook. Tomorrow, the planner needs another complete file of 24 hourly predictions. The analyst is away. Which cells produced the fitted model? Which data did they use? Will running the notebook from the top recreate the same result?
+Threadline Retail's fashion specialists review product categories before items enter the catalog. They have labeled examples of ten kinds of clothing, footwear and bags. The engineering team wants to investigate whether images can support useful category suggestions.
 
-Those questions turn a successful experiment into an engineering task. Our project keeps the useful ML work and makes its dependencies explicit. You will inspect that project in VS Code, extend one validation boundary, and build evidence that another engineer can understand.
+A notebook experiment might show that a model recognizes a shirt. The catalog team needs to know where that image came from, how it was prepared, which learned model produced the answer and whether the same process works for the next supplier batch. A pipeline makes those operations explicit and connects their inputs and outputs.
 
-## Make the next execution predictable
+# Follow one product through five stages
 
-A **pipeline** connects stages through declared inputs and outputs. A **reproducible** execution can be rebuilt from recorded source, data, configuration and environment to obtain an agreed result. Saving a prediction file preserves a result; it does not preserve everything needed to rebuild it.
+Fashion-MNIST supplies small front-view product thumbnails with reviewed category labels. A **label** is the known category used to teach and evaluate the classifier. The course uses those research images in a fictional catalog operation. The images are already prepared as `28×28` grayscale thumbnails. [Dataset card](https://github.com/richhiey/ml-llm-ops/blob/main/docs/dataset-card.md)
 
-A notebook can call a well-structured pipeline. The problem is hidden state: a cell may depend on an object fitted earlier, a changed file, or cells run in a different order. Moving that same hidden dependency into a script would preserve the problem. Named functions, explicit configuration and checks at their boundaries make the execution inspectable in either workspace.
-
-Linden's supplied Python scaffold has five stages. Read the table as input → responsibility → output, rather than a list of functions to memorize.
-
-| Stage | What it does for Linden | Output another stage can use |
+| Stage | What happens at Threadline | Evidence to inspect |
 |---|---|---|
-| Ingestion | Reads the historical CSV and checks its schema, completeness and unique identifiers | Checked historical table |
-| Preprocessing | Checks model inputs and selects the three features in the declared order | Feature table with rows/index preserved |
-| Training | Fits preprocessing statistics and regression coefficients using training rows | Fitted scaler and estimator together |
-| Evaluation | Compares validation predictions with known demand | Error metrics in kWh |
-| Inference | Uses the fitted artifact to predict planned inputs | Identified rows with `prediction_kwh` |
+| Ingestion | Load verified image and label files, then select recorded sample indices. | Original file hashes and the split manifest |
+| Preprocessing | Convert raw integer pixels into the numeric shape and scale expected by the CNN. | Input/output shapes, dtype and pixel values |
+| Training | Use labeled training images to adjust the CNN's weights. | Configuration, learning history and saved weights |
+| Evaluation | Compare predictions with known labels on separate validation images. | Predictions, metrics and confusion matrix |
+| Inference | Load the saved model and suggest categories for incoming thumbnails. | Identified predictions and the model actually loaded |
 
-## Follow the target, then the fitted artifact
+A **CNN**, or convolutional neural network, learns image patterns using small filters that move across the image. Early filters can respond to local edges. Later layers combine those responses to produce a score for each category. Training adjusts the filters and classification weights using examples.
 
-A **feature** is an input to the model; the **target** is the value it learns to predict. Linden's features are `temperature_c`, `hour` and `occupancy`. Its historical target is `demand_kwh`. The unique identifier `row_id` aligns records; `partition` identifies their fixed role. Neither is a model feature.
+At ingestion, an image might be identified as `train:56368`. That identifier means an index in the original research training file. Its known label can be used during training or evaluation. Incoming catalog images have their own identifiers and need predictions without supplying a category to the model.
 
-![Historical rows split into training and evaluation paths; a fitted scaler and model are reused by a separate planned-input path](assets/from-notebook-to-pipeline__01__en.png)
+# Two routes share the same preparation
 
-Follow the solid data arrows. Historical training rows supply both features and known demand to fitting. Validation rows supply known demand to evaluation, without fitting. Planned rows supply features to inference and have no known demand yet. Evaluation produces evidence; it does not turn into a prediction input.
+The training route contains labeled examples and updates model weights. The inference route loads the resulting weights and produces predictions. New catalog images pass through ingestion and preprocessing, then go to the saved model. They do not need to pass through training again.
 
-Linden uses a `StandardScaler`, which learns feature means and scales, followed by Ridge regression, a linear model whose penalty limits coefficient size. The scaler is fitted inside the model using training rows only. Both fitted objects must travel together. At inference, they transform and predict; they do not learn again from the planned batch.
+**Preprocessing** changes the representation of the input. Here, raw pixels use unsigned 8-bit integers, `uint8`, with values from `0` to `255`. The shared function creates a channel dimension and produces `float32` tensors with values from `0.0` to `1.0`. A **tensor** is the multidimensional numeric array used by the neural network.
 
-This also separates two questions: did the job deliver usable predictions, and how well did the model predict held-out historical demand? A completed CSV answers the first. **RMSE** (root mean squared error) and **MAE** (mean absolute error) answer the second, in the target's units of kWh. Without observed demand for planned rows, there is no prediction-error score for that batch.
+The CNN was trained to interpret that scale. If a supplier image is scaled differently during inference, the weights receive a different kind of input. Giving each image its own maximum value of `1.0` would change the contrast relationship the model learned.
 
-## Know what stays fixed
+# A metric needs a result it can be traced to
 
-The [dataset card](https://github.com/richhiey/ml-llm-ops/blob/main/src/linden_mlops/data/README.md) describes 240 fixed synthetic records: 168 training, 48 validation and 24 reserved final rows. Use the supplied split. Final targets and scores stay outside development decisions until the final handoff. This small teaching fixture demonstrates operational evidence; its interleaved split is not a real building-forecasting evaluation design.
+A **validation set** contains labeled images kept separate from training. It helps the engineers see whether the learned patterns work on other examples. The CPU profile has `12,000` training images and `3,000` validation images with recorded, disjoint indices. The official test split is reserved for reporting after model selection.
 
-The [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) asks for all 24 planned predictions in one complete CSV within 60 seconds. Keep that delivery requirement in view as you trace and change the code.
+Accuracy is the fraction classified correctly. Per-category recall asks how many examples of a category were found. A **confusion matrix** shows the actual category against the predicted category, exposing mistakes such as shirts classified as coats. These observations help the catalog team decide what to investigate next.
 
-## Check for Understanding
+The team retains more than a score. A saved run connects the model to its configuration, dataset, split, source code, environment and predictions. Another engineer can inspect that record without depending on the original notebook's hidden variables.
 
-Sketch the two paths for Linden. Mark where a known target is required and which fitted artifact must reach planned inference. Then diagnose this proposal: “We'll keep yesterday's regression coefficients but fit a fresh scaler on tomorrow's planned inputs.” What breaks, and what must be handed over instead?
+A **reproducible run** provides retrievable code, data, split, configuration and environment so another engineer can repeat its evaluation within a declared tolerance. Hidden notebook state prevents that engineer from knowing which steps and values produced the result. Recording the recipe begins here, while later operational work will verify a clean replay.
+
+# Check for Understanding
+
+A colleague has a screenshot showing `84%` accuracy and a file named `best-model.pt`. They now want to run tomorrow's supplier thumbnails through the classifier. Draw the route from those images to identified predictions. Mark the information that must be retrieved or verified before the screenshot can support using that model.
 
 <details>
-<summary>Solution — open after drawing your paths and diagnosing the proposal</summary>
+<summary>Solution</summary>
 
-**Result you should get:** Training and historical evaluation require known demand; planned inference does not. The proposal changes the feature representation the coefficients expect. Hand over the fitted scaler and regressor together, alongside the recorded recipe.
+**Result you should get**
 
-**How:** Trace which object learned means/scales during training. A new scaler uses different statistics even if the column names and regression coefficients match. Mark that learned state on your sketch; do not draw evaluation metrics entering the estimator as features.
+Your route should include incoming image identities, the expected image contract, shared preprocessing, a known saved model and identified output predictions. Your evidence list should connect the screenshot's metric to a dataset/split, evaluation procedure and the exact model artifact.
+
+**How**
+
+Trace ingestion → preprocessing → inference for the new images. Trace the saved artifact backward to training and evaluation records. A plausible filename cannot establish that the file is the model that achieved the displayed score. Re-running training would create a new observation requiring its own evidence.
 
 </details>
-
-Keep this sketch in your working notes. You will attach concrete functions, records and output files to the same map. Before execution, use the [VS Code setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md).
 
 ## Learning outcome
 
@@ -60,4 +62,4 @@ Explain why a reproducible training/inference pipeline replaces a one-off notebo
 
 ## Summary
 
-Linden needs a repeatable dependency chain as well as a prediction file. You can now separate historical fitting/evaluation from planned inference and locate the fitted preprocessing that connects them. The next step is to find those boundaries in the supplied source and its actual outputs.
+Threadline's prototype has a traceable route from labeled product images to a learned model and from incoming images to category suggestions. The scaffold will make each stage visible so you can inspect its actual data, code and outputs.

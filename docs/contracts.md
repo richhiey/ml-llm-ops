@@ -1,31 +1,27 @@
-# Application input, model and delivery contracts
+# Pipeline contracts
 
-## Historical training input
+## Dataset and preprocessing
 
-`ingest()` accepts the exact column order `row_id`, `temperature_c`, `hour`, `occupancy`, `demand_kwh`, `partition`. Rows must be nonempty, uniquely identified, complete and numeric/finite where required. The provided fixed snapshot has `168` train, `48` validation and `24` reserved final rows. `row_id` and `partition` are not features. Final targets remain closed during development and configuration selection.
+Original compressed IDX files must match the SHA256 values in `data.py`. The split manifest records exact official-training indices. Training uses only `train`. Validation uses only `validation`. Other partitions support later operational work and the official test split is reserved until selection.
 
-## Shared feature validation
+`validate_images()` accepts a nonempty NumPy array of uint8 grayscale images with shape `(N, 28, 28)`. It preserves the caller's array. `preprocess()` produces float32 tensors with shape `(N, 1, 28, 28)`, with pixel `255` mapped to `1.0` and pixel `0` to `0.0`. Evaluation and training use the same `normalize_pixels()` implementation. Neither inference route rescales each image by its own maximum.
 
-`validate_features(frame)` requires a nonempty table containing the three finite numeric features. The completed `validate_ranges(frame)` additionally rejects temperatures outside inclusive `[-30, 50]` degrees Celsius, hours outside inclusive `[0, 23]` or fractional hours, and occupancy outside inclusive `[0, 100]` percent. It rejects the whole invalid call and returns a deep independent copy of valid input, preserving columns, values, order and index. It never clips or filters.
+An image-quality policy is a separate bounded extension. The guided supplier policy requires pixel range of at least `20` within each accepted thumbnail. This checks for low-information intake under the exercise brief. It does not detect every photographic defect or establish category correctness. The starter intentionally has only its structural boundary. Learners add and test the new policy through the ordinary application route.
 
-`preprocess(frame, config)` applies the chosen validation boundary and selects the three features in their declared order. `train` fits a `StandardScaler` and Ridge estimator only on training rows. Inference reuses both fitted objects without fitting on planned input.
+## Saved run
 
-## Planned input and delivery
+The model artifact declares architecture, class order and preprocessing version. `verify_run()` checks the retained recipe, model, metrics, predictions, learning history, environment and source archive identities before a consumer loads it. A new run uses a new output directory. Incomplete jobs do not publish a complete run directory.
 
-The general `batch_predict` entrypoint reads a CSV with complete unique `row_id` and the three valid features. It supports a nonempty input of any size; the baseline does not enforce an exact planned-input column list or `24` input rows. These additional complete-plan guarantees are a concrete new intake-boundary requirement, distinct from the existing correct feature-range guard.
+`training_source_sha256` identifies the archived training code. `inference_source_sha256` identifies the source present when the consumer starts. These can differ after an intake extension. Restart a Python process after editing source so the imported functions correspond to that source revision.
 
-Linden's planner requires all `24` planned predictions in one CSV within `60` seconds. Acceptance checks verify the full `row_id` sequence, finite predictions, exact output columns `row_id`/`prediction_kwh` and actual elapsed time. The timer includes artifact loading, prediction and CSV writing, excluding environment setup and training. Whole-job throughput is delivered rows divided by seconds, not network-request latency.
+## Batch input and output
 
-A batch takes an explicit logged-model URI or resolves `active` once and pins that model version. Metadata records source run, model URI, resolved version when applicable, input path/hash and `serving_code_revision`. Source-run training identity and current serving source are separate facts. Existing CSV/JSON names are never overwritten.
+A UTF-8 CSV contains exactly `image_id,path` in that order. Identifiers are nonempty and unique. Relative image paths are resolved against the manifest's directory. PNG images must use mode `L` and size `28×28`.
 
-## Experiment and lifecycle policies
+Successful delivery publishes a new directory with `predictions.csv` and `batch.json`. Prediction rows preserve input order and identifiers. Fields are `image_id`, `class_id`, `class_name` and `top_score`. The record identifies the model, consumed manifest/image hashes, count, output hash and elapsed seconds. A failed job leaves its requested output directory absent.
 
-Application plans accept a nonempty set of distinct positive finite `alpha` values. A particular experiment may specify five configurations; that population size is not a universal runtime constraint. Comparisons require distinct actual IDs/configurations, shared data/source identity, guarded validation rows and finite nonnegative primary error. Lower validation `rmse_kwh` decides; `mae_kwh` and training metrics diagnose behavior.
+## HTTP request and response
 
-Registry approval requires a rationale, `range_guard=True`, validation evaluation and finite RMSE `<=5` kWh. Only approved versions may be active. This is a local single-user application policy, not built-in MLflow authorization. The mutable audit log covers helper-mediated changes and is not a tamper-proof control plane.
+`POST /predict` receives JSON containing `image_id` and `pixels`, a list of 28 rows of 28 integer pixels in `[0,255]`. Floats and out-of-range values are rejected before conversion to uint8. Success returns the prediction, model identity and service-side `inference_seconds`. Invalid input returns HTTP `422`. `GET /health` reports the loaded model identity.
 
-A release descriptor binds an approved active version to its actual source run and completed batch. Export consumes that verified descriptor or an explicitly named run. Recovery requires matching source/data/config/partition/environment and absolute validation RMSE difference `<=1e-6` kWh, plus independent delivery acceptance. See [recovery](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md).
-
-## Source identity at release
-
-An intermediate batch can investigate a new serving validation change with an existing fitted model. A final release must use one matching current training and serving source revision: the exported source is the training-time archive. If source changes afterward, revalidate/retrain the intended recipe from the completed source in a deliberate new experiment, then produce a fresh named batch before exporting. The release verifier rejects a source mismatch before creating an export directory.
+The process pins one saved model at startup. In this starting route, selecting another run requires a new process. Later registry work will make the resolution/reload boundary explicit. Batch and single-request top scores can differ by small floating-point roundoff, so compare class equality and score difference at most `1e-6`.

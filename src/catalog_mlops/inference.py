@@ -1,0 +1,155 @@
+"""Shared model loading and prediction for catalog batches and HTTP requests."""
+
+import csv
+from datetime import datetime, timezone
+import io
+from pathlib import Path
+import shutil
+import tempfile
+import threading
+import time
+
+import numpy as np
+from PIL import Image
+import torch
+
+from catalog_mlops.artifacts import bytes_digest, sha256, write_json
+from catalog_mlops.data import CLASS_NAMES, load_arrays, verify_data
+from catalog_mlops.preprocessing import preprocess
+from catalog_mlops.training import load_model, runtime_source_sha256, verify_run
+
+
+def read_thumbnail(path: Path) -> np.ndarray:
+    return decode_thumbnail(path.read_bytes(), path.name)
+
+
+def decode_thumbnail(content: bytes, name: str) -> np.ndarray:
+    with Image.open(io.BytesIO(content)) as image:
+        if image.mode != "L" or image.size != (28, 28):
+            raise ValueError(f"Expected a 28x28 grayscale image in mode L: {name}")
+        return np.asarray(image).copy()
+
+
+class Predictor:
+    """Pin one verified saved model for the lifetime of a consumer."""
+
+    def __init__(self, run_directory: Path):
+        self.run_directory = run_directory.resolve()
+        self.record = verify_run(self.run_directory)
+        self.model, self.checkpoint = load_model(self.run_directory / "model.pt")
+        self.identity = {"local_run": self.run_directory.name,
+                         "model_sha256": self.record["model_sha256"],
+                         "training_source_sha256": self.record["source"]["source_sha256"],
+                         "inference_source_sha256": runtime_source_sha256()}
+        self.model_lock = threading.Lock()
+        torch.set_num_threads(self.checkpoint["config"]["cpu_threads"])
+
+    def predict(self, images: np.ndarray, image_ids: list[str]) -> list[dict]:
+        if len(image_ids) != len(images) or len(set(image_ids)) != len(image_ids):
+            raise ValueError("Every image must have one distinct identifier")
+        if any(not isinstance(image_id, str) or not image_id.strip() for image_id in image_ids):
+            raise ValueError("Image identifiers must be nonempty strings")
+        inputs = preprocess(images)
+        with self.model_lock, torch.inference_mode():
+            maximum, predicted = self.model(inputs).softmax(dim=1).max(dim=1)
+        return [{"image_id": image_id, "class_id": int(class_id),
+                 "class_name": CLASS_NAMES[int(class_id)], "top_score": float(score)}
+                for image_id, class_id, score in zip(image_ids, predicted.tolist(), maximum.tolist(), strict=True)]
+
+
+def read_batch_manifest(path: Path, content: bytes | None = None) -> list[dict]:
+    if content is None:
+        content = path.read_bytes()
+    with io.StringIO(content.decode("utf-8"), newline="") as stream:
+        reader = csv.DictReader(stream)
+        if reader.fieldnames != ["image_id", "path"]:
+            raise ValueError("Batch manifest must have exactly the columns image_id,path")
+        rows = list(reader)
+    if not rows or any(None in row or None in row.values() for row in rows):
+        raise ValueError("Batch manifest is empty or contains incomplete rows")
+    ids = [row["image_id"] for row in rows]
+    if len(set(ids)) != len(ids) or any(not image_id.strip() for image_id in ids):
+        raise ValueError("Batch image identifiers must be nonempty and unique")
+    for row in rows:
+        image_path = Path(row["path"])
+        if not image_path.is_absolute():
+            image_path = path.parent / image_path
+        row["path"] = image_path
+    return rows
+
+
+def predict_batch(run_directory: Path, manifest_path: Path, output: Path) -> dict:
+    if output.exists():
+        raise FileExistsError(f"Batch output already exists: {output}")
+    started = time.perf_counter()
+    manifest_bytes = manifest_path.read_bytes()
+    rows = read_batch_manifest(manifest_path, manifest_bytes)
+    predictor = Predictor(run_directory)
+    predictions = []
+    input_hashes = []
+    for start in range(0, len(rows), 64):
+        chunk = rows[start:start + 64]
+        arrays = []
+        for row in chunk:
+            content = row["path"].read_bytes()
+            arrays.append(decode_thumbnail(content, row["path"].name))
+            input_hashes.append({"image_id": row["image_id"], "sha256": bytes_digest(content)})
+        predictions.extend(predictor.predict(np.stack(arrays), [row["image_id"] for row in chunk]))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    temporary = Path(tempfile.mkdtemp(prefix=f".{output.name}-", dir=output.parent))
+    try:
+        with (temporary / "predictions.csv").open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(stream, fieldnames=["image_id", "class_id", "class_name", "top_score"])
+            writer.writeheader()
+            writer.writerows(predictions)
+        report = {"created_at": datetime.now(timezone.utc).isoformat(), "count": len(predictions),
+                  "model": predictor.identity, "manifest_sha256": bytes_digest(manifest_bytes),
+                  "inputs": input_hashes, "predictions_sha256": sha256(temporary / "predictions.csv"),
+                  "elapsed_seconds": time.perf_counter() - started}
+        write_json(temporary / "batch.json", report)
+        reservation = output.parent / f".{output.name}.lock"
+        reservation.mkdir()
+        try:
+            if output.exists():
+                raise FileExistsError(f"Another process already published {output}")
+            temporary.rename(output)
+        finally:
+            reservation.rmdir()
+        return report
+    finally:
+        if temporary.exists():
+            shutil.rmtree(temporary)
+
+
+def export_samples(data_root: Path, partition: str, count: int, output: Path) -> dict:
+    manifest = verify_data(data_root)
+    if partition not in manifest["partitions"] or not 0 < count <= len(manifest["partitions"][partition]):
+        raise ValueError("Choose a supported partition and a count within its size")
+    images, _ = load_arrays(data_root)
+    # Interleave classes so small exports are useful for visual inspection.
+    per_class = len(manifest["partitions"][partition]) // 10
+    ids = np.asarray(manifest["partitions"][partition]).reshape(10, per_class).T.flatten()[:count]
+    if output.exists():
+        raise FileExistsError(f"Intake directory already exists: {output}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    temporary = Path(tempfile.mkdtemp(prefix=f".{output.name}-", dir=output.parent))
+    try:
+        with (temporary / "manifest.csv").open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(["image_id", "path"])
+            for image_id in ids:
+                filename = f"{int(image_id)}.png"
+                Image.fromarray(images[image_id]).save(temporary / filename)
+                writer.writerow([f"train:{int(image_id)}", filename])
+        reservation = output.parent / f".{output.name}.lock"
+        reservation.mkdir()
+        try:
+            if output.exists():
+                raise FileExistsError(f"Another process already published {output}")
+            temporary.rename(output)
+        finally:
+            reservation.rmdir()
+    finally:
+        if temporary.exists():
+            shutil.rmtree(temporary)
+    return {"partition": partition, "count": count, "manifest": str(output / "manifest.csv")}

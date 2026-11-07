@@ -1,61 +1,53 @@
-# Set up the demand application in VS Code
+# Local setup
 
-Install [Git](https://git-scm.com/downloads), [uv](https://docs.astral.sh/uv/getting-started/installation/) and [VS Code](https://code.visualstudio.com/). Add the [Python extension](https://code.visualstudio.com/docs/languages/python) if needed.
+Use a terminal in VS Code or your operating system's terminal. Install Git and `uv` first using their official instructions. Python is managed by the project's `.python-version` file. [Git downloads](https://git-scm.com/downloads) · [uv installation](https://docs.astral.sh/uv/getting-started/installation/)
 
-```sh
+## 1. Get the source and environment
+
+```bash
 git clone https://github.com/richhiey/ml-llm-ops.git
 cd ml-llm-ops
-uv sync --locked --python 3.12
-uv run python --version
-uv run pytest tests/test_spine.py::test_contract_extension_and_unchanged_pipeline -q
-uv run linden-mlops status
+uv sync --frozen
+uv run --frozen python --version
 ```
 
-Expect Python `3.12.x`, one passing existing input-contract test and a project location under `work`. Open this folder in VS Code and choose this clone's `.venv` using **Python: Select Interpreter**. The terminal must be at the folder containing `pyproject.toml`. `uv run` uses the environment without activation.
+Expect Python `3.12.12`. `uv sync --frozen` installs the committed dependency lock into `.venv`. Run commands from this repository's root. The configuration uses CPU PyTorch wheels on Windows/Linux and the standard macOS wheel, with all application tensors kept on CPU.
 
-## Work on the actual application
+If you already have an older clone of this course, retain personal work outside it and use a fresh clone for the replacement project. An old environment and demand-model commands do not establish the new setup.
 
-| Location | Responsibility |
-|---|---|
-| `src/linden_mlops/pipeline.py` | Ingestion, existing valid range guard, feature order and fitted model |
-| `src/linden_mlops/lifecycle.py` | Tracking, model lifecycle and batch prediction |
-| `configs/` | Explicit model and experiment settings |
-| `tests/` | Ordinary application regression tests |
-| `work/` | Local run/job records and your engineering notes |
+## 2. Prepare the research dataset
 
-The supplied range guard is complete. No setup command replaces it with broken code. A new requirement is implemented as an actual source change on your branch, with distinguishing tests and `git diff` as the change record. The Campus walkthrough introduces a new planned-batch intake boundary; that learner-created module is intentionally absent from this baseline.
-
-```sh
-git switch -c planned-batch-validation
+```bash
+uv run --frozen catalog-mlops prepare
 ```
 
-If that branch already exists, reopen it instead of creating another. Keep the same clone and `work/` through the journey. The application does not require a sprint directory or a completion flag. An existing valid model can be reused for a new serving validation change; inspect the batch metadata's `serving_code_revision` separately from its training run's source identity.
+Expect `fashion-mnist-cpu-v1`, a split hash and counts including `train=12000` and `validation=3000`. The command downloads roughly 30 MiB, verifies file hashes and creates the fixed split manifest. Wait for the command to finish before training. A repeated preparation verifies existing data. A checksum mismatch identifies a damaged cache file to remove and download again.
 
-## Run and inspect actual operations
+## 3. Train and retain one baseline
 
-Use a small Python script or the application CLI. Training produces a fitted artifact and a run ID; inference takes an explicit logged-model URI or the registry's active version. [API reference](https://github.com/richhiey/ml-llm-ops/blob/main/docs/api-reference.md) and [experiment workflow](https://github.com/richhiey/ml-llm-ops/blob/main/docs/experiments.md) document those interfaces. Every new batch needs a new output name; retained output is not an instruction to train again.
-
-Start MLflow in a second terminal when UI inspection is required:
-
-```sh
-uv run linden-mlops ui
+```bash
+uv run --frozen catalog-mlops train --config configs/baseline.json --output work/runs/baseline
+uv run --frozen catalog-mlops evaluate --run work/runs/baseline
 ```
 
-Open `http://127.0.0.1:5050` in your browser and inspect the same full run ID/store as your script. The terminal stays occupied until `Ctrl+C`; stopping it preserves records. A port already in use is a reason to inspect the existing server before starting another.
+Expect four epoch observations and a completed result directory containing `run.json`, `config.json`, `dataset.json`, `environment.json`, `history.json`, `model.pt`, `source.zip`, `metrics.json` and `validation-predictions.csv`. Evaluation reloads the saved model and uses its declared validation IDs.
 
-## Resume or recover
+An existing run directory is preserved. Inspect it to resume your investigation, or choose a different output path for a genuinely new run. Do not delete a run to conceal a failed comparison.
 
-A fresh setup creates an initial application environment, not evidence of work completed earlier. To resume a lesson, reopen the saved branch, actual source patch, your focused tests, recorded failing/passing observations, relevant run/job files and explanation. If they do not exist, carry out the missing activity; do not copy a solved reference and claim prior evidence.
+## 4. Run the regression checks
 
-| Symptom | Recovery |
-|---|---|
-| Missing import/file | Confirm clone root and run `uv sync --locked --python 3.12` |
-| Source edit appears ignored | Save it and run a new `uv run` process; select this `.venv` in the editor |
-| Contract test fails | Inspect the exact assertion, retain failure, repair its cause and rerun that test |
-| Existing batch name | Inspect/reuse that actual job, or choose a fresh name for a deliberate new execution |
-| Missing saved experiment | Inspect `status`; `LINDEN_WORK_DIR` selects a different project if explicitly set |
-| Source differs from saved comparison | Preserve history; declare a new experiment in a deliberate new work directory |
+```bash
+uv run --frozen pytest -q
+```
 
-The [four local notebooks](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/README.md) are optional core-API companions; use the same `.venv` kernel. They do not install a starter or reset source. Before assistant-summary work, confirm access to the institution-approved assistant for one actual request. No provider key or runtime integration is needed.
+The mechanics tests use a small explicitly synthetic fixture. They check preprocessing, model reload, intake behavior, batch/HTTP consistency and evidence integrity. They do not establish Fashion-MNIST quality. The walkthrough trains on the real dataset.
 
-[Course intake preparation](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/README.md) is a separate setup responsibility. [Recovery](https://github.com/richhiey/ml-llm-ops/blob/main/docs/recovery.md) creates an actual new receiving source/environment/store; copying a local database alone does not relocate its artifacts.
+## 5. Use the local notebook
+
+Open `notebooks/01-pipeline-and-extension.ipynb` in VS Code and select the repository's `.venv` Python kernel. Run it from the repository root, or let its first cell locate the parent repository when opened from `notebooks/`. It shows the data loading, CNN, evaluation and plots directly with standard libraries and inspects your retained baseline. A missing baseline is an instruction to finish step 3 first.
+
+## Resource expectations
+
+CPU execution and bounded batches are the default. On the author's Apple M4 with 16 GB RAM, the initial four-epoch run took about 10 seconds end to end and peaked below 700 MiB RSS. Downloads, dependency installation, slower processors and concurrent applications affect the full setup. An 8 GB classroom computer is the target profile, with hardware-specific verification still pending.
+
+Use a short writable clone path on Windows. Keep a few GB free for the environment, cached packages, dataset and run artifacts. If a command is unavailable, verify that `uv` and Git are on your terminal's path, then reopen the terminal.

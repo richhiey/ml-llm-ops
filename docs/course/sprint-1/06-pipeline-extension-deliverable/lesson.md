@@ -1,124 +1,67 @@
 ✂️
 # Pipeline extension deliverable
 
-Harbor Facilities wants to use the pipeline you have extended. Its supplier sends an unfamiliar intake containing boundary values and contract violations. Before accepting the data, Harbor needs you to explain which rules apply, demonstrate their behavior, and justify the delivery pattern.
+Morrow Market is a new catalog partner evaluating Threadline's thumbnail-classification pipeline. Its intake resembles the supplier workflow you have practiced, but its acceptance policy and files need an independent check. The partner wants a complete set of category suggestions before its morning catalog review.
 
-Use the same clone, your new planned-batch stage and lifecycle call, existing domain guard and retained evidence. Harbor is a new acceptance client within this project; it does not require a replacement model or another pipeline build.
+Use your existing saved CNN and the same local helper repository. Your task is to demonstrate an explained, tested pipeline extension and recommend a delivery pattern for this partner.
 
-## What you will work with
+# What you will work with
 
-Open the [supplier intake](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/harbor-intake.csv). It contains `row_id`, `temperature_c`, `hour` and `occupancy`, without a historical target or partition. Preserve the raw file. Use the feature guard directly; historical `ingest()` expects a different schema.
+Create the constructed acceptance intake from the repository root.
 
-Your [contract](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) accepts inclusive temperature `-30..50`, integer hour `0..23`, and occupancy `0..100`. Accepted inputs must retain their values, columns, order and index in an independent returned table. Invalid input must reject; dropping rows or clipping values changes the agreement.
-
-![Supplier rows enter the existing validation boundary; acceptance needs the explained change, contract probes and separate complete delivery evidence](assets/pipeline-extension-deliverable__01__en.png)
-
-Use the picture to distinguish an intake decision from a model-delivery result. It deliberately does not classify Harbor's rows for you. A valid output produced earlier does not establish that this unfamiliar intake is acceptable.
-
-## Quick diagnosis
-
-Before running the supplier input, record an inventory with one row per identifier: predicted accept/reject, responsible condition, and the guard line supporting your reasoning. Then predict what happens when the complete mixed intake enters the guard as one call.
-
-Harbor asks: “Can we clip invalid measurements and still describe them as the supplied input?” State an acceptance decision you can test. Keep your predictions before the observations so a corrected misunderstanding remains visible.
-
-## Task A — Demonstrate the validated extension
-
-Complete `check_supplier()` in your existing `work/sprint-1/attempt.py`. If you are resuming, reopen the completed feature branch, new stage and lifecycle call, tests, failing-before/passing-after records, baseline model manifest, validated batch and code-review notes. The [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) installs the environment; it does not recreate that evidence. If a piece is missing, complete the missing guided change or independent review before this acceptance task. The [unsolved starter](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/sprint-1-attempt.py) supplies only a place to write your probes.
-
-Test individual rows and the whole intake using the saved `validate_ranges()` function. Check the original table after accepted and rejected calls, including its index. For accepted rows, check that the returned table is independent. Compare observed decisions with your inventory and explain any mismatch before correcting it.
-
-```sh
-uv run python work/sprint-1/attempt.py supplier
+```bash
+uv run --frozen python docs/course/exercises/prepare_intake.py --output work/morrow-intake
 ```
 
-Retain the new `batch_input.py` module, its lifecycle integration diff, learner-owned tests, intended failing-before test and passing-after test, plus the complete valid batch. Those demonstrate the addition and unchanged downstream path. This supplier investigation adds transfer evidence; it does not replace the earlier checks with a single exception.
+The script exports `24` identified records to `work/morrow-intake/intake.csv`. Product examples come from the independent research-image pool. Additional format/quality conditions are deliberately constructed for this exercise. Creating the intake does not verify or repair it.
 
-## Accept complete client plans
-
-Harbor also supplies three constructed full-file intake cases: [plan A](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/harbor-plan-a.csv), [plan B](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/harbor-plan-b.csv) and [plan C](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/harbor-plan-c.csv). Before execution, inventory each file's schema, row count and identifier completeness/uniqueness. Predict its acceptance at your new stage and cite the responsible condition. These synthetic client cases use the bundled planned features; they are not observed building traffic.
-
-Test each unchanged file with `validate_planned_batch()`, including input preservation after rejection. Deliver an accepted complete plan through `batch_predict()` with the retained baseline model URI and a fresh client output name. Check the actual identifiers, finite predictions and deadline; a direct unit call alone cannot establish integration. Keep the existing five-row supplier intake for individual domain probes. That five-row file is incomplete as a whole planner batch, even when a particular row has valid features. Explain which boundary each probe is testing.
-
-## Task B — Explain changed and proposed logic
-
-Use your line-by-line explanation of the new planned-batch stage and its integration call. Keep the separate review of the proposed domain guard. Cover each read, condition, exception, copy and return. Link each rule to a distinguishing input and point to your review of the unsafe candidate, including an observed failed assertion and the correction needed before merging.
-
-Choose one planned-file and one supplier-row decision and predict where execution stops or reaches the return. Compare that explanation with the actual probe. A correct classification without a correct explanation is incomplete evidence.
-
-## Task C — Justify inference
-
-Reuse your recommendation for the [provided inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md): all 24 planned inputs arrive together and the complete CSV is required within 60 seconds. Address latency, throughput and resource cost. Point to the actual batch metadata and identifier check supporting completion, and identify what you cannot claim from those records.
-
-Harbor's five-row intake tests the input contract. It is not the 24-row planned delivery file. Do not change its values or train on it to make the checkpoint pass.
-
-## Final check
-
-Keep one working project with the source change and your existing script/notes. Check that another engineer can find these three pieces without guessing:
-
-| Deliverable | Evidence to point to |
+| Partner requirement | Acceptance condition |
 |---|---|
-| At least one validated stage | New module and integration diff; failing-before/passing-after tests; planned-file and supplier predictions/probes; valid batch |
-| Line-by-line explanation | Statement effects, stopping points, preservation/copy behavior and candidate correction |
-| Justified inference recommendation | Brief requirements, latency/cost/throughput reasoning and observed completion evidence |
+| Image format | Prepared `28×28` grayscale thumbnails using raw uint8 pixels |
+| Minimum intensity range | At least `24` on the raw `0–255` scale |
+| Input identity | Every original record retained in your intake decision |
+| Accepted delivery | One prediction per accepted identifier, in accepted-manifest order |
+| Rejected delivery | Separate record of rejected identifiers and observed reasons |
+| Prediction source | The existing saved CNN, with actual loaded model identity |
 
-If source has changed since the saved batch, run your contract/regression tests and invoke the actual delivery function from a fresh process with a new output name. Otherwise reuse the existing proof. Use the explicit fitted artifact URI; this checkpoint does not require registry configuration or another model search.
+The partner receives a completed manifest each evening. Its review starts the next morning, and it does not need to keep a user waiting for each individual result. Your delivery recommendation must address that primary workflow. [Application contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md)
+
+# Your task
+
+## Inspect and decide
+
+Inspect the input metadata and image values. Produce an intake decision record identifying which inputs meet the partner's contract and which require correction. Preserve the original manifest and files. Do not silently resize, recolor or rescale rejected inputs into apparently valid thumbnails.
+
+Before changing code, identify a boundary case that distinguishes this partner's policy from the previously demonstrated supplier rule. State the expected behavior on both sides of the new boundary.
+
+## Extend and explain
+
+Implement or adapt one bounded validation stage in the ordinary application source and connect it to shared inference preparation. Keep the demonstrated function's default supplier policy available, and select this partner's threshold explicitly at the preparation boundary. Retain the source diff and record the active policy. Explain each changed line, the input/output contract and why the insertion point is appropriate.
+
+Create executable checks for an accepted boundary, a rejected boundary, source preservation and integration. Show evidence of a failed check or rejected route before the relevant correction, then retain the passing evidence. A direct helper-function call alone does not establish that the batch or request route uses your stage.
+
+## Deliver and verify
+
+Create an accepted manifest from your intake decisions. Run the real batch route using your saved CNN and a new output directory. Reconcile output counts, identifiers and order against that manifest. Verify the checkpoint identity and explain why retraining was unnecessary for this intake change.
+
+Exercise a rejected case through an actual consumer. Verify the documented failure behavior and the absence of an apparently complete batch result. Also demonstrate that the valid route continues to work. Use the same learned weights when comparing behavior.
+
+Recommend batch or real-time delivery for the partner. Explain latency, throughput and cost drivers using the brief and your measurements, with the timer boundaries stated.
+
+# Final check
+
+Your retained evidence should let another engineer inspect the original intake, your accepted/rejected decision, the implemented source change, active partner policy, line-by-line explanation, discriminating tests, actual delivery and inference recommendation. Label which supplier policy each boundary test exercises, and update the active integration-test expectation to match the partner brief. Keep your first attempt and any repair rather than replacing its evidence with a summary claim.
 
 <details>
-<summary>Solution — open after completing the intake decision and three deliverables</summary>
+<summary>Reference feedback</summary>
 
-**Result you should get:** Plan A has `24` unique complete identifiers and passes unchanged. Plan B has a duplicated identifier and rejects; plan C has `23` rows and rejects. The accepted plan reaches actual batch inference without changing its identifiers. Separately, `H-201` and `H-203` pass unchanged in separate returned tables. `H-202` rejects its fractional hour `22.5`; `H-204` rejects temperature `51`; `H-205` rejects occupancy `-0.5`. The complete five-row intake raises an error and returns no filtered or repaired result. Its original values and index survive. Clipping would conceal an input-contract violation.
+**Result you should get**
 
-**How:** Check the complete-plan boundary separately from the feature-domain boundary. For the three file cases, compare the returned table and the caller after each decision:
+The constructed intake has `20` acceptable product thumbnails and `4` records requiring correction under the partner's policy. Your checks must distinguish raw range `23` from `24`. Using a threshold of `20` unchanged would accept a supplied thumbnail that fails this partner's requirement. The completed delivery has exactly the accepted identifiers in their declared order and records the saved model used.
 
-```python
-import pandas as pd
-from linden_mlops.batch_input import validate_planned_batch
+**How**
 
-for label in ["a", "b", "c"]:
-    plan = pd.read_csv(f"docs/course/exercises/harbor-plan-{label}.csv")
-    before = plan.copy(deep=True)
-    try:
-        checked = validate_planned_batch(plan)
-    except ValueError as error:
-        print(label, "rejected", str(error))
-    else:
-        pd.testing.assert_frame_equal(checked, before)
-        assert checked is not plan
-        print(label, "accepted; independent unchanged table")
-    pd.testing.assert_frame_equal(plan, before)
-```
-
-You should observe A accepted, B rejected for repeated identity, and C rejected for incomplete count. If a direct stage call rejects B/C but the application delivers them, inspect the lifecycle integration and rerun `test_partial_plan_is_rejected`: successful unit checks can coexist with an unused stage. For the accepted client job, inspect the actual saved CSV and JSON from your chosen output name; match every input identifier, the baseline source run, `24` finite predictions and the measured deadline. Reuse that delivery rather than generating another merely to read this solution.
-
-For the separate five-row domain intake, compare your predictions with individual probes and the mixed call:
-
-```python
-intake = pd.read_csv("docs/course/exercises/harbor-intake.csv")
-original = intake.copy(deep=True)
-for index in intake.index:
-    row = intake.loc[[index]].copy(deep=True)
-    before = row.copy(deep=True)
-    try:
-        checked = validate_ranges(row)
-    except ValueError as error:
-        print(row.iloc[0]["row_id"], "rejected", str(error))
-    else:
-        pd.testing.assert_frame_equal(checked, before)
-        assert checked is not row
-        print(row.iloc[0]["row_id"], "accepted; independent unchanged table")
-    pd.testing.assert_frame_equal(row, before)
-try:
-    validate_ranges(intake)
-except ValueError as error:
-    print("Mixed intake rejected:", error)
-else:
-    raise AssertionError("Mixed invalid intake was accepted")
-pd.testing.assert_frame_equal(intake, original)
-```
-
-If `H-202` passes, inspect the integer-hour condition. If either valid boundary row rejects, inspect inclusivity. If later-feature violations pass, inspect an early return. Retain the wrong observation, explain the responsible condition, repair it and rerun the affected probe and saved-source checks.
-
-A complete inference answer recommends batch for shared arrival and the whole-file deadline, citing 24 aligned finite predictions and measured completion. It discusses resource obligations without inventing prices or request-serving benchmarks. Validation RMSE describes held-out historical error; it cannot establish service cost.
+Inspect mode, dimensions, dtype and raw maximum-minus-minimum values. Keep structural failures separate from quality-policy failures. Match every decision to its original identifier. Verify that the validation stage is called by shared inference, then run the accepted subset through the normal consumer. An evening manifest supports a batch recommendation, while another client's interactive review can justify a request service. Explain the measured work rather than inferring hosting costs from one local call.
 
 </details>
 
@@ -128,4 +71,4 @@ Deliverable: the provided pipeline scaffold extended with at least 1 validated s
 
 ## Summary
 
-You have applied an explained pipeline extension to unfamiliar supplier input and connected the delivery choice to observed evidence. Keep the new module and integration, existing domain guard, tests, actual batch metadata and explanation. The next controlled comparison uses this same saved source but creates its own declared runs; the illustrative delivery baseline is not a model-selection decision.
+Morrow's handoff contains a validated intake boundary, explained source, actual accepted predictions and a delivery recommendation tied to its review process. Keep the original CNN and evaluation as historical baseline evidence. Before controlled model comparisons, freeze the audited source and confirm the same baseline recipe under that source so later runs have a comparable starting point.
