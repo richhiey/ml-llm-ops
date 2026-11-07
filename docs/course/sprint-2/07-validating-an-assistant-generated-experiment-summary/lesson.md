@@ -1,39 +1,41 @@
 📝
 # Validating an assistant-generated experiment summary
 
-Threadline's catalog lead asks an assistant to summarize the experiment study. A fluent recommendation could still quote the wrong run, miss a category regression or turn a one-seed observation into a production claim. You will direct a bounded request and validate the response before it enters the handoff.
+Threadline's catalog lead needs a clear recommendation about which CNN the engineers should review next. An assistant can summarize the six configurations, but it might quote the wrong run or overlook a category that became worse. You will give it a specific evidence-based task, then check its response before the recommendation reaches the team.
 
 Use an assistant approved for your learning environment. Supply the actual run records you are allowed to share. Do not give an assistant credentials or assume it can see your local MLflow store.
 
 # 1. Prepare evidence the assistant can inspect
 
-Use your completed comparison and retrieve the corresponding raw runs in MLflow. Include full run IDs, configurations, comparison controls, primary metric, diagnostic results and the distinction between candidates and the autologging repeat.
+Use your completed comparison and retrieve the matching run records in MLflow. Each run ID identifies one training execution, while its configuration records the recipe. Include the conditions held fixed, the final validation macro F1 and category results. Macro F1 averages the ten category F1 scores equally and is the declared primary metric. Include the difference between changed candidate recipes and the repeated baseline used to check automatic logging.
 
 The [actual author demonstration](https://github.com/richhiey/ml-llm-ops/tree/main/docs/course/evidence/sprint-2) retains a Codex request, its real response and the validation. It is an authoring example, not a student submission. Its run IDs refer to the author's store; use your own records for your request.
 
 # 2. Ask for a bounded recommendation
 
-Send a request like this, with your actual evidence attached or pasted:
+Ask which saved model the engineers should check next and why. This activity recommends a candidate; the next project phase will check and record the chosen version. Send a request like this, with your actual evidence attached or pasted:
 
-> Recommend one configuration for further registry validation using validation macro F1, maximized across comparable baseline/candidate rows. Cite full run IDs and raw metric values. Explain the changed factor, gain, category regressions and measured training-time tradeoff. Treat repeated configurations as instrumentation evidence. Flag missing controls and do not infer test performance, significance, inference speed, cost or production readiness. Return a short recommendation and a table of checkable claims.
+> Recommend one configuration for further engineering checks using validation macro F1, maximized across comparable baseline/candidate rows. Cite full run IDs and raw metric values. Explain the changed factor, gain, category regressions and measured training-time tradeoff. Treat repeated configurations as evidence about whether logging worked. Flag missing controls and do not infer test performance, significance, inference speed, cost or production readiness. Return a short recommendation and a table of checkable claims.
 
 Retain the exact request and unedited response. The author example's [request](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/evidence/sprint-2/assistant-request.md) and [response](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/evidence/sprint-2/assistant-response.md) show what this evidence looks like.
 
 # 3. Check the recommendation against raw records
 
-For the selected run, open its full ID in MLflow and inspect parameters, final metrics, source/split tags and the logged model. `MlflowClient.get_run()` retrieves that recorded object directly; its `data.params`, `data.metrics` and `data.tags` are the values you are checking. The [comparison source](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/comparison.py) shows how those records are checked against the downloaded prediction CSV.
+For the selected run, open its full ID in MLflow and inspect parameters, final metrics, source/split tags and the logged model. **Tags** are labels attached to a run, including which code and image split it used. `MlflowClient.get_run()` retrieves the record directly, with its settings in `data.params`, measurements in `data.metrics` and labels in `data.tags`. The comparison source connects those records to the downloaded CSV of individual predictions. [Comparison implementation](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/comparison.py)
 
 | Claim to validate | Inspect | Decision |
 |---|---|---|
 | This configuration wins | Eligible full-precision `validation_macro_f1` values | Accept only the largest value under the declared tie rule |
 | One factor caused the observed difference | Configurations plus fixed comparison controls | Qualify or reject if another factor changed |
 | It improves the difficult categories | Raw per-category counts, precision, recall and F1 | Report regressions as well as gains |
-| It uses a specific model | Logged-model source run and learned-state identity | Reject an artifact detached from the evaluated run |
-| It is faster or cheaper | Actual timer boundary and available workload evidence | Reject conclusions beyond the measured work |
+| It uses a specific model | The saved model's source run and verified learned weight values | Reject a model file detached from the evaluated run |
+| It is faster or cheaper | Which work the timer measured and what workload was tested | Reject conclusions beyond the measured work |
 
 In the actual author response, the recommended full ID is `99ce416e13ee4eeba47f6adf05d4ed7c`, with macro F1 `0.8572382087673285`. The baseline is `c538c971fdf44099b750af1d9513458b`, with `0.8322013435739599`. Subtracting gives `0.025036865193368563`. Check those values in the raw reference records before accepting the sentence.
 
-Then verify the qualification: shirt recall improved, while T-shirt/top and coat recall fell. The response also reports lower shirt/dress/pullover precision and lower trouser recall. Its training-duration claim refers to updates, epoch validation and telemetry, not serving latency. The [claim validation](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/evidence/sprint-2/assistant-validation.md) records the individual checks. The actual response's recommendation survived; validation does not require inventing an assistant error.
+Then verify the category tradeoffs. **Recall** is the fraction of actual members of a category found. **Precision** is the fraction of its category suggestions that were correct. Shirt recall improved, while T-shirt/top and coat recall fell. The response also reports lower shirt/dress/pullover precision and lower trouser recall.
+
+The training-duration claim covers updates, epoch validation and measurement logging. It cannot establish how long a customer would wait for a prediction. The claim-validation record shows each check. The actual response's recommendation survived, so retain that finding without inventing an assistant error. [Validation of the actual response](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/evidence/sprint-2/assistant-validation.md)
 
 # 4. Test claims that should be flagged
 
@@ -53,9 +55,9 @@ A correct winner does not make every supporting sentence correct. A run name can
 
 | Evidence | What it supports |
 |---|---|
-| Native run parameters/tags | Recipe and declared conditions |
+| MLflow run parameters/tags | Recipe and declared conditions |
 | Raw predictions and recomputed metrics | Observed quality |
-| Model metadata and weights | Artifact connection |
+| Model metadata, its descriptive record, and learned weights | Connection to the evaluated saved model |
 | Exact request/response and claim decisions | Auditable assistant use |
 
 ## Learning outcome

@@ -1,7 +1,7 @@
 ✂️
 # Pipeline extension deliverable
 
-Morrow Market is a fictional catalog partner trying Threadline's image-classification pipeline. Its staff need category suggestions ready before their morning product review. They have sent a new set of thumbnails and a rule specifying which images they will accept for prediction.
+Morrow Market is another fictional online clothing shop trying Threadline's category-suggestion pipeline. Its staff need category suggestions ready before their morning product review. They have sent a new set of thumbnails and a rule specifying which images they will accept for prediction.
 
 Use your existing saved CNN, whose learned weights turn prepared thumbnails into category scores, and the same local project. Your task is to check the incoming files, adapt the taught image-validation step and demonstrate a complete prediction delivery. Explain your code change and recommend how the partner should receive predictions.
 

@@ -5,7 +5,9 @@ Threadline's catalog specialists use image suggestions to help check product cat
 
 For this exercise, the supplier requires a brightest-minus-darkest pixel value of at least `20` on the raw `0–255` scale. That difference is the image's brightness range. The **intake policy** is the team's rule for accepting incoming files, and this rule detects one specified problem. You will add the check and confirm that accepted images still produce the same predictions.
 
-![How brightness range is measured and where the supplier's rule accepts or rejects an incoming image](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/intake-range-check__01__en.png)
+![An actual product thumbnail and a constructed flat-gray image, with their pixel brightness distributions, minimum, maximum and range](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/intake-range-check__01__en.png)
+
+Each bar below an image counts pixels with that brightness value. The constructed image has all `784` pixels at `86`, so its maximum and minimum are identical. Its range is `0`, even though its dimensions and file type are valid. The real thumbnail has range `255`; passing this one rule does not guarantee that every image contains a usable product.
 
 # 1. Where should the check run?
 

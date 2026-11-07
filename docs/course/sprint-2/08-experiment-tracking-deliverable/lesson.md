@@ -1,13 +1,13 @@
 ✂️
 # Experiment tracking deliverable
 
-Morrow Market asks for an independent review of the catalog classifier before a supplier trial. It gives categories equal importance, but its catalog team has two additional acceptance requirements: T-shirt/top recall must be at least `0.80`, and sneaker recall at least `0.90` on the fixed validation set.
+Morrow Market, another fictional clothing retailer, is considering the classifier for a supplier trial with its own catalog requirements. Its specialists want stronger category suggestions overall, while protecting two categories they have explicitly chosen for this trial. T-shirt/top recall must be at least `0.80`, and sneaker recall at least `0.90` on the fixed validation set.
 
-The partner wants the strongest macro F1 among configurations meeting those requirements. This is a new decision brief applied to the tracked pipeline you have built. The thresholds are constructed assessment policy, not claimed research or production standards.
+Recall measures the fraction of actual members of a category found. With `300` validation examples per category, these requirements mean finding at least `240` actual T-shirts/tops and `270` sneakers. Morrow wants the largest macro F1, the equally weighted average of the ten category F1 scores, among configurations meeting both requirements. A higher average alone cannot settle this partner's choice. The thresholds are constructed assessment policy, not claimed research or production standards.
 
 # What you will work with
 
-Use your completed local pipeline, the fixed Fashion-MNIST splits, at least five distinct candidate configurations plus baseline, the autologging repeat, and the actual artifacts in your MLflow store. Keep the official test split closed. Do not change the evaluation data to make a candidate pass the new policy.
+Use your completed local pipeline and fixed Fashion-MNIST training/validation groups. Bring five distinct changed candidate recipes plus the reference baseline, the baseline repeat checking automatic logging, and the saved files in your MLflow store. Keep the official test split closed. Preserve the validation examples when applying the new policy.
 
 | Requirement | Evidence to retain |
 |---|---|
@@ -22,13 +22,13 @@ Use your completed local pipeline, the fixed Fashion-MNIST splits, at least five
 
 ## Review and complete the tracked study
 
-Audit the runs you have already created. Complete any missing configuration or logging evidence through the actual pipeline. Retain excluded/confounded rows with their reasons; duplicates and instrumentation repeats do not count as distinct candidates. Keep source fixed across any runs you add to this study.
+Audit the training executions you have already recorded. Complete any missing configuration or logging evidence through the actual pipeline. Retain excluded comparisons and their reasons. Repeating an ID or recording the same recipe with automatic logging does not create a distinct improvement candidate. Keep the Python code fixed across any runs you add to this study, and keep the same seed and starting model weights.
 
 Show a real MLflow UI comparison of at least five configurations. Retrieve raw parameters, metrics and predictions to verify the comparison. Explain the changed factor and hypothesis for each candidate.
 
 ## Apply the partner's acceptance conditions
 
-Create `work/morrow-selection.md` listing each run's full ID, comparability, two policy checks and primary metric. Distinguish a controlled run that fails the partner's policy from a run that is not scientifically comparable. Apply the policy before choosing the highest macro F1. Explain any difference from the original Threadline recommendation.
+Create `work/morrow-selection.md` listing each run's full ID, whether it shares the required comparison conditions, the two policy checks and the primary metric. **Eligibility** means meeting Morrow's requirements. A properly controlled run can fail this policy, while a run on different evaluation images fails the comparison conditions. Apply both kinds of checks before choosing the highest macro F1. Explain any difference from the original Threadline recommendation.
 
 The project's comparison file ranks controlled experimental results; it does not know Morrow's new business policy. Keep its original result intact and document the partner decision separately. Do not alter observed metrics or the primary metric to obtain a preferred winner.
 
@@ -42,7 +42,7 @@ Direct your approved assistant to recommend a configuration under Morrow's brief
 
 Your handoff should let a colleague retrieve each configuration, metric history, evaluated model and supporting prediction file. It must include the actual UI comparison, partner eligibility table, selection or no-eligible-result decision, autologging evidence, original assistant response and claim-by-claim validation.
 
-No registry alias is changed in this assessment. The output is a justified candidate for lifecycle validation, with all unresolved tradeoffs visible.
+The output recommends a saved model for the engineers' next validation step. Explain the remaining category and runtime tradeoffs so Morrow can see what the recommendation establishes.
 
 <details>
 <summary>Reference feedback</summary>
@@ -63,4 +63,4 @@ Deliverable: at least 5 experiment configurations logged and compared in MLflow,
 
 ## Summary
 
-Morrow receives a tracked, policy-aware recommendation supported by real runs, genuine autologging and checked assistant advice. The selected artifact and its evidence are ready for registry validation and connected reproducibility work.
+Morrow receives a recommendation supported by real runs, checked automatic logging and validated assistant advice. It meets the partner's stated conditions, or explains why no observed configuration does. The selected saved model remains connected to the recipe and measurements needed for its next review.

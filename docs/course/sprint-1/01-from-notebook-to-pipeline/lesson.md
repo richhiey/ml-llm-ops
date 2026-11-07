@@ -11,9 +11,9 @@ You are the ML engineer building that aid. A **machine-learning model** is a pro
 
 A **dataset** is a collection of examples. Ours is Fashion-MNIST: small product images paired with categories that people have already assigned. That known category is the image's **label**. A model's suggested category is its **prediction**. A prediction can disagree with the label.
 
-![The catalog task: a real research thumbnail, a possible category suggestion, a staff check and a product listed in the right category](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/catalog-problem__01__en.png)
+![Six actual validation images all labeled Shirt, with two correct Shirt suggestions, two mistaken Coat suggestions and two mistaken T-shirt/top suggestions](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/catalog-problem__01__en.png)
 
-The image and mistaken `Coat` suggestion come from one recorded model result; its known label is `Shirt`. The staff review is an illustration of how the shop could correct that suggestion. This is why staff need to check the model rather than trust every guess.
+All six images above have the known label `Shirt`. These selected examples show both correct suggestions and actual mistakes from one recorded model. They illustrate the kinds of confusion staff would need to correct; their proportions do not represent the whole dataset. What details might make a shirt look like a coat or T-shirt at this size?
 
 Each research image is a `28×28` grid of **pixels**, the small squares that make an image. These images are **grayscale**: a pixel records brightness rather than separate red, green and blue values. The ten labels cover clothing, footwear and bags. Some categories look similar at this small size, which gives us meaningful mistakes to investigate.
 
@@ -29,17 +29,13 @@ We also need examples that do not update the weights. A **validation set** is a 
 
 After training, we save the learned weights. **Inference** means using that saved learning to predict a category for an incoming image. The incoming request does not need to include a known category, and making the prediction does not retrain the model.
 
-![Training changes learned weights; evaluation checks them on separate labeled images; inference uses the saved weights for a new image](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/learning-and-use__01__en.png)
-
 # How a CNN works with an image
 
 We will use a **convolutional neural network**, usually shortened to **CNN**. It is a type of neural network designed to process image grids through connected layers of calculations.
 
 A CNN applies small learned grids of numbers, called **filters**, across different parts of the image. A filter can respond to a local pattern, such as a change in brightness along an edge. Later layers combine those responses into useful patterns, called **features**, that help distinguish categories. The final layers produce a score for each category. Training learns the filters and the final category-scoring weights together.
 
-![A small window examines local pixel patterns, later layers combine responses, and the CNN produces scores for the ten categories](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/cnn-image-patterns__01__en.png)
-
-This is a simplified explanation of the calculations, not a picture of features proven to have been learned by our particular model. You will inspect the actual CNN and its mistakes in the project. The first trained version becomes the **baseline**: the reference result against which later changes are compared.
+You will inspect the actual CNN and its mistakes in the project. The first trained version becomes the **baseline**: the reference result against which later changes are compared.
 
 # Connect the work into a repeatable pipeline
 

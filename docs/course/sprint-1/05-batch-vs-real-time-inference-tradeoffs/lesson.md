@@ -5,8 +5,6 @@ Threadline's catalog specialists check category suggestions from a trained image
 
 Both workflows use the saved CNN, the image model whose learned weights are already stored. **Inference** means using those weights to predict a category. The choice here concerns when images arrive and how their predictions reach the people who need them.
 
-![Schematic workflows showing a collected evening batch and individual requests to an already-running model server](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/batch-and-live__01__en.png)
-
 # Match the arrival pattern to the delivery
 
 **Batch inference** processes a collected group of inputs as one job. A **manifest** is the CSV checklist containing each image's unique identifier and filename. Threadline checks that list, selects one saved model for the whole job and produces a complete prediction CSV. The output preserves every accepted identifier and its order so staff can match suggestions to products.

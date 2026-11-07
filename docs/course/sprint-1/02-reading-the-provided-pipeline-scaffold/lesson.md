@@ -5,9 +5,9 @@ Threadline is a fictional online fashion retailer. Its catalog specialists check
 
 You will train a small convolutional neural network, or **CNN**, an image model that learns patterns from labeled examples. This first trained model is your **baseline**, the reference for later improvements. Its **weights** are the numbers adjusted during learning. You will inspect its mistakes, save those learned numbers and use them to suggest categories for other images.
 
-Work in one local copy of the supplied project in VS Code. Finish with the saved baseline, its evaluation results, a prediction file for several images and a response to one image request. The [README](https://github.com/richhiey/ml-llm-ops/blob/main/README.md) repeats this exact command sequence, including the two-terminal service step. The [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) covers installation and recovery.
+The provided **scaffold** is a working starter project: its files already connect image loading, preparation, training, evaluation and prediction. Work in one local copy in VS Code. Finish with the saved baseline, its evaluation results, a prediction file for several images and a response to one image request. The [README](https://github.com/richhiey/ml-llm-ops/blob/main/README.md) repeats this exact command sequence, including the two-terminal service step. The [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) covers installation and recovery.
 
-Run the commands below. Short Python excerpts explain the ML operations inside the supplied files; you do not need to copy those excerpts into a second implementation. The [companion notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) provides the complete native-package implementation for closer inspection.
+Run the commands below. Short Python excerpts explain the ML operations inside the supplied files; you do not need to copy those excerpts into a second implementation. The [companion notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) shows the full data-reading, model and plotting code when you want to inspect it.
 
 # 1. What images are we learning from?
 
@@ -22,13 +22,13 @@ python scripts/prepare_data.py
 python scripts/inspect_dataset.py
 ```
 
-`uv sync --frozen` installs the locked environment once. Activate `.venv` once in each terminal, then run the tools directly. On Windows, use the activation command in the [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). `python` executes the named file, which you can open in your editor. Preparation downloads and verifies Fashion-MNIST, then records fixed image indices. Inspection reads the image arrays with NumPy and plots examples with Matplotlib.
+`uv sync --frozen` installs the locked environment once. Activate `.venv` once in each terminal, then run the tools directly. On Windows, use the activation command in the [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md). `python` executes the named file, which you can open in your editor. Preparation downloads and verifies Fashion-MNIST, then records which images are used for learning and which for checking. Inspection reads the image arrays with NumPy and plots examples with Matplotlib.
 
 Expect the original array to have shape `(60000, 28, 28)`, meaning `60,000` images with `28` rows and `28` columns of pixels. A **pixel** is one position in the image grid. Its `uint8` data type stores brightness as a whole number from `0` to `255`.
 
 The supplied settings keep this exercise small enough for the computer's CPU, its general-purpose processor. They use `12,000` training images and `3,000` separate **validation images**, whose known categories let us check mistakes without using those images to update the weights. There are `1200` training and `300` validation images per category. The official test split stays reserved for reporting after model selection.
 
-Open `work/training-examples.png`. Choose two categories you expect the model to confuse and explain what makes their silhouettes similar.
+Open `work/training-examples.png`. Each image has an identifier so we can connect a prediction to the original image. For example, `train:56368` identifies image `56368` in the research training file; the recorded split decides whether our pipeline uses an image for learning or a separate check. Choose two categories you expect the model to confuse and explain what makes their silhouettes similar.
 
 ![One actual training example from each category, with its original image identifier](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/fashion-mnist-examples__01__en.png)
 
@@ -59,7 +59,7 @@ The first block produces `16` pattern-response grids, each reduced from `28×28`
 
 Open [model.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/model.py). Locate `nn.Conv2d`, `nn.MaxPool2d` and the final `nn.Linear`. Match them to this table. You are tracing the supplied architecture; you do not need to rewrite it.
 
-![A real thumbnail, an enlarged patch of its pixel values and the four dimensions of the tensor passed to the CNN](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/image-to-tensor__01__en.png)
+![An actual 28 by 28 thumbnail, its highlighted 4 by 4 patch enlarged with exact brightness values, and the shared 0 to 255 brightness scale](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/image-to-tensor__01__en.png)
 
 # 3. How does the model learn?
 
@@ -102,15 +102,13 @@ Start with one category. The reference contains `300` actual shirts: the model f
 
 ![Observed training and validation loss over four epochs in the author's baseline](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/baseline-learning-history__01__en.png)
 
-Open `work/learning-history.png`. Training loss comes from images used to update weights. Validation loss comes from separate images. Describe how both change; four epochs alone cannot establish what a longer run would achieve.
+Open `work/learning-history.png`. Training loss is averaged while the weights change during an epoch; validation loss is measured afterward using the resulting weights on separate images. The two values therefore describe different measurement moments. Describe how both change; four epochs alone cannot establish what a longer run would achieve.
 
 A **confusion matrix** counts the actual categories on its rows and the predicted categories on its columns. A count where the two categories match represents correct suggestions. Other cells show which categories the model mixed up.
 
 ![Actual categories on rows and predicted categories on columns for the author's validation results](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/baseline-confusion-matrix__01__en.png)
 
 Open `work/confusion-matrix.png`. Follow the actual-shirt row across the predictions. The reference found `117` of `300` shirts, giving recall `0.39`. It called `73` shirts coats and `70` T-shirts/tops. Those suggestions would send specialists to the wrong category even though overall accuracy is much higher. Identify the largest error in your own matrix.
-
-![An enlarged explanation of the author's shirt-category metrics from the retained validation results](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/shirt-metrics__01__en.png)
 
 # 5. What connects the score to a usable model?
 
