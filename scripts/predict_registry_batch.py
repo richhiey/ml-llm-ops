@@ -19,10 +19,10 @@ if __name__ == "__main__":
         raise FileExistsError(args.output)
     started = time.perf_counter()
     predictor = RegistryPredictor(args.state, args.name, args.alias)
-    print(
-        json.dumps(
-            deliver_batch(predictor, args.manifest, args.output, started),
-            indent=2,
-            allow_nan=False,
-        )
-    )
+    report = deliver_batch(predictor, args.manifest, args.output, started)
+    summary = {
+        key: report[key]
+        for key in ("count", "model", "predictions_sha256", "elapsed_seconds")
+    }
+    summary["output"] = str(args.output)
+    print(json.dumps(summary, indent=2, allow_nan=False))

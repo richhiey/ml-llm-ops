@@ -13,3 +13,5 @@ The native validation report was retained on the original MLflow run, and alias 
 The ordinary and shifted cohort comparisons keep the model and inference code fixed. The bad-model comparison keeps image bytes, ordering and labels fixed. Reference and current are different research groups; current and shifted-current share source image identities but have different pixel bytes.
 
 The final official-test result was reported after selection was fixed and the rollback restored the approved model. These observations do not establish performance on arbitrary photographs, other hardware or future suppliers.
+
+The Morrow reference is in `morrow-observations.json`, with its actual approved/bad prediction CSVs under `morrow/`. Both use the same current input bytes and labels. The wrong-brief selection raised overall macro F1 while reducing T-shirt/top recall; the original validation eligibility rule still requires rollback. Its inference archive records the separate partner deployment name.

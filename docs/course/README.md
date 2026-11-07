@@ -26,8 +26,15 @@ The course follows Threadline’s catalog classifier through the supplied learni
 | Evidence-Grounded Experiment Analysis | [Validating an assistant-generated experiment summary](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/07-validating-an-assistant-generated-experiment-summary/lesson.md) | Practical Walkthrough |
 | PROJECT - Sprint 2 Checkpoint | [Experiment tracking deliverable](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/08-experiment-tracking-deliverable/lesson.md) | Assessment Lesson |
 
-## Remaining sequence
+## Sprint 3
 
-Sprint 3 adds registry selection, connected reproducibility, monitoring, drift response, rollback and audits. Those project layers are developed after the preceding sprint has been verified.
+| Lesson group | Lesson | Type |
+|---|---|---|
+| Why a Model Registry | [From "which file is production?" to a registry](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/01-from-which-file-is-production-to-a-registry/lesson.md) | Concept Note |
+| Why a Model Registry | [Registering and promoting a model](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/02-registering-and-promoting-a-model/lesson.md) | Practical Walkthrough |
+| Versioning Data, Code & Models Together | [What full reproducibility requires](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/03-what-full-reproducibility-requires/lesson.md) | Concept Note |
+| Versioning Data, Code & Models Together | [Reproducing a past training run](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/04-reproducing-a-past-training-run/lesson.md) | Independent Practice |
+| Rollbacks & Auditing | [Rolling back a bad model version](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/05-rolling-back-a-bad-model-version/lesson.md) | Independent Practice |
+| PROJECT - Sprint 3 Checkpoint | [Registry lifecycle deliverable](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-3/06-registry-lifecycle-deliverable/lesson.md) | Assessment Lesson |
 
 [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) · [Project story](https://github.com/richhiey/ml-llm-ops/blob/main/docs/project-story.md)

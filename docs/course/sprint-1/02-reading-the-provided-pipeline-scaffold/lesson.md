@@ -156,7 +156,7 @@ Back in the **first terminal**, prepare the request body and send it using `curl
 
 ```bash
 python scripts/prepare_request.py --image work/intake/56368.png --image-id train:56368 --output work/intake/request.json
-curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary @work/intake/request.json http://127.0.0.1:8000/predict
+curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary "@work/intake/request.json" http://127.0.0.1:8000/predict
 ```
 
 The [request preparation file](https://github.com/richhiey/ml-llm-ops/blob/main/scripts/prepare_request.py) reads the PNG with Pillow, a Python image library, and writes its identifier and pixel array as JSON, a text format for structured data. Open `request.json` to inspect the values the client sends. `curl` performs the HTTP request directly. In Windows PowerShell, use `curl.exe` for this command.

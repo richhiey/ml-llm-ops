@@ -123,7 +123,7 @@ uvicorn scripts.api:app --host 127.0.0.1 --port 8000
 In the first terminal, send the constructed low-range input directly with `curl`.
 
 ```bash
-curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary @work/quality-intake/request.json http://127.0.0.1:8000/predict
+curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary "@work/quality-intake/request.json" http://127.0.0.1:8000/predict
 ```
 
 Expect HTTP `422`, the response status used here for invalid input, and an insufficient-contrast message. curl returns a nonzero exit code to signal the rejected request. On Windows PowerShell, use `curl.exe`.
@@ -131,7 +131,7 @@ Expect HTTP `422`, the response status used here for invalid input, and an insuf
 Send the valid request you retained earlier.
 
 ```bash
-curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary @work/intake/request.json http://127.0.0.1:8000/predict
+curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary "@work/intake/request.json" http://127.0.0.1:8000/predict
 ```
 
 Expect a successful prediction matching the corresponding batch row and the same saved model identity. Stop the server with `Ctrl+C`.

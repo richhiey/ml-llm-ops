@@ -1,0 +1,1138 @@
+{
+  "kind": "actual author Morrow transfer rehearsal; native IDs are reference observations, not preloaded learner state",
+  "business_policy": {
+    "tshirt_recall_min": 0.8,
+    "sneaker_recall_min": 0.9,
+    "selection": "largest comparable eligible validation macro F1",
+    "selected_run_id": "cfc92f3749474862bcc32a9269b797d5",
+    "bad_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+    "bad_tshirt_recall": 0.6466666666666666,
+    "selected_metrics": {
+      "Ankle boot": {
+        "f1": 0.9353233830845771,
+        "precision": 0.9306930693069307,
+        "recall": 0.94,
+        "support": 300
+      },
+      "Bag": {
+        "f1": 0.9459901800327333,
+        "precision": 0.9292604501607717,
+        "recall": 0.9633333333333334,
+        "support": 300
+      },
+      "Coat": {
+        "f1": 0.7460087082728593,
+        "precision": 0.6606683804627249,
+        "recall": 0.8566666666666667,
+        "support": 300
+      },
+      "Dress": {
+        "f1": 0.8514492753623188,
+        "precision": 0.9325396825396826,
+        "recall": 0.7833333333333333,
+        "support": 300
+      },
+      "Pullover": {
+        "f1": 0.7439613526570048,
+        "precision": 0.719626168224299,
+        "recall": 0.77,
+        "support": 300
+      },
+      "Sandal": {
+        "f1": 0.9355932203389831,
+        "precision": 0.9517241379310345,
+        "recall": 0.92,
+        "support": 300
+      },
+      "Shirt": {
+        "f1": 0.5123595505617977,
+        "precision": 0.7862068965517242,
+        "recall": 0.38,
+        "support": 300
+      },
+      "Sneaker": {
+        "f1": 0.9093904448105437,
+        "precision": 0.8990228013029316,
+        "recall": 0.92,
+        "support": 300
+      },
+      "T-shirt/top": {
+        "f1": 0.7941176470588235,
+        "precision": 0.7105263157894737,
+        "recall": 0.9,
+        "support": 300
+      },
+      "Trouser": {
+        "f1": 0.9634551495016611,
+        "precision": 0.9602649006622517,
+        "recall": 0.9666666666666667,
+        "support": 300
+      }
+    }
+  },
+  "registered_name": "morrow-catalog-4iz24xxb",
+  "approved_model": {
+    "alias_at_startup": "active",
+    "inference_source_sha256": "7e59f2e32122d7632ab8dd87c0a4f75042e8a77b3210f25e8ff9149b03a13e20",
+    "loaded_at": "2026-11-07T15:39:17.124179+00:00",
+    "local_run": "recipe",
+    "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+    "model_uri": "models:/m-ba8bac3f714941f89ed3fdf9b64473f5",
+    "registered_name": "morrow-catalog-4iz24xxb",
+    "registered_version": "1",
+    "source_run_id": "cfc92f3749474862bcc32a9269b797d5",
+    "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+    "validation_status_at_startup": "passed"
+  },
+  "bad_model": {
+    "alias_at_startup": "active",
+    "inference_source_sha256": "7e59f2e32122d7632ab8dd87c0a4f75042e8a77b3210f25e8ff9149b03a13e20",
+    "loaded_at": "2026-11-07T15:39:34.471889+00:00",
+    "local_run": "recipe",
+    "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+    "model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+    "registered_name": "morrow-catalog-4iz24xxb",
+    "registered_version": "2",
+    "source_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+    "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+    "validation_status_at_startup": "pending"
+  },
+  "initial_approved_service": {
+    "status": "ready",
+    "model": {
+      "local_run": "recipe",
+      "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+      "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+      "inference_source_sha256": "7e59f2e32122d7632ab8dd87c0a4f75042e8a77b3210f25e8ff9149b03a13e20",
+      "registered_name": "morrow-catalog-4iz24xxb",
+      "registered_version": "1",
+      "alias_at_startup": "active",
+      "source_run_id": "cfc92f3749474862bcc32a9269b797d5",
+      "model_uri": "models:/m-ba8bac3f714941f89ed3fdf9b64473f5",
+      "validation_status_at_startup": "passed",
+      "loaded_at": "2026-11-07T15:39:30.332421+00:00"
+    }
+  },
+  "initial_approved_http": {
+    "prediction": {
+      "image_id": "train:56368",
+      "class_id": 0,
+      "class_name": "T-shirt/top",
+      "top_score": 0.973239004611969
+    },
+    "model": {
+      "local_run": "recipe",
+      "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+      "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+      "inference_source_sha256": "7e59f2e32122d7632ab8dd87c0a4f75042e8a77b3210f25e8ff9149b03a13e20",
+      "registered_name": "morrow-catalog-4iz24xxb",
+      "registered_version": "1",
+      "alias_at_startup": "active",
+      "source_run_id": "cfc92f3749474862bcc32a9269b797d5",
+      "model_uri": "models:/m-ba8bac3f714941f89ed3fdf9b64473f5",
+      "validation_status_at_startup": "passed",
+      "loaded_at": "2026-11-07T15:39:30.332421+00:00"
+    },
+    "inference_seconds": 0.0009018341079354286
+  },
+  "cohort_quality": {
+    "reference": {
+      "accuracy": 0.852,
+      "class_names": [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+      ],
+      "confusion_matrix": [
+        [
+          94,
+          0,
+          1,
+          2,
+          0,
+          1,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          97,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          74,
+          1,
+          21,
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          2,
+          2,
+          84,
+          6,
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          3,
+          2,
+          91,
+          0,
+          2,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          89,
+          0,
+          7,
+          0,
+          4
+        ],
+        [
+          27,
+          0,
+          15,
+          1,
+          18,
+          0,
+          36,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          93,
+          0,
+          5
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          98,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          96
+        ]
+      ],
+      "count": 1000,
+      "macro_f1": 0.8439066663144024,
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9365853658536586,
+          "precision": 0.9142857142857143,
+          "recall": 0.96,
+          "support": 100
+        },
+        "Bag": {
+          "f1": 0.9655172413793104,
+          "precision": 0.9514563106796117,
+          "recall": 0.98,
+          "support": 100
+        },
+        "Coat": {
+          "f1": 0.7647058823529411,
+          "precision": 0.6594202898550725,
+          "recall": 0.91,
+          "support": 100
+        },
+        "Dress": {
+          "f1": 0.875,
+          "precision": 0.9130434782608695,
+          "recall": 0.84,
+          "support": 100
+        },
+        "Pullover": {
+          "f1": 0.7589743589743589,
+          "precision": 0.7789473684210526,
+          "recall": 0.74,
+          "support": 100
+        },
+        "Sandal": {
+          "f1": 0.9270833333333334,
+          "precision": 0.967391304347826,
+          "recall": 0.89,
+          "support": 100
+        },
+        "Shirt": {
+          "f1": 0.5,
+          "precision": 0.8181818181818182,
+          "recall": 0.36,
+          "support": 100
+        },
+        "Sneaker": {
+          "f1": 0.9117647058823529,
+          "precision": 0.8942307692307693,
+          "recall": 0.93,
+          "support": 100
+        },
+        "T-shirt/top": {
+          "f1": 0.8245614035087719,
+          "precision": 0.734375,
+          "recall": 0.94,
+          "support": 100
+        },
+        "Trouser": {
+          "f1": 0.9748743718592965,
+          "precision": 0.9797979797979798,
+          "recall": 0.97,
+          "support": 100
+        }
+      }
+    },
+    "current": {
+      "accuracy": 0.858,
+      "class_names": [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+      ],
+      "confusion_matrix": [
+        [
+          90,
+          0,
+          6,
+          1,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          98,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          76,
+          2,
+          15,
+          0,
+          5,
+          0,
+          1,
+          0
+        ],
+        [
+          10,
+          1,
+          1,
+          83,
+          2,
+          0,
+          1,
+          0,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          4,
+          1,
+          94,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          93,
+          0,
+          5,
+          0,
+          2
+        ],
+        [
+          24,
+          1,
+          11,
+          4,
+          25,
+          0,
+          34,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          95,
+          0,
+          5
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          96,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          99
+        ]
+      ],
+      "count": 1000,
+      "macro_f1": 0.8490271445172883,
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9611650485436893,
+          "precision": 0.9339622641509434,
+          "recall": 0.99,
+          "support": 100
+        },
+        "Bag": {
+          "f1": 0.96,
+          "precision": 0.96,
+          "recall": 0.96,
+          "support": 100
+        },
+        "Coat": {
+          "f1": 0.7966101694915254,
+          "precision": 0.6911764705882353,
+          "recall": 0.94,
+          "support": 100
+        },
+        "Dress": {
+          "f1": 0.8556701030927835,
+          "precision": 0.8829787234042553,
+          "recall": 0.83,
+          "support": 100
+        },
+        "Pullover": {
+          "f1": 0.7638190954773869,
+          "precision": 0.7676767676767676,
+          "recall": 0.76,
+          "support": 100
+        },
+        "Sandal": {
+          "f1": 0.9637305699481865,
+          "precision": 1.0,
+          "recall": 0.93,
+          "support": 100
+        },
+        "Shirt": {
+          "f1": 0.4722222222222222,
+          "precision": 0.7727272727272727,
+          "recall": 0.34,
+          "support": 100
+        },
+        "Sneaker": {
+          "f1": 0.9405940594059405,
+          "precision": 0.9313725490196079,
+          "recall": 0.95,
+          "support": 100
+        },
+        "T-shirt/top": {
+          "f1": 0.7964601769911505,
+          "precision": 0.7142857142857143,
+          "recall": 0.9,
+          "support": 100
+        },
+        "Trouser": {
+          "f1": 0.98,
+          "precision": 0.98,
+          "recall": 0.98,
+          "support": 100
+        }
+      }
+    },
+    "shifted-current": {
+      "accuracy": 0.823,
+      "class_names": [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+      ],
+      "confusion_matrix": [
+        [
+          96,
+          0,
+          2,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          94,
+          0,
+          4,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          81,
+          3,
+          4,
+          4,
+          5,
+          0,
+          1,
+          0
+        ],
+        [
+          18,
+          0,
+          0,
+          80,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          7,
+          0,
+          21,
+          3,
+          60,
+          2,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          96,
+          0,
+          3,
+          0,
+          1
+        ],
+        [
+          39,
+          0,
+          21,
+          2,
+          3,
+          1,
+          32,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          95,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          95,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          4,
+          0,
+          94
+        ]
+      ],
+      "count": 1000,
+      "macro_f1": 0.8154394331411456,
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9591836734693877,
+          "precision": 0.9791666666666666,
+          "recall": 0.94,
+          "support": 100
+        },
+        "Bag": {
+          "f1": 0.95,
+          "precision": 0.95,
+          "recall": 0.95,
+          "support": 100
+        },
+        "Coat": {
+          "f1": 0.718562874251497,
+          "precision": 0.8955223880597015,
+          "recall": 0.6,
+          "support": 100
+        },
+        "Dress": {
+          "f1": 0.8290155440414507,
+          "precision": 0.8602150537634409,
+          "recall": 0.8,
+          "support": 100
+        },
+        "Pullover": {
+          "f1": 0.72,
+          "precision": 0.648,
+          "recall": 0.81,
+          "support": 100
+        },
+        "Sandal": {
+          "f1": 0.909952606635071,
+          "precision": 0.8648648648648649,
+          "recall": 0.96,
+          "support": 100
+        },
+        "Shirt": {
+          "f1": 0.43537414965986393,
+          "precision": 0.6808510638297872,
+          "recall": 0.32,
+          "support": 100
+        },
+        "Sneaker": {
+          "f1": 0.9359605911330049,
+          "precision": 0.9223300970873787,
+          "recall": 0.95,
+          "support": 100
+        },
+        "T-shirt/top": {
+          "f1": 0.7272727272727273,
+          "precision": 0.5853658536585366,
+          "recall": 0.96,
+          "support": 100
+        },
+        "Trouser": {
+          "f1": 0.9690721649484536,
+          "precision": 1.0,
+          "recall": 0.94,
+          "support": 100
+        }
+      }
+    },
+    "bad-current": {
+      "accuracy": 0.881,
+      "class_names": [
+        "T-shirt/top",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+      ],
+      "confusion_matrix": [
+        [
+          69,
+          0,
+          3,
+          6,
+          0,
+          0,
+          22,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          97,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          79,
+          3,
+          7,
+          0,
+          10,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          93,
+          2,
+          0,
+          3,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          7,
+          5,
+          77,
+          0,
+          11,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          98,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          7,
+          0,
+          7,
+          7,
+          3,
+          0,
+          75,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          96,
+          0,
+          4
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          99,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0,
+          98
+        ]
+      ],
+      "count": 1000,
+      "macro_f1": 0.8817849425632909,
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9655172413793104,
+          "precision": 0.9514563106796117,
+          "recall": 0.98,
+          "support": 100
+        },
+        "Bag": {
+          "f1": 0.9850746268656716,
+          "precision": 0.9801980198019802,
+          "recall": 0.99,
+          "support": 100
+        },
+        "Coat": {
+          "f1": 0.8148148148148148,
+          "precision": 0.8651685393258427,
+          "recall": 0.77,
+          "support": 100
+        },
+        "Dress": {
+          "f1": 0.8571428571428571,
+          "precision": 0.7948717948717948,
+          "recall": 0.93,
+          "support": 100
+        },
+        "Pullover": {
+          "f1": 0.8061224489795918,
+          "precision": 0.8229166666666666,
+          "recall": 0.79,
+          "support": 100
+        },
+        "Sandal": {
+          "f1": 0.98989898989899,
+          "precision": 1.0,
+          "recall": 0.98,
+          "support": 100
+        },
+        "Shirt": {
+          "f1": 0.6787330316742082,
+          "precision": 0.6198347107438017,
+          "recall": 0.75,
+          "support": 100
+        },
+        "Sneaker": {
+          "f1": 0.964824120603015,
+          "precision": 0.9696969696969697,
+          "recall": 0.96,
+          "support": 100
+        },
+        "T-shirt/top": {
+          "f1": 0.770949720670391,
+          "precision": 0.8734177215189873,
+          "recall": 0.69,
+          "support": 100
+        },
+        "Trouser": {
+          "f1": 0.9847715736040609,
+          "precision": 1.0,
+          "recall": 0.97,
+          "support": 100
+        }
+      }
+    }
+  },
+  "paired_model_change": {
+    "first_model": {
+      "alias_at_startup": "active",
+      "inference_source_sha256": "7e59f2e32122d7632ab8dd87c0a4f75042e8a77b3210f25e8ff9149b03a13e20",
+      "loaded_at": "2026-11-07T15:39:17.124179+00:00",
+      "local_run": "recipe",
+      "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+      "model_uri": "models:/m-ba8bac3f714941f89ed3fdf9b64473f5",
+      "registered_name": "morrow-catalog-4iz24xxb",
+      "registered_version": "1",
+      "source_run_id": "cfc92f3749474862bcc32a9269b797d5",
+      "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+      "validation_status_at_startup": "passed"
+    },
+    "first_sha256": "a5685be946e3e6f3f9b6526b5f8e1e86475517a2f2569eda86f9f23eb22c4328",
+    "interpretation": "Paired quality observations on the same supplied images and labels; no universal performance claim.",
+    "macro_f1_change": 0.03275779804600254,
+    "policy": {
+      "brightness_total_variation_alert": 0.2,
+      "macro_f1_drop_alert": 0.05,
+      "mean_brightness_bin_edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.30000000000000004,
+        0.4,
+        0.5,
+        0.6000000000000001,
+        0.7000000000000001,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "name": "catalog-cohort-v1"
+    },
+    "quality_regression_alert": false,
+    "second_model": {
+      "alias_at_startup": "active",
+      "inference_source_sha256": "7e59f2e32122d7632ab8dd87c0a4f75042e8a77b3210f25e8ff9149b03a13e20",
+      "loaded_at": "2026-11-07T15:39:34.471889+00:00",
+      "local_run": "recipe",
+      "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+      "model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+      "registered_name": "morrow-catalog-4iz24xxb",
+      "registered_version": "2",
+      "source_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+      "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+      "validation_status_at_startup": "pending"
+    },
+    "second_sha256": "587fb44dec0654ee142c60e3f8905a5e04ab6f17f483c3e633af4b33121fdd40"
+  },
+  "local_audit_extract": [
+    {
+      "action": "register",
+      "actor": "catalog-engineer",
+      "at": "2026-11-07T15:39:05.073422+00:00",
+      "name": "morrow-catalog-4iz24xxb",
+      "operation_id": "cbc76673fda04f4680af874af1e7f61e",
+      "reason": "Retain the selected Morrow experiment",
+      "run_id": "cfc92f3749474862bcc32a9269b797d5",
+      "status": "requested"
+    },
+    {
+      "action": "register",
+      "actor": "catalog-engineer",
+      "at": "2026-11-07T15:39:06.852495+00:00",
+      "name": "morrow-catalog-4iz24xxb",
+      "operation_id": "cbc76673fda04f4680af874af1e7f61e",
+      "reason": "Retain the selected Morrow experiment",
+      "reused": false,
+      "run_id": "cfc92f3749474862bcc32a9269b797d5",
+      "source": "models:/m-ba8bac3f714941f89ed3fdf9b64473f5",
+      "status": "completed",
+      "version": "1"
+    },
+    {
+      "action": "validate",
+      "actor": "catalog-engineer",
+      "at": "2026-11-07T15:39:08.618062+00:00",
+      "evidence_sha256": "6b0dbf37b79de9af6fca8d17cb121e26424945b18ae911f3e753453a58ea609d",
+      "name": "morrow-catalog-4iz24xxb",
+      "operation_id": "9d1a2d2fa6884130bd6d6ea22283a6ec",
+      "reason": "Clean archived-source replay passed",
+      "status": "requested",
+      "version": "1"
+    },
+    {
+      "action": "validate",
+      "actor": "catalog-engineer",
+      "at": "2026-11-07T15:39:08.956232+00:00",
+      "evidence_sha256": "6b0dbf37b79de9af6fca8d17cb121e26424945b18ae911f3e753453a58ea609d",
+      "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+      "name": "morrow-catalog-4iz24xxb",
+      "operation_id": "9d1a2d2fa6884130bd6d6ea22283a6ec",
+      "reason": "Clean archived-source replay passed",
+      "status": "completed",
+      "validation_status": "passed",
+      "version": "1"
+    },
+    {
+      "action": "assign_alias",
+      "actor": "catalog-engineer",
+      "alias": "active",
+      "at": "2026-11-07T15:39:10.419219+00:00",
+      "expected_current": null,
+      "name": "morrow-catalog-4iz24xxb",
+      "operation_id": "63121421c5904734b59c9dd8a8d76c45",
+      "reason": "Morrow recall gates and highest eligible macro F1 reviewed",
+      "status": "requested",
+      "target_version": "1"
+    },
+    {
+      "action": "assign_alias",
+      "actor": "catalog-engineer",
+      "alias": "active",
+      "at": "2026-11-07T15:39:10.708981+00:00",
+      "expected_current": null,
+      "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+      "name": "morrow-catalog-4iz24xxb",
+      "observed_version": "1",
+      "operation_id": "63121421c5904734b59c9dd8a8d76c45",
+      "previous_version": null,
+      "reason": "Morrow recall gates and highest eligible macro F1 reviewed",
+      "run_id": "cfc92f3749474862bcc32a9269b797d5",
+      "status": "completed",
+      "target_version": "1"
+    },
+    {
+      "action": "rollback",
+      "actor": "catalog-engineer",
+      "alias": "active",
+      "at": "2026-11-07T15:39:38.287968+00:00",
+      "expected_current": "2",
+      "name": "morrow-catalog-4iz24xxb",
+      "operation_id": "5f769a0df19946a0bcc8501876725006",
+      "reason": "Restore Morrow approved model; incident ignored category eligibility",
+      "status": "requested",
+      "target_version": "1"
+    },
+    {
+      "action": "rollback",
+      "actor": "catalog-engineer",
+      "alias": "active",
+      "at": "2026-11-07T15:39:38.584893+00:00",
+      "expected_current": "2",
+      "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+      "name": "morrow-catalog-4iz24xxb",
+      "observed_version": "1",
+      "operation_id": "5f769a0df19946a0bcc8501876725006",
+      "previous_version": "2",
+      "reason": "Restore Morrow approved model; incident ignored category eligibility",
+      "run_id": "cfc92f3749474862bcc32a9269b797d5",
+      "status": "completed",
+      "target_version": "1"
+    }
+  ],
+  "incident": {
+    "kind": "constructed native alias incident",
+    "previous_approved_version": "1",
+    "active_bad_version": "2",
+    "previous_run_id": "cfc92f3749474862bcc32a9269b797d5",
+    "bad_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+    "validation_status": "pending"
+  },
+  "old_service_after_rollback": {
+    "local_run": "recipe",
+    "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+    "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+    "inference_source_sha256": "7e59f2e32122d7632ab8dd87c0a4f75042e8a77b3210f25e8ff9149b03a13e20",
+    "registered_name": "morrow-catalog-4iz24xxb",
+    "registered_version": "2",
+    "alias_at_startup": "active",
+    "source_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+    "model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+    "validation_status_at_startup": "pending",
+    "loaded_at": "2026-11-07T15:39:32.851038+00:00"
+  },
+  "fresh_restored_service": {
+    "local_run": "recipe",
+    "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+    "training_source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+    "inference_source_sha256": "7e59f2e32122d7632ab8dd87c0a4f75042e8a77b3210f25e8ff9149b03a13e20",
+    "registered_name": "morrow-catalog-4iz24xxb",
+    "registered_version": "1",
+    "alias_at_startup": "active",
+    "source_run_id": "cfc92f3749474862bcc32a9269b797d5",
+    "model_uri": "models:/m-ba8bac3f714941f89ed3fdf9b64473f5",
+    "validation_status_at_startup": "passed",
+    "loaded_at": "2026-11-07T15:39:40.408651+00:00"
+  },
+  "inference_source_archive_sha256": "5eee161592055d4cdeb6c94be1553ba962196669d1c710fd5085dd072aca3afb",
+  "raw_inputs": "Same bytes/order as current/input-observations.csv; known labels are current/labels.csv.",
+  "interpretation": "The incident model raises overall current-cohort macro F1 but fails the original Morrow validation T-shirt/top requirement. Its macro-F1 regression alert is false; that does not override business eligibility.",
+  "scope": "Paired model-choice observations, not attribution to an individual training hyperparameter. Native incident bypasses the mutable local journal; fresh consumer proves restoration."
+}

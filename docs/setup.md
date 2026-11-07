@@ -6,7 +6,7 @@ Follow the complete sequence in the [README](https://github.com/richhiey/ml-llm-
 
 ## Environment
 
-`uv sync --frozen` installs the committed dependency lock into `.venv`. The project selects Python `3.12.12`. Run every command from the repository root. CPU PyTorch wheels are selected on Windows/Linux; macOS uses the standard wheel with application tensors kept on CPU.
+`uv sync --frozen` installs the committed dependency lock into `.venv`. The project selects Python `3.12.12`. Run commands from the repository root unless the archived-code replay explicitly opens a separate terminal in its extracted folder. CPU PyTorch wheels are selected on Windows/Linux; macOS uses the standard wheel with application tensors kept on CPU.
 
 On macOS or Linux, activate the installed environment from the repository root:
 
@@ -49,3 +49,32 @@ The [companion notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebo
 Bounded batches and CPU execution are the default. On the author's Apple M4 with 16 GB RAM, the initial four-epoch run took about 10 seconds end to end and peaked below 700 MiB RSS. Downloads, installation, slower processors and concurrent applications affect total setup time. An 8 GB classroom computer is the target profile; hardware-specific verification is still pending.
 
 Keep a few GB free for the environment, cached packages, dataset and retained runs.
+
+## Archived-code replay and Windows shells
+
+The registry walkthrough keeps the main project terminal at the repository root and opens a separate terminal for the archived code. That extracted project gets its own new `.venv`; activate the environment belonging to that folder once. Keep its interpreter/import paths and command outputs as execution evidence. Close the replay terminal when finished and return to the unchanged main terminal.
+
+The walkthrough uses this native MLflow store setting at the repository root:
+
+```bash
+export MLFLOW_TRACKING_URI=sqlite:///work/mlflow/tracking.db
+```
+
+In PowerShell, replace that one line with:
+
+```powershell
+$env:MLFLOW_TRACKING_URI = "sqlite:///work/mlflow/tracking.db"
+```
+
+In Command Prompt, use `set MLFLOW_TRACKING_URI=sqlite:///work/mlflow/tracking.db`. Continue to substitute your platform's activation command and `curl.exe` where needed.
+
+Evaluation uses `>` to retain its JSON output. macOS/Linux shells, PowerShell 7 and Windows Command Prompt can write the output without a UTF-16 conversion. In older Windows PowerShell, run the two archived evaluation redirects through Command Prompt instead. [Microsoft documents these encoding defaults](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_character_encoding?view=powershell-7.5).
+
+```powershell
+cmd /c "python scripts/evaluate.py --run ../recipe > ../saved-evaluation.json"
+cmd /c "python scripts/evaluate.py --run ../retrained > ../retrained-evaluation.json"
+```
+
+Use a fresh replay destination before download/extraction/redirection; those native operations can overwrite existing files. Project training, verification and batch commands separately reject existing output destinations. These Windows equivalents document the intended route; the author receiving proof was run on macOS, not Windows hardware.
+
+Use the quoted form `--data-binary "@work/intake/request.json"` shown in the commands. Quoting keeps the file argument literal in PowerShell as well as Bash. [PowerShell argument parsing](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing?view=powershell-7.5) explains the initial `@` syntax. In Windows Command Prompt, replace the displayed `cp` command with `copy docs\course\exercises\test_intake_quality.py tests\test_intake_quality.py`. PowerShell supports `Copy-Item` (also available as `cp`).
