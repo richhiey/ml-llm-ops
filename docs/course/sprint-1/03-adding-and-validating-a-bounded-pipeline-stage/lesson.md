@@ -1,97 +1,39 @@
 📝
 # Adding and validating a bounded pipeline stage
 
-Threadline's first supplier trial includes thumbnails that have the right dimensions but almost no visible intensity variation. The existing boundary checks shape and dtype. The catalog team adds a specific intake rule so these low-information files reach a specialist for correction before category prediction.
+Threadline's supplier trial includes thumbnails with the right dimensions but almost no brightness variation. These files can pass a shape check while giving the classifier little useful visual information. The catalog team wants them returned for correction before prediction.
 
-For this supplier, each accepted thumbnail must have a brightest-minus-darkest pixel value of at least `20`. This is a declared exercise policy. It checks one kind of intake problem and needs its own evidence. You will add the check, connect it to inference and verify that valid predictions still work.
+For this exercise, the supplier requires a brightest-minus-darkest pixel value of at least `20` on the raw `0–255` scale. This is a declared intake policy, not a proven measure of photograph quality. You will add one small validation step and check that accepted images still produce the same predictions.
 
-# 1. Locate the change boundary
+# 1. Where should the check run?
 
-Open [preprocessing.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/preprocessing.py) and find `validate_images()` and `preprocess()`. Trace `Predictor.predict()` in [inference.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/inference.py).
+Open [preprocessing.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/preprocessing.py). Find `validate_images()` and `preprocess()`. Both batch and HTTP predictions use this preparation route.
 
-Both batch and HTTP consumers call the predictor's shared preparation. The appropriate insertion point is before normalization, while pixels still use their documented `0–255` scale. A **contract** states the inputs a function accepts, its output and how it signals failure.
+The new check belongs before normalization, while threshold `20` still refers to raw pixel units. Keep the saved model and division by `255` fixed. A **contract** states which inputs a step accepts, what it returns and how it signals failure.
 
-| Input condition | Existing structural boundary | New supplier policy |
+| Input | Existing behavior | Required behavior |
 |---|---|---|
-| Wrong shape or dtype | Reject | Preserve rejection |
-| Constant grayscale image | Accept as structurally valid | Reject for insufficient range |
-| Correct thumbnail with range `20` | Accept | Accept |
-| Correct thumbnail with range `19` | Accept | Reject |
+| Wrong shape or dtype | Reject | Continue rejecting |
+| All-black image or constant gray `86` | Accept structurally | Reject for insufficient range |
+| Range `19` | Accept | Reject |
+| Range `20` | Accept | Accept without changing pixels |
 
-Expect to find one shared inference preparation function. Keep the model architecture, normalization and saved checkpoint fixed during this extension.
+# 2. Observe the missing behavior
 
-# 2. Write checks before the implementation
-
-Create `tests/test_intake_quality.py` with these checks.
-
-```python
-import csv
-import hashlib
-import subprocess
-import sys
-from pathlib import Path
-import numpy as np
-import pytest
-from PIL import Image
-
-ACTIVE_MINIMUM_RANGE = 20
-
-@pytest.mark.parametrize("base,pixel_range", [
-    (0, 0),
-    (86, 0),
-    (0, ACTIVE_MINIMUM_RANGE - 1),
-    (0, ACTIVE_MINIMUM_RANGE),
-])
-def test_intake_policy_through_batch(base, pixel_range, tmp_path):
-    raw = np.full((28, 28), base, dtype=np.uint8)
-    raw[:, 14:] = base + pixel_range
-    image_path = tmp_path / "thumbnail.png"
-    Image.fromarray(raw).save(image_path)
-    original_hash = hashlib.sha256(image_path.read_bytes()).hexdigest()
-    manifest_path = tmp_path / "manifest.csv"
-    manifest_path.write_text("image_id,path\nexample,thumbnail.png\n")
-    output = tmp_path / "delivery"
-    result = subprocess.run([
-        sys.executable, "-m", "catalog_mlops.cli", "batch",
-        "--run", "work/runs/baseline",
-        "--manifest", str(manifest_path), "--output", str(output),
-    ], capture_output=True, text=True)
-    if pixel_range >= ACTIVE_MINIMUM_RANGE:
-        assert result.returncode == 0, result.stderr
-        with (output / "predictions.csv").open() as stream:
-            rows = list(csv.DictReader(stream))
-        assert len(rows) == 1 and rows[0]["image_id"] == "example"
-    else:
-        assert result.returncode != 0
-        assert "contrast" in result.stderr
-        assert not output.exists()
-    assert hashlib.sha256(image_path.read_bytes()).hexdigest() == original_hash
-```
+The supplied [intake checks](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/test_intake_quality.py) create those four range cases and send each through the real batch process. Copy the checks into your project's test directory, then run them from the repository root.
 
 ```bash
+cp docs/course/exercises/test_intake_quality.py tests/test_intake_quality.py
 uv run --frozen pytest -q tests/test_intake_quality.py
 ```
 
-This first failure is intentional. The starter accepts these structurally valid thumbnails, so the rejection cases fail. Each test runs the actual public batch command in another Python process. The rejected-boundary case will also fail if a new validation function exists but is never connected to the pipeline.
+Expect three failures and one pass before the change: the starter accepts the three images the new policy should reject. The checks also verify that an accepted image produces an identified prediction, a rejected delivery remains unpublished and the original image file is preserved.
 
-`ACTIVE_MINIMUM_RANGE` records the policy expected by this integration test. When a partner requirement changes, update both the active source policy and the independently stated test expectation, then test the new boundary. Keep the earlier requirement and observed results in your source history.
+Open the test file and find its four inputs. Predict which assertion fails for each rejected case. You do not need to reproduce the subprocess-testing machinery. Its purpose is to check the route a client actually uses, including whether your new stage is connected.
 
-# 3. Implement the bounded check
+# 3. Add the intake decision
 
-The structural function already in the source has this implementation. Its accepted output is the caller's original array.
-
-```python
-def validate_images(images: np.ndarray) -> np.ndarray:
-    if not isinstance(images, np.ndarray):
-        raise ValueError("Images must be a NumPy array")
-    if images.dtype != np.uint8:
-        raise ValueError("Raw image pixels must use uint8, representing values from 0 to 255")
-    if images.ndim != 3 or images.shape[1:] != (28, 28) or len(images) == 0:
-        raise ValueError("Expected a nonempty batch with shape (N, 28, 28)")
-    return images
-```
-
-The source file already imports NumPy as `np`. Add the following function after `validate_images()`.
+The source file already imports NumPy as `np`. Add this function after `validate_images()`.
 
 ```python
 def validate_contrast(images: np.ndarray, minimum_range: int = 20) -> np.ndarray:
@@ -107,28 +49,17 @@ def validate_contrast(images: np.ndarray, minimum_range: int = 20) -> np.ndarray
     return raw
 ```
 
-`np.ptp()` computes the maximum minus minimum over the two image axes. The result has one range per image. `np.flatnonzero()` identifies the batch positions failing the declared threshold. The function returns the original accepted array without changing its pixels.
+`np.ptp()` calculates maximum minus minimum over each image's two axes, producing one range per image. `np.flatnonzero()` identifies the failing positions. Accepted arrays are returned with their pixels unchanged. The existing `validate_images()` still handles shape and dtype.
 
-Now change the first line of `preprocess()` to call the new stage.
-
-```python
-def preprocess(images: np.ndarray) -> torch.Tensor:
-    raw = validate_contrast(images, minimum_range=20)
-    return normalize_pixels(torch.from_numpy(raw.copy()).unsqueeze(1))
-```
-
-The final numeric conversion has the following implementation in the same source file. It creates a float32 tensor on the declared scale.
+Now replace the first assignment inside `preprocess()` with:
 
 ```python
-def normalize_pixels(raw: torch.Tensor) -> torch.Tensor:
-    if raw.dtype != torch.uint8 or raw.ndim != 4 or tuple(raw.shape[1:]) != (1, 28, 28):
-        raise ValueError("Expected uint8 grayscale tensors with shape (N, 1, 28, 28)")
-    return raw.to(dtype=torch.float32).div(255.0)
+raw = validate_contrast(images, minimum_range=20)
 ```
 
-`validate_contrast()` reuses the existing structural validation. Its parameter makes the policy explicit at the call site. Keep the function's default of `20` for the demonstrated supplier contract. A different partner can select another threshold at its inference boundary and test that policy separately. The channel conversion and division by `255` keep their prior behavior.
+Keep the remaining tensor conversion and normalization unchanged. This call connects the new decision to both inference routes. The function's default retains the demonstrated supplier rule; a partner can declare a different threshold at this call site and test that requirement separately.
 
-# 4. Verify the function and integration
+# 4. Check the decision and its effect
 
 ```bash
 uv run --frozen pytest -q tests/test_intake_quality.py
@@ -136,69 +67,67 @@ uv run --frozen pytest -q
 git diff -- src/catalog_mlops/preprocessing.py
 ```
 
-Expect four new quality checks to pass and the existing mechanics checks to remain passing. Inspect the diff and explain each changed statement, including how the failure positions relate to image order. Passing the contrast function's direct checks alone would miss an omitted call in `preprocess()`.
+Expect all four intake cases to pass and the existing checks to remain passing. Explain each changed line in your diff. If the rejection tests still fail, check whether `preprocess()` actually calls the new function.
 
-Do not rerun training to explain this change. The new intake rule decides which incoming images can reach the saved classifier. It does not change the saved weights.
+You have changed which incoming images may reach the classifier. You have not changed what its weights learned, so this step does not require retraining.
 
-# 5. Exercise the actual batch consumer
+# 5. Try a rejected batch and a valid batch
 
-Create `work/check_quality_route.py` with the following code.
-
-```python
-from pathlib import Path
-import subprocess
-import sys
-import numpy as np
-from PIL import Image
-
-intake = Path("work/quality-intake")
-intake.mkdir(exist_ok=True)
-Image.fromarray(np.full((28, 28), 86, dtype=np.uint8)).save(intake / "flat.png")
-(intake / "manifest.csv").write_text(
-    "image_id,path\nflat-item,flat.png\n", encoding="utf-8"
-)
-output = Path("work/batches/quality-rejection")
-result = subprocess.run([
-    sys.executable, "-m", "catalog_mlops.cli", "batch",
-    "--run", "work/runs/baseline",
-    "--manifest", str(intake / "manifest.csv"), "--output", str(output),
-], capture_output=True, text=True)
-print(result.stderr)
-assert result.returncode != 0 and "contrast" in result.stderr
-assert not output.exists()
-```
+Create a deliberately flat thumbnail and run it through the ordinary prediction script.
 
 ```bash
-uv run --frozen python work/check_quality_route.py
-uv run --frozen catalog-mlops batch --run work/runs/baseline --manifest work/intake/manifest.csv --output work/batches/after-quality-stage
+uv run --frozen python docs/course/exercises/prepare_quality_intake.py
+uv run --frozen python scripts/predict_batch.py --run work/runs/baseline --manifest work/quality-intake/manifest.csv --output work/batches/quality-rejection
 ```
 
-Expect the low-range intake to fail with its batch position and leave the requested output absent. Expect the valid `20`-image intake to produce a completed new batch. Compare its rows with `work/batches/baseline/predictions.csv`. Identifiers, classes and scores should agree because accepted images still use the same preparation and weights.
+The fixture contains one constant-gray image, its manifest and a JSON request body. Expect the batch command to fail with insufficient contrast at position `0`. Confirm that `work/batches/quality-rejection` was not published. This failure is the intended policy response.
 
-Inspect `batch.json`. The training source identity still refers to the baseline's archived code. The inference source identity records the edited code used by this consumer. This distinction lets another engineer see which part changed.
-
-# 6. Verify the request boundary
-
-Restart the service after editing source. In a second terminal, run the normal serving command with `work/runs/baseline` and port `8000`. In your first terminal, send the low-range file.
+Now run the original valid intake into a new destination.
 
 ```bash
-uv run --frozen catalog-mlops request --image work/quality-intake/flat.png --image-id flat-item --port 8000
+uv run --frozen python scripts/predict_batch.py --run work/runs/baseline --manifest work/intake/manifest.csv --output work/batches/after-quality-stage
 ```
 
-Expect an HTTP `422` validation response. The command exits with an error because the server rejected the input. Now request a valid image from `work/intake` and verify that its prediction matches the retained batch row. Stop the service when finished.
+Expect `20` predictions. Compare them with `work/batches/baseline/predictions.csv`: identifiers, classes and scores should agree. Accepted pixels and saved weights are unchanged.
 
-# Watch out for
+In `batch.json`, the training source identity still describes the code that trained the baseline. The inference source identity records your edited code. This distinguishes an intake change from a new learned model.
 
-Check raw intensity range before normalization so threshold `20` has the intended units. Exercise the accepted boundary as well as rejected examples. Preserve the original image array. Restart imported code after changes. A high range can still occur in a poor photograph, so this bounded policy requires careful interpretation.
+# 6. Check the HTTP route
+
+In a second terminal, restart the web server so it imports your edited source.
+
+```bash
+uv run --frozen uvicorn scripts.api:app --host 127.0.0.1 --port 8000
+```
+
+In the first terminal, send the constructed low-range input directly with `curl`.
+
+```bash
+curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary @work/quality-intake/request.json http://127.0.0.1:8000/predict
+```
+
+Expect HTTP `422`, an insufficient-contrast message and a nonzero curl exit code. The service rejected the request as intended. On Windows PowerShell, use `curl.exe`.
+
+Send the valid request you retained earlier.
+
+```bash
+curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary @work/intake/request.json http://127.0.0.1:8000/predict
+```
+
+Expect a successful prediction matching the corresponding batch row and the same saved model identity. Stop the server with `Ctrl+C`.
 
 # Quick reference
 
-| Check | Evidence |
+| Check | What it establishes |
 |---|---|
-| Policy boundary through the public consumer | Constants rejected, `19` rejected, `20` accepted, source image file unchanged |
-| Shared preparation | Source trace and the public batch command establish that the new stage is called |
-| Real batch route | Failed delivery remains unpublished and valid predictions agree |
-| Real HTTP route | Rejected input returns `422`, valid response uses the retained model |
+| Range `19` rejected, range `20` accepted | The declared policy boundary works |
+| Batch-process tests pass | Shared preparation actually calls the new stage |
+| Valid predictions agree | Accepted input still reaches the same saved classifier |
+| curl receives `422` for the flat image | The running HTTP route enforces the same rule |
+
+# Watch out for
+
+Apply the range check before normalization so the units remain correct. Check both sides of the threshold. Preserve source images. Restart the server after edits. A high brightness range can occur in a poor image too; this rule detects one bounded problem and does not establish overall image quality.
 
 ## Learning outcome
 
@@ -206,4 +135,4 @@ Follow an expert adding one preprocessing or validation stage to the provided pi
 
 ## Summary
 
-Threadline's supplier policy is now an implemented stage with a clear scale, failure condition and integration path. You have evidence that the new rejection works and that valid input still reaches the same saved classifier correctly. A proposed preparation change can be reviewed with the same combination of explanation and discriminating tests.
+Threadline now rejects one specified kind of unusable input before prediction. Your evidence shows that the new stage is connected, its threshold behaves as declared and accepted images still reach the same classifier correctly.

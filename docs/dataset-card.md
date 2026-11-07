@@ -17,7 +17,7 @@ Fashion-MNIST contains 70,000 grayscale product thumbnails, each 28 by 28 pixels
 
 ## Local CPU partitions
 
-`catalog-mlops prepare` downloads the four original compressed IDX files, checks their SHA256 values and records deterministic stratified partitions in `data/fashion-mnist/manifest.json`. An image identifier such as `train:56368` means index `56368` in the original training file. The labels never become input features.
+`python scripts/prepare_data.py` downloads the four original compressed IDX files, checks their SHA256 values and records deterministic stratified partitions in `data/fashion-mnist/manifest.json`. An image identifier such as `train:56368` means index `56368` in the original training file. The labels never become input features.
 
 | Partition | Images | Role |
 |---|---|---|

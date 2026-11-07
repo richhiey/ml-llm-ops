@@ -1,92 +1,45 @@
 📝
 # Reading the provided pipeline scaffold
 
-Threadline's catalog team wants a first working classifier and an honest account of its mistakes. You will follow the supplied pipeline from verified thumbnails to a trained CNN, then reload that CNN and use both delivery routes.
+Threadline's catalog team wants a first working classifier and a clear account of its mistakes. You will train a small CNN, inspect where it struggles and use its saved weights to suggest categories for incoming thumbnails.
 
-Use one local clone in VS Code. Finish with a retained baseline run, validation evidence, a batch CSV and a real HTTP prediction from the same saved model. The [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) supplies installation and recovery steps. The [local companion notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) shows the same data loading, model definition and evaluation directly with standard libraries.
+Work in one local clone in VS Code. Your end result is a trained baseline, evaluation evidence, a batch CSV and an HTTP prediction from the same model. The [README](https://github.com/richhiey/ml-llm-ops/blob/main/README.md) repeats this exact command sequence, including the two-terminal service step. The [setup guide](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) covers installation and recovery.
 
-This walkthrough has two stopping points. First retain the trained/evaluated baseline. Then run the inference routes. Keep completed artifacts when you resume.
+Run the commands below. Short Python excerpts explain the ML operations inside the supplied files; you do not need to copy those excerpts into a second implementation. The [companion notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) provides the complete native-package implementation for closer inspection.
 
-# 1. Verify your starting point
+# 1. What images are we learning from?
 
-Run these commands from the repository root.
+Get the repository and install its locked environment.
 
 ```bash
+git clone https://github.com/richhiey/ml-llm-ops.git
+cd ml-llm-ops
 uv sync --frozen
-uv run --frozen catalog-mlops prepare
+uv run --frozen python scripts/prepare_data.py
+uv run --frozen python scripts/inspect_dataset.py
 ```
 
-The environment is installed from the committed lock. Dataset preparation verifies the original files before creating its split manifest. Wait until preparation finishes.
+`uv` selects the project environment. `python` executes the named file, which you can open in your editor. Preparation downloads and verifies Fashion-MNIST, then records fixed image indices. Inspection reads the image arrays with NumPy and plots examples with Matplotlib.
 
-Expect `fashion-mnist-cpu-v1`, a split hash, `train=12000` and `validation=3000`. There are also separate operational pools for later investigations. Keep the official test images reserved.
+Expect the original array to have shape `(60000, 28, 28)` and dtype `uint8`. The bounded CPU profile uses `12,000` training images and `3,000` separate validation images: `1200` and `300` per category respectively. The official test split stays reserved for reporting after model selection.
 
-# 2. Inspect the actual images and labels
+Open `work/training-examples.png`. Choose two categories you expect the model to confuse and explain what makes their silhouettes similar.
 
-Create `work/inspect_dataset.py` with the following code, then run it.
+![One actual training example from each category, with its original image identifier](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/fashion-mnist-examples__01__en.png)
+
+The script's [visible data-reading implementation](https://github.com/richhiey/ml-llm-ops/blob/main/scripts/inspect_dataset.py) is available if you want to inspect the file format. Understanding binary headers is not required for this task.
+
+# 2. What does the CNN receive?
+
+A raw thumbnail contains integer brightness values from `0` to `255`. PyTorch needs a floating-point tensor, with a channel dimension for grayscale. Inside the supplied preprocessing, the key conversion is:
 
 ```python
-from pathlib import Path
-import gzip
-import json
-import struct
-import numpy as np
-import matplotlib.pyplot as plt
-
-data = Path("data/fashion-mnist")
-manifest = json.loads((data / "manifest.json").read_text())
-with gzip.open(data / "train-images-idx3-ubyte.gz", "rb") as stream:
-    magic, count, height, width = struct.unpack(">IIII", stream.read(16))
-    images = np.frombuffer(stream.read(), dtype=np.uint8).reshape(count, height, width)
-with gzip.open(data / "train-labels-idx1-ubyte.gz", "rb") as stream:
-    label_magic, label_count = struct.unpack(">II", stream.read(8))
-    labels = np.frombuffer(stream.read(), dtype=np.uint8)
-assert (magic, height, width) == (2051, 28, 28)
-assert label_magic == 2049 and label_count == count
-
-class_names = ("T-shirt/top", "Trouser", "Pullover", "Dress", "Coat",
-               "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot")
-train_ids = manifest["partitions"]["train"]
-validation_ids = manifest["partitions"]["validation"]
-print(images.shape, images.dtype, labels.shape)
-print("Training counts", np.bincount(labels[train_ids], minlength=10))
-print("Validation counts", np.bincount(labels[validation_ids], minlength=10))
-assert set(train_ids).isdisjoint(validation_ids)
-
-figure, axes = plt.subplots(2, 5, figsize=(11, 4.5), layout="constrained")
-for label, axis in enumerate(axes.flat):
-    image_id = next(index for index in train_ids if labels[index] == label)
-    axis.imshow(images[image_id], cmap="gray", vmin=0, vmax=255)
-    axis.set_title(class_names[label])
-    axis.set_xlabel(f"train:{image_id}")
-    axis.set_xticks([])
-    axis.set_yticks([])
-figure.savefig("work/training-examples.png", dpi=150)
+inputs = raw_images.to(dtype=torch.float32) / 255.0
 ```
 
-```bash
-uv run --frozen python work/inspect_dataset.py
-```
+Here, `raw_images` is an existing batch shaped `(N, 1, 28, 28)`. A raw pixel of `128` becomes approximately `0.502`. Training and inference must use that same scale. Scaling each image by its own brightest pixel would change what its numbers mean.
 
-The compressed files use the IDX binary format. `struct.unpack()` reads their headers, and `np.frombuffer()` interprets the remaining bytes as raw integer pixels or labels. The JSON manifest contains the exact indices selected by the pipeline, which you can inspect directly.
-
-Expect image shape `(60000, 28, 28)`, dtype `uint8` and label shape `(60000,)`. Each training class has `1200` examples and each validation class has `300`. Open `work/training-examples.png` in VS Code. The plot loop selects and draws one actual training example for each label. The raw file contains more images than the bounded CPU training profile uses.
-
-![One actual training example from each of the ten categories, with its original sample identifier](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/fashion-mnist-examples__01__en.png)
-
-Each research thumbnail presents one prepared front-view product image. Shirts, pullovers and coats share visual structure at this resolution. The model has to learn distinctions that can be difficult even to inspect in a small image.
-
-# 3. Trace preparation and the model
-
-Open the source functions shown below. Follow their callers in the editor rather than starting a separate implementation.
-
-| Source | What to trace |
-|---|---|
-| [data.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/data.py) | Download hashes, original arrays and fixed indices |
-| [preprocessing.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/preprocessing.py) | Structural checks, channel dimension and one division by `255` |
-| [model.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/model.py) | The complete `CatalogCNN` definition |
-| [training.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/training.py) | Fresh initialization, weight updates, validation and checkpoint save/reload |
-
-The CNN has two convolutional layers. A **convolution** applies a learned small filter across the image. A **ReLU** activation keeps positive responses and maps negative responses to zero. **Pooling** reduces the spatial resolution by taking the strongest response in a small region.
+The CNN learns small filters that respond to image patterns. Two convolution-and-pooling blocks turn local patterns into features, and a classifier produces ten raw category scores, called **logits**.
 
 | Point in the CNN | Shape for one image |
 |---|---|
@@ -97,242 +50,117 @@ The CNN has two convolutional layers. A **convolution** applies a learned small 
 | Hidden classifier layer | `32` values |
 | Output | `10` category scores |
 
-The complete model uses ordinary PyTorch layers. Read this definition alongside `model.py`. Append it to `work/inspect_dataset.py` so it is available for the direct checkpoint inspection below.
+Open [model.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/model.py). Locate `nn.Conv2d`, `nn.MaxPool2d` and the final `nn.Linear`. Match them to this table. You are tracing the supplied architecture; you do not need to rewrite it.
 
-```python
-import torch
-from torch import nn
+# 3. How does the model learn?
 
-class CatalogCNN(nn.Module):
-    def __init__(self, dropout=0.0):
-        super().__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2),
-            nn.Conv2d(16, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2),
-        )
-        self.classifier = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(32 * 7 * 7, 32),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Linear(32, 10),
-        )
-
-    def forward(self, inputs):
-        return self.classifier(self.features(inputs))
-```
-
-Those final raw scores are **logits**. The training loss compares logits with the known category and the optimizer adjusts weights to reduce that loss. The small model has `55,338` trainable parameters. An **epoch** is one pass through the training examples.
-
-# 4. Train the baseline from fresh weights
-
-Inspect `configs/baseline.json`. It declares four epochs, batch size `64`, learning rate `0.001` and seed `426`. The **learning rate** controls the size of optimizer updates. The seed controls recorded sources of randomness within the declared environment.
+Inspect `configs/baseline.json`. It specifies four **epochs**—four passes through the training examples—a batch size of `64`, learning rate `0.001` and seed `426`. The learning rate controls the size of weight updates.
 
 ```bash
-uv run --frozen catalog-mlops train --config configs/baseline.json --output work/runs/baseline
+uv run --frozen python scripts/train.py --config configs/baseline.json --output work/runs/baseline
 ```
 
-The weight-update loop inside the supplied pipeline follows these operations. Read the excerpt alongside `training.py`. Here, `model` is the CNN above, `training` yields raw image/label batches, and `optimizer` is Adam configured from `baseline.json`.
+The script starts with fresh CNN weights. It uses PyTorch's Adam optimizer. The essential update, inside the existing batch loop, is:
 
 ```python
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-model.train()
-for raw_images, known_labels in training:
-    inputs = raw_images.to(dtype=torch.float32) / 255.0
-    optimizer.zero_grad(set_to_none=True)
-    logits = model(inputs)
-    loss = nn.functional.cross_entropy(logits, known_labels)
-    loss.backward()
-    optimizer.step()
+optimizer.zero_grad(set_to_none=True)
+logits = model(inputs)
+loss = nn.functional.cross_entropy(logits, known_labels)
+loss.backward()
+optimizer.step()
 ```
 
-This is an excerpt to inspect inside its existing training context. Division prepares the input scale. Clearing gradients prevents accidental accumulation. `backward()` computes gradients and `step()` updates weights. Validation omits these updates. The application command executes the full pipeline and retains its artifacts.
+The loss measures disagreement with the known labels. `backward()` computes how weights contributed to that loss; `step()` updates them. Clearing gradients prevents an earlier batch's gradients from accumulating accidentally. Validation makes predictions without updating weights.
 
-Expect four epoch observations and a completed `work/runs/baseline` directory. `train()` constructs a new CNN before learning. It does not start from a supplied pretrained checkpoint. Validation runs between epochs without updating weights.
+Expect four epoch observations and a completed `work/runs/baseline` directory. Keep that directory. An existing output is protected; inspect it rather than deleting it to rerun the same command.
 
-If this directory already holds a completed run, inspect and reuse it. Choose a new directory only when deliberately making another run. A fresh command in the same environment should repeat the declared recipe, while results across platforms can differ.
+# 4. Where does the baseline struggle?
 
-# 5. Read the retained learning and evaluation evidence
-
-Run evaluation through the saved checkpoint.
+Reload the saved model, evaluate it on the fixed validation images and inspect its results.
 
 ```bash
-uv run --frozen catalog-mlops evaluate --run work/runs/baseline
+uv run --frozen python scripts/evaluate.py --run work/runs/baseline
+uv run --frozen python scripts/inspect_results.py --run work/runs/baseline
 ```
 
-Expect `count=3000`, overall accuracy, macro F1, per-class metrics and a confusion matrix. `model.eval()` selects evaluation behavior, and inference mode avoids tracking gradients. The report uses the same fixed validation IDs as training's validation observations.
+The first script evaluates the saved weights. The second recomputes metrics from the retained prediction CSV and draws your own plots. Expect `3000` predictions. The author's reference run reached accuracy `0.8380` and macro F1 `0.8322`; inspect your own result rather than treating those numbers as a guarantee across computers.
 
-The author's observed reference run reached accuracy `0.8380` and macro F1 `0.8322`. These numbers describe one CPU run under the recorded recipe. Inspect your own retained predictions to explain your result.
+**Accuracy** is the fraction classified correctly. **Recall** asks how many actual examples of a category were found; **precision** asks how many predictions of that category were correct. F1 combines precision and recall. **Macro F1** averages the ten category F1 scores equally, matching Threadline's equal-category priority.
 
-Append the following code to `work/inspect_dataset.py`. It loads the declared architecture and saved weights, performs validation with PyTorch directly, computes metrics with scikit-learn and draws both plots with Matplotlib.
+![Observed training and validation loss over four epochs in the author's baseline](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/baseline-learning-history__01__en.png)
 
-```python
-from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, classification_report
-from torch.utils.data import DataLoader, TensorDataset
+Open `work/learning-history.png`. Training loss comes from images used to update weights. Validation loss comes from separate images. Describe how both change; four epochs alone cannot establish what a longer run would achieve.
 
-run = Path("work/runs/baseline")
-checkpoint = torch.load(run / "model.pt", map_location="cpu", weights_only=True)
-model = CatalogCNN(dropout=checkpoint["config"]["dropout"])
-model.load_state_dict(checkpoint["state_dict"])
-model.eval()
-torch.set_num_threads(checkpoint["config"]["cpu_threads"])
-validation = TensorDataset(
-    torch.from_numpy(images[validation_ids].copy()).unsqueeze(1),
-    torch.from_numpy(labels[validation_ids].astype(np.int64)),
-)
-loader = DataLoader(validation, batch_size=64, shuffle=False)
-truth, predictions = [], []
-with torch.inference_mode():
-    for raw_images, known_labels in loader:
-        logits = model(raw_images.to(dtype=torch.float32) / 255.0)
-        predictions.extend(logits.argmax(dim=1).tolist())
-        truth.extend(known_labels.tolist())
-print("Accuracy", accuracy_score(truth, predictions))
-print("Macro F1", f1_score(truth, predictions, average="macro"))
-print(classification_report(truth, predictions, labels=range(10),
-                            target_names=class_names, zero_division=0))
+![Actual categories on rows and predicted categories on columns for the author's validation results](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/baseline-confusion-matrix__01__en.png)
 
-history = json.loads((run / "history.json").read_text())
-epochs = [row["epoch"] for row in history]
-figure, axis = plt.subplots(figsize=(8, 4), layout="constrained")
-axis.plot(epochs, [row["train_loss"] for row in history], "o-", label="Training")
-axis.plot(epochs, [row["validation_loss"] for row in history], "s--", label="Validation")
-axis.set(xlabel="Epoch", ylabel="Cross-entropy loss (unitless)", xticks=epochs)
-axis.legend()
-figure.savefig("work/learning-history.png", dpi=150)
+Open `work/confusion-matrix.png`. Follow the actual-shirt row across the predictions. The reference found `117` of `300` shirts: recall `0.39`. It called `73` shirts coats and `70` T-shirts/tops. This is a concrete weakness that overall accuracy conceals. Identify the largest error in your own matrix.
 
-matrix = confusion_matrix(truth, predictions, labels=range(10))
-figure, axis = plt.subplots(figsize=(9, 7), layout="constrained")
-image = axis.imshow(matrix, cmap="Greens", vmin=0)
-axis.set_xticks(range(10), class_names, rotation=40, ha="right")
-axis.set_yticks(range(10), class_names)
-axis.set_xlabel("Predicted category")
-axis.set_ylabel("Actual category")
-figure.colorbar(image, ax=axis, label="Images")
-figure.savefig("work/confusion-matrix.png", dpi=150)
-```
+# 5. What connects the score to a usable model?
 
-```bash
-uv run --frozen python work/inspect_dataset.py
-```
+Inspect these files in `work/runs/baseline`.
 
-Expect two figures derived from your own observations. **Cross-entropy loss** measures disagreement with the known labels. Smaller loss is better under the same evaluation conditions. Training loss comes from examples used for updates, while validation loss comes from separate examples. These four observations alone do not prove what a longer run would achieve.
-
-![Observed training and validation loss over four epochs of the author's baseline](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/baseline-learning-history__01__en.png)
-
-**Recall** for a category is the fraction of its actual examples classified correctly. **Precision** is the fraction of predictions for that category that are correct. F1 combines precision and recall. **Macro F1** averages F1 equally across the ten categories, matching the catalog brief's equal-category priority.
-
-![Actual categories on rows and predictions on columns for 3,000 validation images in the author's baseline](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/baseline-confusion-matrix__01__en.png)
-
-The reference found `117` of `300` shirts, giving shirt recall `0.39`. It classified `73` shirts as coats and `70` as T-shirts/tops. That is a specific weakness to investigate, even though overall accuracy is much higher. In your matrix, follow one actual category across its row and explain the largest error.
-
-# 6. Identify what was saved
-
-Inspect the files in the completed run.
-
-| Artifact | What it establishes |
+| Artifact | What it lets you check |
 |---|---|
-| `config.json` and `history.json` | Recipe and observed learning curve |
-| `dataset.json` | Original file identities, class order and split indices |
-| `model.pt` | Learned weights and model/preprocessing declaration |
-| `metrics.json` and `validation-predictions.csv` | Evaluation summary and the predictions supporting it |
-| `source.zip`, `environment.json` and `run.json` | Code/environment record and connected artifact hashes |
+| `config.json`, `history.json` | Training settings and learning observations |
+| `dataset.json` | Data identities, class order and fixed split indices |
+| `model.pt` | Saved learned weights |
+| `metrics.json`, `validation-predictions.csv` | Scores and the predictions behind them |
+| `source.zip`, `environment.json`, `run.json` | Code, environment and connected artifact identities |
 
-A **hash** is a content fingerprint. Changing a byte changes the expected fingerprint. Here, hashes help detect mismatched artifacts. They also need retrievable files to support later reproduction.
+A **hash** is a content fingerprint used here to detect mismatched files. The run record contains the saved model's fingerprint; the consumers below report that same model identity. Retain the files as well as their hashes so another engineer can retrieve the recipe.
 
-The underlying file operation uses Python's `hashlib` directly.
+This is a useful stopping point. You can close your editor and resume from the saved model without training again.
 
-```python
-import hashlib
-model_hash = hashlib.sha256(Path("work/runs/baseline/model.pt").read_bytes()).hexdigest()
-print(model_hash)
-```
+# 6. Can the saved model process an incoming batch?
 
-Expect this value to match the model fingerprint in the saved run record.
-
-This is the first stopping point. Keep these artifacts when you close the editor.
-
-# 7. Run a batch with the saved CNN
-
-Export a small unlabeled intake from the independent incoming pool, then invoke the normal batch route.
+Export a small unlabeled intake from the separate incoming-image pool and run prediction.
 
 ```bash
-uv run --frozen catalog-mlops samples --count 20 --output work/intake
-uv run --frozen catalog-mlops batch --run work/runs/baseline --manifest work/intake/manifest.csv --output work/batches/baseline
+uv run --frozen python scripts/export_samples.py --count 20 --output work/intake
+uv run --frozen python scripts/predict_batch.py --run work/runs/baseline --manifest work/intake/manifest.csv --output work/batches/baseline
 ```
 
-Expect `20` rows in `work/batches/baseline/predictions.csv`, plus `batch.json`. Compare image identifiers and order with `work/intake/manifest.csv`. The model supplies a `class_id`, `class_name` and `top_score` for each image. **Softmax** converts the ten logits into normalized scores. The largest score is not a calibrated guarantee of correctness.
+Expect `20` rows in `work/batches/baseline/predictions.csv`, plus `batch.json`. Match identifiers and order to the intake manifest. Each result contains a category and a top softmax score. **Softmax** turns logits into normalized scores; its largest value is not a calibrated guarantee of correctness.
 
-Open [inference.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/inference.py). Trace manifest → `read_thumbnail()` → `Predictor.predict()` → `preprocess()` → saved CNN → identified predictions. The input manifest has `image_id,path` and supplies no label.
+Open [inference.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/inference.py). Trace the image read, shared preprocessing, saved-model call and output row. Incoming images supply no category label.
 
-# 8. Call the real-time route
+# 7. Can a client request one prediction?
 
-In a second terminal at the repository root, start the local service.
+In a **second terminal**, at the repository root, start the actual web server.
 
 ```bash
-uv run --frozen catalog-mlops serve --run work/runs/baseline --port 8000
+uv run --frozen uvicorn scripts.api:app --host 127.0.0.1 --port 8000
 ```
 
-Expect a message that the service is listening on port `8000`. It loads and pins that saved model at startup. Keep this terminal running.
+Uvicorn loads the FastAPI application declared in [scripts/api.py](https://github.com/richhiey/ml-llm-ops/blob/main/scripts/api.py). That file explicitly selects `work/runs/baseline`. Wait for startup to complete and keep the terminal running.
 
-In your first terminal, use the first image from the generated intake.
+Back in the **first terminal**, prepare the request body and send it using `curl`.
 
 ```bash
-uv run --frozen catalog-mlops request --image work/intake/56368.png --image-id train:56368 --port 8000
+uv run --frozen python scripts/prepare_request.py --image work/intake/56368.png --image-id train:56368 --output work/intake/request.json
+curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary @work/intake/request.json http://127.0.0.1:8000/predict
 ```
 
-The fixed manifest's first image is `train:56368`. Expect an HTTP response containing its prediction, model identity and service-side processing time. Compare its class with the matching batch row. Class IDs must agree, and top-score difference should be at most `1e-6` to allow floating-point roundoff. The model hash must match the batch record.
+The [request preparation file](https://github.com/richhiey/ml-llm-ops/blob/main/scripts/prepare_request.py) reads the PNG with Pillow and writes its identifier and pixel array as JSON. Open `request.json`: these are the values the client sends. `curl` performs the HTTP request directly. In Windows PowerShell, use `curl.exe` for this command.
 
-Stop the service with `Ctrl+C` in its terminal when finished. The [inference brief](https://github.com/richhiey/ml-llm-ops/blob/main/docs/inference-brief.md) explains the two clients and what the timers include.
-
-Finish your annotated stage trace. For each of the five stages, record its actual function name, purpose, input, output and one observed artifact. Trace one training image identifier and one incoming identifier, and show where the saved CNN connects their two routes. Use your retained files as the labels on that trace.
-
-# Project assembly
-
-The implementations above establish how the packages work. For project construction, the repository packages those operations into reusable functions and adds file validation, identity records and complete-output delivery.
-
-| Operation you inspected | Repository entry point | Project responsibility |
-|---|---|---|
-| IDX headers, NumPy arrays and recorded indices | `prepare_data()` and `load_arrays()` | Verified dataset access |
-| PyTorch layers, Adam, loss, backward pass and updates | `train()` | One configured learning run and retained artifacts |
-| `torch.load()`, `load_state_dict()` and `eval()` | `load_model()` | Restore the declared CNN and validate its metadata |
-| Raw pixels divided by `255`, forward pass and category selection | `Predictor.predict()` | Consistent preparation and identified suggestions |
-| CSV/image reading, prediction and complete output | `predict_batch()` | Deliver a complete batch with model/input evidence |
-
-After tracing these operations in source, you can use the project function to assemble another delivery without rewriting its packaging logic. This code is a project integration example using the already-trained model.
-
-```python
-# Project assembly
-from pathlib import Path
-from catalog_mlops.inference import predict_batch
-
-report = predict_batch(
-    run_directory=Path("work/runs/baseline"),
-    manifest_path=Path("work/intake/manifest.csv"),
-    output=Path("work/batches/project-assembly"),
-)
-print(report["count"], report["model"])
-```
-
-Expect `20` delivered predictions and the same model hash as the earlier batch. Use a new output directory for this actual execution. Be able to point from the function to its preparation, model call and output-writing code. The helper assembles operations whose behavior you have already inspected.
-
-# Watch out for
-
-Wait for data preparation before training. Keep validation labels outside weight updates. Avoid dividing by `255` twice or treating a softmax score as established reliability. Restart a service or notebook kernel after editing imported source. An existing output path preserves evidence and requires inspection or a deliberately new destination.
+Expect a prediction, loaded model identity and service-side processing time. Match the class to `train:56368` in your batch CSV. The model hashes must agree; top scores should agree within `1e-6` for floating-point roundoff. Stop Uvicorn with `Ctrl+C` in the second terminal.
 
 # Quick reference
 
-| Operation | Entry point | Evidence |
-|---|---|---|
-| Verify data | `catalog-mlops prepare` | File identities and split counts |
-| Learn weights | `catalog-mlops train` | Completed baseline run |
-| Reload/evaluate | `catalog-mlops evaluate` | Metrics on fixed validation IDs |
-| Deliver many predictions | `catalog-mlops batch` | CSV and batch identity record |
-| Deliver one response | `catalog-mlops serve` and `request` | Actual HTTP prediction and loaded model identity |
+Complete an annotated route from raw image to served suggestion. For each of the five stages, name its purpose, input, output, actual source function and one observed artifact. Trace one training identifier and one incoming identifier; mark where the saved weights connect the routes.
+
+| Underlying package operation | Project code that assembles it |
+|---|---|
+| NumPy reads and selects image arrays | `data.py` verifies files and records splits |
+| PyTorch converts tensors, learns weights and predicts | `preprocessing.py`, `model.py` and `training.py` connect those operations |
+| scikit-learn calculates evaluation metrics | `evaluation.py` reports fixed-split results |
+| FastAPI receives a request; Uvicorn runs the server | `service.py` connects validated input to the saved classifier |
+
+Project functions save repeated assembly work. The package operations above explain what those functions do. Use the linked source and notebook when you need implementation detail.
+
+# Watch out for
+
+Wait for preparation before training. Keep validation labels outside weight updates. Use the same pixel scale in training and inference. Restart the server after source changes. Keep completed outputs and choose a new destination for a deliberately new run.
 
 ## Learning outcome
 
@@ -340,4 +168,4 @@ Trace how data moves through the provided training/inference pipeline scaffold f
 
 ## Summary
 
-Threadline now has a baseline whose mistakes can be inspected and whose saved weights work through both inference routes. Your stage trace connects the image files, preprocessing, learning, evaluation and delivered prediction. A supplier requirement can now be added at a specific boundary and tested against that working route.
+Threadline has a baseline with visible weaknesses and saved weights that work through batch and HTTP delivery. Your stage trace connects the images, preparation, learning, evaluation and category suggestion. You can now add a supplier intake rule at a specific boundary and check its effect.

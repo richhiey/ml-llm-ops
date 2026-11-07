@@ -54,6 +54,7 @@ def translate_batch(inputs: torch.Tensor, pixels: int, generator: torch.Generato
 def source_files() -> dict[str, bytes]:
     root = Path(__file__).resolve().parents[2]
     files = sorted((root / "src").rglob("*.py"))
+    files += sorted((root / "scripts").rglob("*.py"))
     files += [root / name for name in ("pyproject.toml", "uv.lock", ".python-version")]
     if not all(path.is_file() for path in files):
         raise ValueError("Source checkout and environment lock are required to record reproducible runs")
@@ -83,7 +84,7 @@ def source_snapshot(destination: Path) -> dict:
 
 def environment_record() -> dict:
     packages = {}
-    for package in ("torch", "numpy", "scikit-learn", "mlflow", "fastapi", "tensorboard"):
+    for package in ("torch", "numpy", "scikit-learn", "mlflow", "sqlalchemy", "fastapi", "tensorboard"):
         packages[package] = importlib.metadata.version(package)
     return {"python": platform.python_version(), "platform": platform.platform(),
             "machine": platform.machine(), "packages": packages, "device": "cpu"}

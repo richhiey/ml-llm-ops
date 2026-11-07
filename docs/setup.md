@@ -1,53 +1,37 @@
-# Local setup
+# Local setup and troubleshooting
 
-Use a terminal in VS Code or your operating system's terminal. Install Git and `uv` first using their official instructions. Python is managed by the project's `.python-version` file. [Git downloads](https://git-scm.com/downloads) · [uv installation](https://docs.astral.sh/uv/getting-started/installation/)
+Use VS Code or your operating system's terminal. Install [Git](https://git-scm.com/downloads) and [uv](https://docs.astral.sh/uv/getting-started/installation/) first.
 
-## 1. Get the source and environment
+Follow the complete sequence in the [README](https://github.com/richhiey/ml-llm-ops/blob/main/README.md): clone → locked environment → data inspection → training → evaluation → batch → Uvicorn → curl. It reproduces the guided pipeline walkthrough, with the same files, arguments and output paths.
 
-```bash
-git clone https://github.com/richhiey/ml-llm-ops.git
-cd ml-llm-ops
-uv sync --frozen
-uv run --frozen python --version
-```
+## Environment
 
-Expect Python `3.12.12`. `uv sync --frozen` installs the committed dependency lock into `.venv`. Run commands from this repository's root. The configuration uses CPU PyTorch wheels on Windows/Linux and the standard macOS wheel, with all application tensors kept on CPU.
+`uv sync --frozen` installs the committed dependency lock into `.venv`. The project selects Python `3.12.12`. Run every command from the repository root. CPU PyTorch wheels are selected on Windows/Linux; macOS uses the standard wheel with application tensors kept on CPU.
 
-If you already have an older clone of this course, retain personal work outside it and use a fresh clone for the replacement project. An old environment and demand-model commands do not establish the new setup.
+If you have an older course clone, preserve personal work elsewhere and start with a fresh clone. An older environment does not establish this setup. Use a short writable path on Windows. If `uv` or Git is unavailable, check your terminal's path and reopen it after installation.
 
-## 2. Prepare the research dataset
+`uv run --frozen` selects the locked environment; the executable after it is the actual tool. `python scripts/train.py` runs the named Python file. `uvicorn scripts.api:app` starts the web server. `curl` is a separate HTTP client already available on many systems. Use curl 7.76 or newer for `--fail-with-body`, and use `curl.exe` in Windows PowerShell.
 
-```bash
-uv run --frozen catalog-mlops prepare
-```
+## Data and retained outputs
 
-Expect `fashion-mnist-cpu-v1`, a split hash and counts including `train=12000` and `validation=3000`. The command downloads roughly 30 MiB, verifies file hashes and creates the fixed split manifest. Wait for the command to finish before training. A repeated preparation verifies existing data. A checksum mismatch identifies a damaged cache file to remove and download again.
+Preparation downloads roughly 30 MiB, verifies original file hashes and records fixed partitions. Wait for it to complete before inspection or training. Repeated preparation verifies existing data. If a checksum fails, inspect the named damaged cache file before replacing it.
 
-## 3. Train and retain one baseline
+A training run retains `run.json`, `config.json`, `dataset.json`, `environment.json`, `history.json`, `model.pt`, `source.zip`, `metrics.json` and `validation-predictions.csv`. Source snapshots include the Python entry files in `scripts/` as well as reusable source and environment declarations.
 
-```bash
-uv run --frozen catalog-mlops train --config configs/baseline.json --output work/runs/baseline
-uv run --frozen catalog-mlops evaluate --run work/runs/baseline
-```
+Existing run, intake, request and batch destinations are protected. Resume by inspecting a retained result, or deliberately choose a new path for new work. Stop a running Uvicorn process with `Ctrl+C`; restart it after source edits so it loads the new implementation.
 
-Expect four epoch observations and a completed result directory containing `run.json`, `config.json`, `dataset.json`, `environment.json`, `history.json`, `model.pt`, `source.zip`, `metrics.json` and `validation-predictions.csv`. Evaluation reloads the saved model and uses its declared validation IDs.
-
-An existing run directory is preserved. Inspect it to resume your investigation, or choose a different output path for a genuinely new run. Do not delete a run to conceal a failed comparison.
-
-## 4. Run the regression checks
+## Checks and optional notebook
 
 ```bash
 uv run --frozen pytest -q
 ```
 
-The mechanics tests use a small explicitly synthetic fixture. They check preprocessing, model reload, intake behavior, batch/HTTP consistency and evidence integrity. They do not establish Fashion-MNIST quality. The walkthrough trains on the real dataset.
+The mechanics tests use explicitly synthetic fixtures. They check implementation behavior, not Fashion-MNIST quality. Your real-data training and evaluation establish model quality.
 
-## 5. Use the local notebook
-
-Open `notebooks/01-pipeline-and-extension.ipynb` in VS Code and select the repository's `.venv` Python kernel. Run it from the repository root, or let its first cell locate the parent repository when opened from `notebooks/`. It shows the data loading, CNN, evaluation and plots directly with standard libraries and inspects your retained baseline. A missing baseline is an instruction to finish step 3 first.
+The [companion notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/01-pipeline-and-extension.ipynb) offers full data-reading, CNN, evaluation and plotting implementations for optional inspection. Select this repository's `.venv` kernel in VS Code and prepare the baseline first. Learner attempt cells remain open.
 
 ## Resource expectations
 
-CPU execution and bounded batches are the default. On the author's Apple M4 with 16 GB RAM, the initial four-epoch run took about 10 seconds end to end and peaked below 700 MiB RSS. Downloads, dependency installation, slower processors and concurrent applications affect the full setup. An 8 GB classroom computer is the target profile, with hardware-specific verification still pending.
+Bounded batches and CPU execution are the default. On the author's Apple M4 with 16 GB RAM, the initial four-epoch run took about 10 seconds end to end and peaked below 700 MiB RSS. Downloads, installation, slower processors and concurrent applications affect total setup time. An 8 GB classroom computer is the target profile; hardware-specific verification is still pending.
 
-Use a short writable clone path on Windows. Keep a few GB free for the environment, cached packages, dataset and run artifacts. If a command is unavailable, verify that `uv` and Git are on your terminal's path, then reopen the terminal.
+Keep a few GB free for the environment, cached packages, dataset and retained runs.
