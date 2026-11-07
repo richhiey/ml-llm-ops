@@ -1,0 +1,3 @@
+You are assisting Morrow Market with a supplier-trial model decision. Use the actual six controlled configurations in comparison.json. The partner requires T-shirt/top recall >= 0.80 and sneaker recall >= 0.90 on the fixed validation set. Among comparable configurations satisfying both requirements, maximize validation_macro_f1; repeats are not new configurations. Recommend a candidate for further validation, citing full run IDs and exact raw values. Explain how this changes the original unrestricted macro-F1 recommendation. Do not alter metrics, infer test performance or claim production readiness. Return a short recommendation and a checkable claim table.
+
+Data file: docs/course/evidence/sprint-2/comparison.json

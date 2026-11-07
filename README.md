@@ -78,3 +78,55 @@ The [Campus lessons](https://github.com/richhiey/ml-llm-ops/blob/main/docs/cours
 | `notebooks/` | Optional implementation detail and learner investigations |
 | `docs/course/` | Lessons and separately labeled exercise fixtures |
 | `work/`, `data/` | Ignored local results and verified dataset cache |
+
+## Sprint 2: track and compare experiments
+
+Continue after the intake extension. Keep the source and evaluation conditions fixed for the controlled study. The following sequence reproduces the [MLflow walkthrough](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/04-revisiting-mlflow-in-a-pipeline-context/lesson.md), followed by the comparison and autologging practice commands. Keep your original saved baseline as historical evidence.
+
+### Confirm a tracked baseline
+
+```bash
+uv run --frozen python scripts/track_experiment.py --config configs/baseline.json --output work/experiments/baseline --state work/mlflow --name baseline
+```
+
+Expect a retained local run and `work/experiments/baseline.tracking.json` containing the full run ID and native logged-model URI.
+
+### Run the five reference candidates
+
+```bash
+uv run --frozen python scripts/track_experiment.py --config configs/experiments/longer-training.json --output work/experiments/longer-training --state work/mlflow --name longer-training
+uv run --frozen python scripts/track_experiment.py --config configs/experiments/lower-learning-rate.json --output work/experiments/lower-learning-rate --state work/mlflow --name lower-learning-rate
+uv run --frozen python scripts/track_experiment.py --config configs/experiments/weight-decay.json --output work/experiments/weight-decay --state work/mlflow --name weight-decay
+uv run --frozen python scripts/track_experiment.py --config configs/experiments/dropout.json --output work/experiments/dropout --state work/mlflow --name dropout
+uv run --frozen python scripts/track_experiment.py --config configs/experiments/translation.json --output work/experiments/translation --state work/mlflow --name translation
+```
+
+Expect five additional configurations and receipts. Preserve regressions as well as gains. Each candidate changes one factor against baseline.
+
+### Start MLflow in a second terminal
+
+```bash
+uv run --frozen mlflow ui --backend-store-uri sqlite:///work/mlflow/tracking.db --host 127.0.0.1 --port 5001
+```
+
+Open `http://127.0.0.1:5001`, choose **Experiments → threadline-cnn**, and inspect the actual parameters, metrics, histories, artifacts and model. Select baseline plus the five candidates and choose **Compare**. Inspect `validation_macro_f1` and the category tradeoffs. Keep this terminal running; stop it with `Ctrl+C` when finished.
+
+### Verify your raw comparison
+
+Replace each capitalized ID token with the full run ID from your own ledger/receipt. Make the UI decision first; the comparison file checks raw prediction metrics, controls and model attribution.
+
+```bash
+uv run --frozen python scripts/compare_runs.py --state work/mlflow --baseline BASELINE_ID --runs LONGER_ID LOWER_LR_ID WEIGHT_DECAY_ID DROPOUT_ID TRANSLATION_ID --output work/comparison.json
+```
+
+Expect five distinct eligible candidates and a selected native model URI. Keep the resulting decision file intact. This ranks the controlled study; a new partner business policy is documented separately.
+
+### Check genuine autologging in the first terminal
+
+```bash
+uv run --frozen python scripts/track_experiment.py --config configs/baseline.json --output work/experiments/baseline-autolog --state work/mlflow --name baseline-autolog --autolog
+```
+
+Expect the baseline configuration to repeat, with four `auto/` metric histories at steps 1–4 and `autolog_hook=tensorboard`. Final decision metrics, lineage and artifacts remain explicitly logged. This is an instrumentation repeat, not another distinct improvement candidate.
+
+Continue with the [assistant validation](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/07-validating-an-assistant-generated-experiment-summary/lesson.md) and partner assessment. The [optional native-package notebook](https://github.com/richhiey/ml-llm-ops/blob/main/notebooks/02-tracking-and-evidence.ipynb) inspects your actual records and raw predictions. [Actual authored reference observations](https://github.com/richhiey/ml-llm-ops/tree/main/docs/course/evidence/sprint-2) are provided for feedback; they are not a preloaded tracking store.

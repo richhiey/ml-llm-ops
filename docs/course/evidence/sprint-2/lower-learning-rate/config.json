@@ -1,0 +1,10 @@
+{
+  "batch_size": 64,
+  "cpu_threads": 2,
+  "dropout": 0.0,
+  "epochs": 4,
+  "learning_rate": 0.0003,
+  "seed": 426,
+  "translation_pixels": 0,
+  "weight_decay": 0.0
+}

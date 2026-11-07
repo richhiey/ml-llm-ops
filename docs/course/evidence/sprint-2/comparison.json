@@ -1,0 +1,806 @@
+{
+  "baseline_run_id": "c538c971fdf44099b750af1d9513458b",
+  "created_at": "2026-11-07T13:23:44.450850+00:00",
+  "direction": "maximize",
+  "distinct_candidates": 5,
+  "interpretation": "Best observed eligible configuration under these fixed conditions",
+  "primary_metric": "validation_macro_f1",
+  "rows": [
+    {
+      "autolog_enabled": false,
+      "changed_field": null,
+      "comparable": true,
+      "config": {
+        "batch_size": 64,
+        "cpu_threads": 2,
+        "dropout": 0.0,
+        "epochs": 4,
+        "learning_rate": 0.001,
+        "seed": 426,
+        "translation_pixels": 0,
+        "weight_decay": 0.0
+      },
+      "config_sha256": "1e228ce2e4422e4d928b696e89dc9e7e9a0c316e576625c80c8f62f6a6dfd213",
+      "controls": {
+        "architecture": "catalog-cnn-v1",
+        "data_sha256": "5e7eab50f667cab081e5b436853a6efaac4e9a985618f90bbee806d1bc5037e0",
+        "environment_sha256": "bc2204ede66268e637157a4b736201909ec33b0f88ed291c7816a804ee61771c",
+        "initial_state_sha256": "1304de60caa9d03e687c1679d944c616e0ed2655800040a9493318df591f1c5a",
+        "primary_metric": "validation_macro_f1",
+        "source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+        "split_sha256": "6a25e2618e44b81958a7e1ebbdeb7063de4202ab1eed349c88d8e68e94c2ee4a",
+        "validation_count": 3000
+      },
+      "delta_macro_f1": 0.0,
+      "environment": {
+        "device": "cpu",
+        "machine": "arm64",
+        "packages": {
+          "fastapi": "0.119.0",
+          "mlflow": "3.5.1",
+          "numpy": "2.3.3",
+          "scikit-learn": "1.7.2",
+          "sqlalchemy": "2.0.44",
+          "tensorboard": "2.20.0",
+          "torch": "2.8.0"
+        },
+        "platform": "macOS-15.5-arm64-arm-64bit",
+        "python": "3.12.12"
+      },
+      "kind": "baseline",
+      "model_sha256": "8a165e24f82b26c9d64b1494c7c65c8775fa9487bf43db086c4d0d33f79365eb",
+      "model_uri": "models:/m-2ab32453a03e43d0a0f5a81af219eedb",
+      "name": "baseline",
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9362416107382551,
+          "precision": 0.9425675675675675,
+          "recall": 0.93,
+          "support": 300
+        },
+        "Bag": {
+          "f1": 0.9444444444444444,
+          "precision": 0.9262820512820513,
+          "recall": 0.9633333333333334,
+          "support": 300
+        },
+        "Coat": {
+          "f1": 0.7426981919332406,
+          "precision": 0.6372315035799523,
+          "recall": 0.89,
+          "support": 300
+        },
+        "Dress": {
+          "f1": 0.8530465949820788,
+          "precision": 0.9224806201550387,
+          "recall": 0.7933333333333333,
+          "support": 300
+        },
+        "Pullover": {
+          "f1": 0.7409948542024014,
+          "precision": 0.7632508833922261,
+          "recall": 0.72,
+          "support": 300
+        },
+        "Sandal": {
+          "f1": 0.9306260575296108,
+          "precision": 0.9450171821305842,
+          "recall": 0.9166666666666666,
+          "support": 300
+        },
+        "Shirt": {
+          "f1": 0.5109170305676856,
+          "precision": 0.740506329113924,
+          "recall": 0.39,
+          "support": 300
+        },
+        "Sneaker": {
+          "f1": 0.9087947882736156,
+          "precision": 0.8885350318471338,
+          "recall": 0.93,
+          "support": 300
+        },
+        "T-shirt/top": {
+          "f1": 0.793984962406015,
+          "precision": 0.7232876712328767,
+          "recall": 0.88,
+          "support": 300
+        },
+        "Trouser": {
+          "f1": 0.9602649006622517,
+          "precision": 0.9539473684210527,
+          "recall": 0.9666666666666667,
+          "support": 300
+        }
+      },
+      "reasons": [],
+      "run_id": "c538c971fdf44099b750af1d9513458b",
+      "training_seconds": 7.071229707915336,
+      "validation_accuracy": 0.838,
+      "validation_macro_f1": 0.8322013435739599
+    },
+    {
+      "autolog_enabled": false,
+      "changed_field": "epochs",
+      "comparable": true,
+      "config": {
+        "batch_size": 64,
+        "cpu_threads": 2,
+        "dropout": 0.0,
+        "epochs": 8,
+        "learning_rate": 0.001,
+        "seed": 426,
+        "translation_pixels": 0,
+        "weight_decay": 0.0
+      },
+      "config_sha256": "2f7fd8206cca57bf0812be8397c476366fcb31027a763e447f05aa925c0e42ae",
+      "controls": {
+        "architecture": "catalog-cnn-v1",
+        "data_sha256": "5e7eab50f667cab081e5b436853a6efaac4e9a985618f90bbee806d1bc5037e0",
+        "environment_sha256": "bc2204ede66268e637157a4b736201909ec33b0f88ed291c7816a804ee61771c",
+        "initial_state_sha256": "1304de60caa9d03e687c1679d944c616e0ed2655800040a9493318df591f1c5a",
+        "primary_metric": "validation_macro_f1",
+        "source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+        "split_sha256": "6a25e2618e44b81958a7e1ebbdeb7063de4202ab1eed349c88d8e68e94c2ee4a",
+        "validation_count": 3000
+      },
+      "delta_macro_f1": 0.025036865193368563,
+      "environment": {
+        "device": "cpu",
+        "machine": "arm64",
+        "packages": {
+          "fastapi": "0.119.0",
+          "mlflow": "3.5.1",
+          "numpy": "2.3.3",
+          "scikit-learn": "1.7.2",
+          "sqlalchemy": "2.0.44",
+          "tensorboard": "2.20.0",
+          "torch": "2.8.0"
+        },
+        "platform": "macOS-15.5-arm64-arm-64bit",
+        "python": "3.12.12"
+      },
+      "kind": "candidate",
+      "model_sha256": "1b94a9f357f77be4527ff2df935dfc98d806221c47c643d7283191a34d401406",
+      "model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+      "name": "longer-training",
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9447236180904522,
+          "precision": 0.9494949494949495,
+          "recall": 0.94,
+          "support": 300
+        },
+        "Bag": {
+          "f1": 0.9525368248772504,
+          "precision": 0.9356913183279743,
+          "recall": 0.97,
+          "support": 300
+        },
+        "Coat": {
+          "f1": 0.7684021543985637,
+          "precision": 0.8326848249027238,
+          "recall": 0.7133333333333334,
+          "support": 300
+        },
+        "Dress": {
+          "f1": 0.8549618320610687,
+          "precision": 0.7887323943661971,
+          "recall": 0.9333333333333333,
+          "support": 300
+        },
+        "Pullover": {
+          "f1": 0.7827476038338658,
+          "precision": 0.7515337423312883,
+          "recall": 0.8166666666666667,
+          "support": 300
+        },
+        "Sandal": {
+          "f1": 0.9407783417935702,
+          "precision": 0.9553264604810997,
+          "recall": 0.9266666666666666,
+          "support": 300
+        },
+        "Shirt": {
+          "f1": 0.6757575757575758,
+          "precision": 0.6194444444444445,
+          "recall": 0.7433333333333333,
+          "support": 300
+        },
+        "Sneaker": {
+          "f1": 0.922824302134647,
+          "precision": 0.9093851132686084,
+          "recall": 0.9366666666666666,
+          "support": 300
+        },
+        "T-shirt/top": {
+          "f1": 0.7637795275590551,
+          "precision": 0.9326923076923077,
+          "recall": 0.6466666666666666,
+          "support": 300
+        },
+        "Trouser": {
+          "f1": 0.9658703071672355,
+          "precision": 0.9895104895104895,
+          "recall": 0.9433333333333334,
+          "support": 300
+        }
+      },
+      "reasons": [],
+      "run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+      "training_seconds": 14.209256208036095,
+      "validation_accuracy": 0.857,
+      "validation_macro_f1": 0.8572382087673285
+    },
+    {
+      "autolog_enabled": false,
+      "changed_field": "learning_rate",
+      "comparable": true,
+      "config": {
+        "batch_size": 64,
+        "cpu_threads": 2,
+        "dropout": 0.0,
+        "epochs": 4,
+        "learning_rate": 0.0003,
+        "seed": 426,
+        "translation_pixels": 0,
+        "weight_decay": 0.0
+      },
+      "config_sha256": "6e00a551832bd455ae7d19b1578956ceb4e147bd33716b67f62a18b7356b1c1e",
+      "controls": {
+        "architecture": "catalog-cnn-v1",
+        "data_sha256": "5e7eab50f667cab081e5b436853a6efaac4e9a985618f90bbee806d1bc5037e0",
+        "environment_sha256": "bc2204ede66268e637157a4b736201909ec33b0f88ed291c7816a804ee61771c",
+        "initial_state_sha256": "1304de60caa9d03e687c1679d944c616e0ed2655800040a9493318df591f1c5a",
+        "primary_metric": "validation_macro_f1",
+        "source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+        "split_sha256": "6a25e2618e44b81958a7e1ebbdeb7063de4202ab1eed349c88d8e68e94c2ee4a",
+        "validation_count": 3000
+      },
+      "delta_macro_f1": -0.0366850964304144,
+      "environment": {
+        "device": "cpu",
+        "machine": "arm64",
+        "packages": {
+          "fastapi": "0.119.0",
+          "mlflow": "3.5.1",
+          "numpy": "2.3.3",
+          "scikit-learn": "1.7.2",
+          "sqlalchemy": "2.0.44",
+          "tensorboard": "2.20.0",
+          "torch": "2.8.0"
+        },
+        "platform": "macOS-15.5-arm64-arm-64bit",
+        "python": "3.12.12"
+      },
+      "kind": "candidate",
+      "model_sha256": "27e80433a46e66e0e1ed24c2d8a68c0212e5899635c4d58247a79e458481bea7",
+      "model_uri": "models:/m-8d77b4b63ed44a8aa7c457167a904e16",
+      "name": "lower-learning-rate",
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9210084033613445,
+          "precision": 0.9288135593220339,
+          "recall": 0.9133333333333333,
+          "support": 300
+        },
+        "Bag": {
+          "f1": 0.9335548172757475,
+          "precision": 0.9304635761589404,
+          "recall": 0.9366666666666666,
+          "support": 300
+        },
+        "Coat": {
+          "f1": 0.6933701657458563,
+          "precision": 0.5919811320754716,
+          "recall": 0.8366666666666667,
+          "support": 300
+        },
+        "Dress": {
+          "f1": 0.8277027027027027,
+          "precision": 0.839041095890411,
+          "recall": 0.8166666666666667,
+          "support": 300
+        },
+        "Pullover": {
+          "f1": 0.6757215619694398,
+          "precision": 0.6885813148788927,
+          "recall": 0.6633333333333333,
+          "support": 300
+        },
+        "Sandal": {
+          "f1": 0.9,
+          "precision": 0.9,
+          "recall": 0.9,
+          "support": 300
+        },
+        "Shirt": {
+          "f1": 0.3938053097345133,
+          "precision": 0.5855263157894737,
+          "recall": 0.2966666666666667,
+          "support": 300
+        },
+        "Sneaker": {
+          "f1": 0.8830313014827018,
+          "precision": 0.8729641693811075,
+          "recall": 0.8933333333333333,
+          "support": 300
+        },
+        "T-shirt/top": {
+          "f1": 0.7737909516380655,
+          "precision": 0.7272727272727273,
+          "recall": 0.8266666666666667,
+          "support": 300
+        },
+        "Trouser": {
+          "f1": 0.9531772575250836,
+          "precision": 0.9563758389261745,
+          "recall": 0.95,
+          "support": 300
+        }
+      },
+      "reasons": [],
+      "run_id": "1f87f84d63604000ab49e1c3405f9da1",
+      "training_seconds": 7.257596916984767,
+      "validation_accuracy": 0.8033333333333333,
+      "validation_macro_f1": 0.7955162471435455
+    },
+    {
+      "autolog_enabled": false,
+      "changed_field": "weight_decay",
+      "comparable": true,
+      "config": {
+        "batch_size": 64,
+        "cpu_threads": 2,
+        "dropout": 0.0,
+        "epochs": 4,
+        "learning_rate": 0.001,
+        "seed": 426,
+        "translation_pixels": 0,
+        "weight_decay": 0.001
+      },
+      "config_sha256": "a19c485d5101da298cfc06b2d6d586a29b24a590ad61f34ebf2ef33d26b49768",
+      "controls": {
+        "architecture": "catalog-cnn-v1",
+        "data_sha256": "5e7eab50f667cab081e5b436853a6efaac4e9a985618f90bbee806d1bc5037e0",
+        "environment_sha256": "bc2204ede66268e637157a4b736201909ec33b0f88ed291c7816a804ee61771c",
+        "initial_state_sha256": "1304de60caa9d03e687c1679d944c616e0ed2655800040a9493318df591f1c5a",
+        "primary_metric": "validation_macro_f1",
+        "source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+        "split_sha256": "6a25e2618e44b81958a7e1ebbdeb7063de4202ab1eed349c88d8e68e94c2ee4a",
+        "validation_count": 3000
+      },
+      "delta_macro_f1": 0.0015635475941703225,
+      "environment": {
+        "device": "cpu",
+        "machine": "arm64",
+        "packages": {
+          "fastapi": "0.119.0",
+          "mlflow": "3.5.1",
+          "numpy": "2.3.3",
+          "scikit-learn": "1.7.2",
+          "sqlalchemy": "2.0.44",
+          "tensorboard": "2.20.0",
+          "torch": "2.8.0"
+        },
+        "platform": "macOS-15.5-arm64-arm-64bit",
+        "python": "3.12.12"
+      },
+      "kind": "candidate",
+      "model_sha256": "e770ac229dbb6ea8b5471ddb6d69195b6ff226207581a03ae521589093ee0be0",
+      "model_uri": "models:/m-ba8bac3f714941f89ed3fdf9b64473f5",
+      "name": "weight-decay",
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9353233830845771,
+          "precision": 0.9306930693069307,
+          "recall": 0.94,
+          "support": 300
+        },
+        "Bag": {
+          "f1": 0.9459901800327333,
+          "precision": 0.9292604501607717,
+          "recall": 0.9633333333333334,
+          "support": 300
+        },
+        "Coat": {
+          "f1": 0.7460087082728593,
+          "precision": 0.6606683804627249,
+          "recall": 0.8566666666666667,
+          "support": 300
+        },
+        "Dress": {
+          "f1": 0.8514492753623188,
+          "precision": 0.9325396825396826,
+          "recall": 0.7833333333333333,
+          "support": 300
+        },
+        "Pullover": {
+          "f1": 0.7439613526570048,
+          "precision": 0.719626168224299,
+          "recall": 0.77,
+          "support": 300
+        },
+        "Sandal": {
+          "f1": 0.9355932203389831,
+          "precision": 0.9517241379310345,
+          "recall": 0.92,
+          "support": 300
+        },
+        "Shirt": {
+          "f1": 0.5123595505617977,
+          "precision": 0.7862068965517242,
+          "recall": 0.38,
+          "support": 300
+        },
+        "Sneaker": {
+          "f1": 0.9093904448105437,
+          "precision": 0.8990228013029316,
+          "recall": 0.92,
+          "support": 300
+        },
+        "T-shirt/top": {
+          "f1": 0.7941176470588235,
+          "precision": 0.7105263157894737,
+          "recall": 0.9,
+          "support": 300
+        },
+        "Trouser": {
+          "f1": 0.9634551495016611,
+          "precision": 0.9602649006622517,
+          "recall": 0.9666666666666667,
+          "support": 300
+        }
+      },
+      "reasons": [],
+      "run_id": "cfc92f3749474862bcc32a9269b797d5",
+      "training_seconds": 7.401080917101353,
+      "validation_accuracy": 0.84,
+      "validation_macro_f1": 0.8337648911681302
+    },
+    {
+      "autolog_enabled": false,
+      "changed_field": "dropout",
+      "comparable": true,
+      "config": {
+        "batch_size": 64,
+        "cpu_threads": 2,
+        "dropout": 0.2,
+        "epochs": 4,
+        "learning_rate": 0.001,
+        "seed": 426,
+        "translation_pixels": 0,
+        "weight_decay": 0.0
+      },
+      "config_sha256": "31e3b014873392412d85d6d717fe2c64efadd5b8965e3aff324f89110b9f99fe",
+      "controls": {
+        "architecture": "catalog-cnn-v1",
+        "data_sha256": "5e7eab50f667cab081e5b436853a6efaac4e9a985618f90bbee806d1bc5037e0",
+        "environment_sha256": "bc2204ede66268e637157a4b736201909ec33b0f88ed291c7816a804ee61771c",
+        "initial_state_sha256": "1304de60caa9d03e687c1679d944c616e0ed2655800040a9493318df591f1c5a",
+        "primary_metric": "validation_macro_f1",
+        "source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+        "split_sha256": "6a25e2618e44b81958a7e1ebbdeb7063de4202ab1eed349c88d8e68e94c2ee4a",
+        "validation_count": 3000
+      },
+      "delta_macro_f1": 0.002022099032591873,
+      "environment": {
+        "device": "cpu",
+        "machine": "arm64",
+        "packages": {
+          "fastapi": "0.119.0",
+          "mlflow": "3.5.1",
+          "numpy": "2.3.3",
+          "scikit-learn": "1.7.2",
+          "sqlalchemy": "2.0.44",
+          "tensorboard": "2.20.0",
+          "torch": "2.8.0"
+        },
+        "platform": "macOS-15.5-arm64-arm-64bit",
+        "python": "3.12.12"
+      },
+      "kind": "candidate",
+      "model_sha256": "01edfb782998181447e505c56c7af9e30804f501ea504269bed796c22580cca0",
+      "model_uri": "models:/m-c79f52784f3644c4b356ebb984781b66",
+      "name": "dropout",
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9243156199677939,
+          "precision": 0.8940809968847352,
+          "recall": 0.9566666666666667,
+          "support": 300
+        },
+        "Bag": {
+          "f1": 0.9515859766277128,
+          "precision": 0.9531772575250836,
+          "recall": 0.95,
+          "support": 300
+        },
+        "Coat": {
+          "f1": 0.740625,
+          "precision": 0.6970588235294117,
+          "recall": 0.79,
+          "support": 300
+        },
+        "Dress": {
+          "f1": 0.8677966101694915,
+          "precision": 0.8827586206896552,
+          "recall": 0.8533333333333334,
+          "support": 300
+        },
+        "Pullover": {
+          "f1": 0.7222222222222222,
+          "precision": 0.6724137931034483,
+          "recall": 0.78,
+          "support": 300
+        },
+        "Sandal": {
+          "f1": 0.9310924369747899,
+          "precision": 0.9389830508474576,
+          "recall": 0.9233333333333333,
+          "support": 300
+        },
+        "Shirt": {
+          "f1": 0.5450733752620545,
+          "precision": 0.7344632768361582,
+          "recall": 0.43333333333333335,
+          "support": 300
+        },
+        "Sneaker": {
+          "f1": 0.8987993138936535,
+          "precision": 0.9257950530035336,
+          "recall": 0.8733333333333333,
+          "support": 300
+        },
+        "T-shirt/top": {
+          "f1": 0.7956656346749226,
+          "precision": 0.7427745664739884,
+          "recall": 0.8566666666666667,
+          "support": 300
+        },
+        "Trouser": {
+          "f1": 0.9650582362728786,
+          "precision": 0.9634551495016611,
+          "recall": 0.9666666666666667,
+          "support": 300
+        }
+      },
+      "reasons": [],
+      "run_id": "519ae2bd2cc941b7abd632338d44c104",
+      "training_seconds": 7.242126999888569,
+      "validation_accuracy": 0.8383333333333334,
+      "validation_macro_f1": 0.8342234426065518
+    },
+    {
+      "autolog_enabled": false,
+      "changed_field": "translation_pixels",
+      "comparable": true,
+      "config": {
+        "batch_size": 64,
+        "cpu_threads": 2,
+        "dropout": 0.0,
+        "epochs": 4,
+        "learning_rate": 0.001,
+        "seed": 426,
+        "translation_pixels": 2,
+        "weight_decay": 0.0
+      },
+      "config_sha256": "1e40c6049985f61b573d748ecd64be54055f171788a377b2639e690caf77c471",
+      "controls": {
+        "architecture": "catalog-cnn-v1",
+        "data_sha256": "5e7eab50f667cab081e5b436853a6efaac4e9a985618f90bbee806d1bc5037e0",
+        "environment_sha256": "bc2204ede66268e637157a4b736201909ec33b0f88ed291c7816a804ee61771c",
+        "initial_state_sha256": "1304de60caa9d03e687c1679d944c616e0ed2655800040a9493318df591f1c5a",
+        "primary_metric": "validation_macro_f1",
+        "source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+        "split_sha256": "6a25e2618e44b81958a7e1ebbdeb7063de4202ab1eed349c88d8e68e94c2ee4a",
+        "validation_count": 3000
+      },
+      "delta_macro_f1": -0.0480617450819697,
+      "environment": {
+        "device": "cpu",
+        "machine": "arm64",
+        "packages": {
+          "fastapi": "0.119.0",
+          "mlflow": "3.5.1",
+          "numpy": "2.3.3",
+          "scikit-learn": "1.7.2",
+          "sqlalchemy": "2.0.44",
+          "tensorboard": "2.20.0",
+          "torch": "2.8.0"
+        },
+        "platform": "macOS-15.5-arm64-arm-64bit",
+        "python": "3.12.12"
+      },
+      "kind": "candidate",
+      "model_sha256": "396f4c9d3750f958969c5cdb95a47143fe22e88e559bc352360d85b36a4cce68",
+      "model_uri": "models:/m-0affab36c95b41a68adfaf0568f4978d",
+      "name": "translation",
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9169329073482428,
+          "precision": 0.8803680981595092,
+          "recall": 0.9566666666666667,
+          "support": 300
+        },
+        "Bag": {
+          "f1": 0.9413680781758957,
+          "precision": 0.9203821656050956,
+          "recall": 0.9633333333333334,
+          "support": 300
+        },
+        "Coat": {
+          "f1": 0.686092715231788,
+          "precision": 0.5692307692307692,
+          "recall": 0.8633333333333333,
+          "support": 300
+        },
+        "Dress": {
+          "f1": 0.8299319727891157,
+          "precision": 0.8472222222222222,
+          "recall": 0.8133333333333334,
+          "support": 300
+        },
+        "Pullover": {
+          "f1": 0.67779632721202,
+          "precision": 0.6789297658862876,
+          "recall": 0.6766666666666666,
+          "support": 300
+        },
+        "Sandal": {
+          "f1": 0.8936936936936937,
+          "precision": 0.9725490196078431,
+          "recall": 0.8266666666666667,
+          "support": 300
+        },
+        "Shirt": {
+          "f1": 0.27249357326478146,
+          "precision": 0.5955056179775281,
+          "recall": 0.17666666666666667,
+          "support": 300
+        },
+        "Sneaker": {
+          "f1": 0.8831168831168831,
+          "precision": 0.8607594936708861,
+          "recall": 0.9066666666666666,
+          "support": 300
+        },
+        "T-shirt/top": {
+          "f1": 0.77526395173454,
+          "precision": 0.7079889807162535,
+          "recall": 0.8566666666666667,
+          "support": 300
+        },
+        "Trouser": {
+          "f1": 0.9647058823529412,
+          "precision": 0.9728813559322034,
+          "recall": 0.9566666666666667,
+          "support": 300
+        }
+      },
+      "reasons": [],
+      "run_id": "a8a29bfff80945c9b488b3008021ec6c",
+      "training_seconds": 7.408681374974549,
+      "validation_accuracy": 0.7996666666666666,
+      "validation_macro_f1": 0.7841395984919902
+    },
+    {
+      "autolog_enabled": true,
+      "changed_field": null,
+      "comparable": true,
+      "config": {
+        "batch_size": 64,
+        "cpu_threads": 2,
+        "dropout": 0.0,
+        "epochs": 4,
+        "learning_rate": 0.001,
+        "seed": 426,
+        "translation_pixels": 0,
+        "weight_decay": 0.0
+      },
+      "config_sha256": "1e228ce2e4422e4d928b696e89dc9e7e9a0c316e576625c80c8f62f6a6dfd213",
+      "controls": {
+        "architecture": "catalog-cnn-v1",
+        "data_sha256": "5e7eab50f667cab081e5b436853a6efaac4e9a985618f90bbee806d1bc5037e0",
+        "environment_sha256": "bc2204ede66268e637157a4b736201909ec33b0f88ed291c7816a804ee61771c",
+        "initial_state_sha256": "1304de60caa9d03e687c1679d944c616e0ed2655800040a9493318df591f1c5a",
+        "primary_metric": "validation_macro_f1",
+        "source_sha256": "ed99dc8d890a2a67e9bcbf1c24b42ac17632793cc19acdc9a4a6fa6284fff205",
+        "split_sha256": "6a25e2618e44b81958a7e1ebbdeb7063de4202ab1eed349c88d8e68e94c2ee4a",
+        "validation_count": 3000
+      },
+      "delta_macro_f1": 0.0,
+      "environment": {
+        "device": "cpu",
+        "machine": "arm64",
+        "packages": {
+          "fastapi": "0.119.0",
+          "mlflow": "3.5.1",
+          "numpy": "2.3.3",
+          "scikit-learn": "1.7.2",
+          "sqlalchemy": "2.0.44",
+          "tensorboard": "2.20.0",
+          "torch": "2.8.0"
+        },
+        "platform": "macOS-15.5-arm64-arm-64bit",
+        "python": "3.12.12"
+      },
+      "kind": "repeat",
+      "model_sha256": "8a165e24f82b26c9d64b1494c7c65c8775fa9487bf43db086c4d0d33f79365eb",
+      "model_uri": "models:/m-fe3550365af2471caf03b8f983bd5cb3",
+      "name": "baseline-autolog",
+      "per_class": {
+        "Ankle boot": {
+          "f1": 0.9362416107382551,
+          "precision": 0.9425675675675675,
+          "recall": 0.93,
+          "support": 300
+        },
+        "Bag": {
+          "f1": 0.9444444444444444,
+          "precision": 0.9262820512820513,
+          "recall": 0.9633333333333334,
+          "support": 300
+        },
+        "Coat": {
+          "f1": 0.7426981919332406,
+          "precision": 0.6372315035799523,
+          "recall": 0.89,
+          "support": 300
+        },
+        "Dress": {
+          "f1": 0.8530465949820788,
+          "precision": 0.9224806201550387,
+          "recall": 0.7933333333333333,
+          "support": 300
+        },
+        "Pullover": {
+          "f1": 0.7409948542024014,
+          "precision": 0.7632508833922261,
+          "recall": 0.72,
+          "support": 300
+        },
+        "Sandal": {
+          "f1": 0.9306260575296108,
+          "precision": 0.9450171821305842,
+          "recall": 0.9166666666666666,
+          "support": 300
+        },
+        "Shirt": {
+          "f1": 0.5109170305676856,
+          "precision": 0.740506329113924,
+          "recall": 0.39,
+          "support": 300
+        },
+        "Sneaker": {
+          "f1": 0.9087947882736156,
+          "precision": 0.8885350318471338,
+          "recall": 0.93,
+          "support": 300
+        },
+        "T-shirt/top": {
+          "f1": 0.793984962406015,
+          "precision": 0.7232876712328767,
+          "recall": 0.88,
+          "support": 300
+        },
+        "Trouser": {
+          "f1": 0.9602649006622517,
+          "precision": 0.9539473684210527,
+          "recall": 0.9666666666666667,
+          "support": 300
+        }
+      },
+      "reasons": [],
+      "run_id": "5673c459ef284ea4904a9d42d38d8e7e",
+      "training_seconds": 7.412309667095542,
+      "validation_accuracy": 0.838,
+      "validation_macro_f1": 0.8322013435739599
+    }
+  ],
+  "schema": 1,
+  "selected_model_uri": "models:/m-43467a9009974f27af80167ddb71d1c2",
+  "selected_run_id": "99ce416e13ee4eeba47f6adf05d4ed7c",
+  "tie_rule": "Keep the earliest declared eligible row, with baseline first",
+  "local_evidence_note": "Actual authored CPU runs after the Sprint 1 partner intake extension. Run IDs identify the author store, not a store shipped with this repository. Re-run the local commands to create your own IDs."
+}

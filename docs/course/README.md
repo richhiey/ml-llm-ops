@@ -13,8 +13,21 @@ The course follows Threadline’s catalog classifier through the supplied learni
 | Inference Pipelines & Batch vs Real-Time | [Batch vs real-time inference tradeoffs](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-1/05-batch-vs-real-time-inference-tradeoffs/lesson.md) | Concept Note |
 | PROJECT - Sprint 1 Checkpoint | [Pipeline extension deliverable](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-1/06-pipeline-extension-deliverable/lesson.md) | Assessment Lesson |
 
+## Sprint 2
+
+| Lesson group | Lesson | Type |
+|---|---|---|
+| From Single Runs to Systematic Tracking | [Why ad hoc tracking breaks down at scale](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/01-why-ad-hoc-tracking-breaks-down-at-scale/lesson.md) | Concept Note |
+| Designing Comparable Experiments | [Controls, confounders, and decision metrics](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/02-controls-confounders-and-decision-metrics/lesson.md) | Concept Note |
+| Designing Comparable Experiments | [Building the five-run experiment matrix](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/03-building-the-five-run-experiment-matrix/lesson.md) | Independent Practice |
+| From Single Runs to Systematic Tracking | [Revisiting MLflow in a pipeline context](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/04-revisiting-mlflow-in-a-pipeline-context/lesson.md) | Practical Walkthrough |
+| Comparing & Organizing Experiments | [Comparing multiple runs systematically](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/05-comparing-multiple-runs-systematically/lesson.md) | Independent Practice |
+| Comparing & Organizing Experiments | [Autologging and reducing manual tracking overhead](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/06-autologging-and-reducing-manual-tracking-overhead/lesson.md) | Independent Practice |
+| Evidence-Grounded Experiment Analysis | [Validating an assistant-generated experiment summary](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/07-validating-an-assistant-generated-experiment-summary/lesson.md) | Practical Walkthrough |
+| PROJECT - Sprint 2 Checkpoint | [Experiment tracking deliverable](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-2/08-experiment-tracking-deliverable/lesson.md) | Assessment Lesson |
+
 ## Remaining sequence
 
-Sprint 2 adds five controlled experiments, MLflow comparison and checked recommendations. Sprint 3 adds registry selection, connected reproducibility, monitoring, drift response, rollback and audits. Those project layers are developed after the preceding sprint has been verified.
+Sprint 3 adds registry selection, connected reproducibility, monitoring, drift response, rollback and audits. Those project layers are developed after the preceding sprint has been verified.
 
 [Local setup](https://github.com/richhiey/ml-llm-ops/blob/main/docs/setup.md) · [Project story](https://github.com/richhiey/ml-llm-ops/blob/main/docs/project-story.md)
