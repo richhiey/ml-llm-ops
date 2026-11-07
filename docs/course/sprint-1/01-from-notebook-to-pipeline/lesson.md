@@ -1,58 +1,90 @@
 🏷
 # From notebook to pipeline
 
-Threadline Retail's fashion specialists review product categories before items enter the catalog. They have labeled examples of ten kinds of clothing, footwear and bags. The engineering team wants to investigate whether images can support useful category suggestions.
+Threadline Retail is the fictional online clothing shop you will work with in this course. Each new product needs a category, such as `Dress`, `Shirt` or `Bag`, before it can appear in the right part of the catalog. If a dress is listed as a bag, a customer filtering for dresses can miss it.
 
-A notebook experiment might show that a model recognizes a shirt. The catalog team needs to know where that image came from, how it was prepared, which learned model produced the answer and whether the same process works for the next supplier batch. A pipeline makes those operations explicit and connects their inputs and outputs.
+Catalog staff currently inspect product images and choose categories. The shop wants to investigate a simple aid: **given a product image, suggest a category for a person to check**. This is **image classification**: choosing one category from a fixed list based on an image.
 
-# Follow one product through five stages
+You are the ML engineer building that aid. A **machine-learning model** is a program whose behavior is learned from examples. Your first job is to teach a small image model using known examples, find out where it makes mistakes, and make its saved learning usable on another image. Later, you will compare changes and keep the chosen model traceable as people use it.
 
-Fashion-MNIST supplies small front-view product thumbnails with reviewed category labels. A **label** is the known category used to teach and evaluate the classifier. The course uses those research images in a fictional catalog operation. The images are already prepared as `28×28` grayscale thumbnails. [Dataset card](https://github.com/richhiey/ml-llm-ops/blob/main/docs/dataset-card.md)
+# Start with an image and a known answer
 
-| Stage | What happens at Threadline | Evidence to inspect |
+A **dataset** is a collection of examples. Ours is Fashion-MNIST: small product images paired with categories that people have already assigned. That known category is the image's **label**. A model's suggested category is its **prediction**. A prediction can disagree with the label.
+
+![The catalog task: a real research thumbnail, a possible category suggestion, a staff check and a product listed in the right category](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/catalog-problem__01__en.png)
+
+The image and mistaken `Coat` suggestion come from one recorded model result; its known label is `Shirt`. The staff review is an illustration of how the shop could correct that suggestion. This is why staff need to check the model rather than trust every guess.
+
+Each research image is a `28×28` grid of **pixels**, the small squares that make an image. These images are **grayscale**: a pixel records brightness rather than separate red, green and blue values. The ten labels cover clothing, footwear and bags. Some categories look similar at this small size, which gives us meaningful mistakes to investigate.
+
+The course uses these prepared thumbnails to represent the shop's classification task. It does not establish performance on arbitrary phone photographs. The [dataset card](https://github.com/richhiey/ml-llm-ops/blob/main/docs/dataset-card.md) explains what the research images contain and where they came from.
+
+# Training turns examples into a model
+
+A model produces a score for each possible category. Its **weights** are learned numbers that influence those scores.
+
+**Training** adjusts those numbers. The model sees a training image, produces category scores, compares them with the known label, and adjusts its weights to reduce the error. Repeating this across many examples can make its predictions more useful. Our model starts with randomly initialized weights and learns from scratch.
+
+We also need examples that do not update the weights. A **validation set** is a separate group of labeled images used to check how the trained model performs. During this check, called **evaluation**, we compare its predictions with the known answers and measure its mistakes. A final test set stays separate until the model-selection work is complete.
+
+After training, we save the learned weights. **Inference** means using that saved learning to predict a category for an incoming image. The incoming request does not need to include a known category, and making the prediction does not retrain the model.
+
+![Training changes learned weights; evaluation checks them on separate labeled images; inference uses the saved weights for a new image](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/learning-and-use__01__en.png)
+
+# How a CNN works with an image
+
+We will use a **convolutional neural network**, usually shortened to **CNN**. It is a type of neural network designed to process image grids through connected layers of calculations.
+
+A CNN applies small learned grids of numbers, called **filters**, across different parts of the image. A filter can respond to a local pattern, such as a change in brightness along an edge. Later layers combine those responses into useful patterns, called **features**, that help distinguish categories. The final layers produce a score for each category. Training learns the filters and the final category-scoring weights together.
+
+![A small window examines local pixel patterns, later layers combine responses, and the CNN produces scores for the ten categories](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/cnn-image-patterns__01__en.png)
+
+This is a simplified explanation of the calculations, not a picture of features proven to have been learned by our particular model. You will inspect the actual CNN and its mistakes in the project. The first trained version becomes the **baseline**: the reference result against which later changes are compared.
+
+# Connect the work into a repeatable pipeline
+
+A **pipeline** connects steps so their outputs become the next step's inputs. For the catalog task, five stages make the route from image files to predictions explicit.
+
+| Stage | Plain meaning | In this project |
 |---|---|---|
-| Ingestion | Load verified image and label files, then select recorded sample indices. | Original file hashes and the split manifest |
-| Preprocessing | Convert raw integer pixels into the numeric shape and scale expected by the CNN. | Input/output shapes, dtype and pixel values |
-| Training | Use labeled training images to adjust the CNN's weights. | Configuration, learning history and saved weights |
-| Evaluation | Compare predictions with known labels on separate validation images. | Predictions, metrics and confusion matrix |
-| Inference | Load the saved model and suggest categories for incoming thumbnails. | Identified predictions and the model actually loaded |
+| Ingestion | Bring the examples into the system | Load the product images and their labels |
+| Preprocessing | Put inputs into the form the model expects | Prepare brightness values and image dimensions consistently |
+| Training | Learn from labeled examples | Adjust the CNN's weights and save them |
+| Evaluation | Check predictions against known answers | Measure mistakes on separate validation images |
+| Inference | Use the saved model | Suggest categories for incoming product images |
 
-A **CNN**, or convolutional neural network, learns image patterns using small filters that move across the image. Early filters can respond to local edges. Later layers combine those responses to produce a score for each category. Training adjusts the filters and classification weights using examples.
+An incoming image uses ingestion, preprocessing and the saved model for inference. It does not travel through training every time. Evaluation is how we check a model's predictions; it is not a weight-update step.
 
-At ingestion, an image might be identified as `train:56368`. That identifier means an index in the original research training file. Its known label can be used during training or evaluation. Incoming catalog images have their own identifiers and need predictions without supplying a category to the model.
+A notebook is useful for exploring images and trying calculations. Its cells can also leave values in memory from an earlier execution. Someone receiving only a result screenshot cannot tell which data, settings or saved weights produced it.
 
-# Two routes share the same preparation
+A **reproducible pipeline** makes the necessary inputs and steps available so another engineer can repeat the work and check the result. We will keep the data used, the code and training settings, the Python package versions, the saved weights and the predictions used for evaluation. That lets the catalog team connect a reported result to the model that will suggest tomorrow's categories.
 
-The training route contains labeled examples and updates model weights. The inference route loads the resulting weights and produces predictions. New catalog images pass through ingestion and preprocessing, then go to the saved model. They do not need to pass through training again.
+# Learn more when you need it
 
-**Preprocessing** changes the representation of the input. Here, raw pixels use unsigned 8-bit integers, `uint8`, with values from `0` to `255`. The shared function creates a channel dimension and produces `float32` tensors with values from `0.0` to `1.0`. A **tensor** is the multidimensional numeric array used by the neural network.
+| If you want to explore… | Start here |
+|---|---|
+| The actual product images and their limits | [Course dataset card](https://github.com/richhiey/ml-llm-ops/blob/main/docs/dataset-card.md) |
+| CNN filters and the flow through a neural network | [PyTorch neural-network tutorial](https://docs.pytorch.org/tutorials/beginner/blitz/neural_networks_tutorial.html), opening explanation and network picture |
+| How a training loop updates learned numbers | [PyTorch training tutorial](https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html), training-loop explanation |
 
-The CNN was trained to interpret that scale. If a supplier image is scaled differently during inference, the weights receive a different kind of input. Giving each image its own maximum value of `1.0` would change the contrast relationship the model learned.
-
-# A metric needs a result it can be traced to
-
-A **validation set** contains labeled images kept separate from training. It helps the engineers see whether the learned patterns work on other examples. The CPU profile has `12,000` training images and `3,000` validation images with recorded, disjoint indices. The official test split is reserved for reporting after model selection.
-
-Accuracy is the fraction classified correctly. Per-category recall asks how many examples of a category were found. A **confusion matrix** shows the actual category against the predicted category, exposing mistakes such as shirts classified as coats. These observations help the catalog team decide what to investigate next.
-
-The team retains more than a score. A saved run connects the model to its configuration, dataset, split, source code, environment and predictions. Another engineer can inspect that record without depending on the original notebook's hidden variables.
-
-A **reproducible run** provides retrievable code, data, split, configuration and environment so another engineer can repeat its evaluation within a declared tolerance. Hidden notebook state prevents that engineer from knowing which steps and values produced the result. Recording the recipe begins here, while later operational work will verify a clean replay.
+These are optional deeper explanations. Use this project's installed package versions for the practical work.
 
 # Check for Understanding
 
-A colleague has a screenshot showing `84%` accuracy and a file named `best-model.pt`. They now want to run tomorrow's supplier thumbnails through the classifier. Draw the route from those images to identified predictions. Mark the information that must be retrieved or verified before the screenshot can support using that model.
+A colleague gives you an accuracy screenshot and a saved model file named `best-model.pt`. They want you to suggest categories for a new folder of product thumbnails.
+
+Draw the route those new images should follow. Then mark the missing information you would request before trusting that this file is the model shown in the screenshot. Explain where the five stages belong and which ones need known labels.
 
 <details>
 <summary>Solution</summary>
 
 **Result you should get**
 
-Your route should include incoming image identities, the expected image contract, shared preprocessing, a known saved model and identified output predictions. Your evidence list should connect the screenshot's metric to a dataset/split, evaluation procedure and the exact model artifact.
+The new images are loaded, prepared in the expected form and passed to the saved model for category suggestions. They do not require new training or known labels to obtain predictions. You still need to connect the saved weights to the data, settings and evaluation that produced the screenshot.
 
 **How**
 
-Trace ingestion → preprocessing → inference for the new images. Trace the saved artifact backward to training and evaluation records. A plausible filename cannot establish that the file is the model that achieved the displayed score. Re-running training would create a new observation requiring its own evidence.
+Trace ingestion → preprocessing → inference for the new folder. Trace the model backward to training and evaluation records. Training used known labels to adjust weights; evaluation used separate known labels to check predictions. A filename and screenshot cannot establish which examples, code or weights produced the score. Request the recorded recipe and supporting predictions before treating it as verified evidence.
 
 </details>
 
@@ -62,4 +94,4 @@ Explain why a reproducible training/inference pipeline replaces a one-off notebo
 
 ## Summary
 
-Threadline's prototype has a traceable route from labeled product images to a learned model and from incoming images to category suggestions. The scaffold will make each stage visible so you can inspect its actual data, code and outputs.
+Your task is to help a clothing shop suggest product categories and measure where those suggestions fail. Training learns from labeled examples; evaluation checks that learning; inference uses the saved model on another image. The pipeline connects those activities so a colleague can inspect and repeat the work.

@@ -1,26 +1,30 @@
 📝
 # Adding and validating a bounded pipeline stage
 
-Threadline's supplier trial includes thumbnails with the right dimensions but almost no brightness variation. These files can pass a shape check while giving the classifier little useful visual information. The catalog team wants them returned for correction before prediction.
+Threadline's catalog specialists use image suggestions to help check product categories. A supplier has now sent thumbnails with the right dimensions but almost no brightness variation. A plain gray square gives the specialists little product detail to inspect, and the classifier can still produce a category score. The team wants those files returned for correction before prediction.
 
-For this exercise, the supplier requires a brightest-minus-darkest pixel value of at least `20` on the raw `0–255` scale. This is a declared intake policy, not a proven measure of photograph quality. You will add one small validation step and check that accepted images still produce the same predictions.
+For this exercise, the supplier requires a brightest-minus-darkest pixel value of at least `20` on the raw `0–255` scale. That difference is the image's brightness range. The **intake policy** is the team's rule for accepting incoming files, and this rule detects one specified problem. You will add the check and confirm that accepted images still produce the same predictions.
+
+![How brightness range is measured and where the supplier's rule accepts or rejects an incoming image](https://raw.githubusercontent.com/richhiey/ml-llm-ops/main/docs/course/figures/intake-range-check__01__en.png)
 
 # 1. Where should the check run?
 
-Open [preprocessing.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/preprocessing.py). Find `validate_images()` and `preprocess()`. Both batch and HTTP predictions use this preparation route.
+Open [preprocessing.py](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/preprocessing.py). Find `validate_images()` and `preprocess()`. Both the file-based prediction job and the HTTP request server use this preparation route.
 
-The new check belongs before normalization, while threshold `20` still refers to raw pixel units. Keep the saved model and division by `255` fixed. A **contract** states which inputs a step accepts, what it returns and how it signals failure.
+Here, **input validation** checks whether an incoming image follows the agreed rules. Evaluating on **validation images** measures the trained model's mistakes on separate labeled examples. The new file check belongs to the incoming-image route.
+
+Here, **normalization** is the fixed conversion from raw brightness to decimal values by dividing by `255`. The new check belongs before normalization, while threshold `20` still refers to raw pixel units. Keep the saved model and division by `255` fixed. A **contract** states which inputs a step accepts, what it returns and how it signals failure.
 
 | Input | Existing behavior | Required behavior |
 |---|---|---|
-| Wrong shape or dtype | Reject | Continue rejecting |
-| All-black image or constant gray `86` | Accept structurally | Reject for insufficient range |
+| Wrong shape or numeric data type | Reject | Continue rejecting |
+| All-black image or constant gray `86` | Accept shape and type | Reject for insufficient range |
 | Range `19` | Accept | Reject |
 | Range `20` | Accept | Accept without changing pixels |
 
 # 2. Observe the missing behavior
 
-The supplied [intake checks](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/test_intake_quality.py) create those four range cases and send each through the real batch process. Copy the checks into your project's test directory, then run them from the repository root.
+The supplied [intake checks](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/test_intake_quality.py) create those four range cases and send each through the real batch process. `pytest` runs these automated comparisons between expected and actual behavior. Copy the checks into your project's test directory, then run them from the repository root.
 
 ```bash
 cp docs/course/exercises/test_intake_quality.py tests/test_intake_quality.py
@@ -29,7 +33,7 @@ pytest -q tests/test_intake_quality.py
 
 Expect three failures and one pass before the change: the starter accepts the three images the new policy should reject. The checks also verify that an accepted image produces an identified prediction, a rejected delivery remains unpublished and the original image file is preserved.
 
-Open the test file and find its four inputs. Predict which assertion fails for each rejected case. You do not need to reproduce the subprocess-testing machinery. Its purpose is to check the route a client actually uses, including whether your new stage is connected.
+Open the test file and find its four inputs. Predict which **assertion**, a statement of expected behavior, fails for each rejected case. The test launches a separate Python process running the prediction script. This checks the route a client actually uses, including whether your new stage is connected.
 
 # 3. Add the intake decision
 
@@ -49,7 +53,7 @@ def validate_contrast(images: np.ndarray, minimum_range: int = 20) -> np.ndarray
     return raw
 ```
 
-`np.ptp()` calculates maximum minus minimum over each image's two axes, producing one range per image. `np.flatnonzero()` identifies the failing positions. Accepted arrays are returned with their pixels unchanged. The existing `validate_images()` still handles shape and dtype.
+The raw array has shape `(N, 28, 28)`, with dimensions for images, rows and columns. `axis=(1, 2)` selects the row and column dimensions. `np.ptp()` therefore calculates maximum minus minimum across each complete image, producing one range per image. `np.flatnonzero()` identifies the failing positions. Accepted arrays are returned with their pixels unchanged. The existing `validate_images()` still handles shape and numeric data type.
 
 Now replace the first assignment inside `preprocess()` with:
 
@@ -67,7 +71,7 @@ pytest -q
 git diff -- src/catalog_mlops/preprocessing.py
 ```
 
-Expect all four intake cases to pass and the existing checks to remain passing. Explain each changed line in your diff. If the rejection tests still fail, check whether `preprocess()` actually calls the new function.
+Expect all four intake cases to pass and the existing checks to remain passing. `git diff` lists the source lines you added or changed. Explain each changed line, including why checking only that the new function exists would miss an omitted call in `preprocess()`.
 
 You have changed which incoming images may reach the classifier. You have not changed what its weights learned, so this step does not require retraining.
 
@@ -80,7 +84,21 @@ python docs/course/exercises/prepare_quality_intake.py
 python scripts/predict_batch.py --run work/runs/baseline --manifest work/quality-intake/manifest.csv --output work/batches/quality-rejection
 ```
 
-The fixture contains one constant-gray image, its manifest and a JSON request body. Expect the batch command to fail with insufficient contrast at position `0`. Confirm that `work/batches/quality-rejection` was not published. This failure is the intended policy response.
+The constructed test input contains one constant-gray image, a CSV manifest listing it and a JSON request body for the server. Expect the batch command to fail with insufficient contrast at position `0`, the first image. Confirm that `work/batches/quality-rejection` was not published. This failure is the intended policy response.
+
+Inspect the file properties as well as the visible picture. In your activated terminal, enter `python` to open its interactive console and run this short inspection with Pillow and NumPy.
+
+```python
+from PIL import Image
+import numpy as np
+for filename in ("work/intake/56368.png", "work/quality-intake/flat.png"):
+    with Image.open(filename) as image:
+        pixels = np.asarray(image)
+        print(filename, image.mode, image.size, pixels.dtype,
+              int(pixels.min()), int(pixels.max()))
+```
+
+Both files report mode `L`, Pillow's name for grayscale, size `(28, 28)` and data type `uint8`. The product image's minimum and maximum are `0` and `255`. The flat image reports `86` and `86`, giving range `0`. Image mode and size are **metadata**, properties describing how the file is stored. Mode `RGB` would contain red, green and blue channels, while `(32, 32)` would describe a different image size. These properties let you distinguish a format problem from insufficient brightness range. Enter `exit()` to return to your terminal commands. [Pillow image attributes](https://pillow.readthedocs.io/en/stable/reference/Image.html#image-attributes) explains `mode` and `size`; [NumPy range calculation](https://numpy.org/doc/stable/reference/generated/numpy.ptp.html) explains the brightness-range operation.
 
 Now run the original valid intake into a new destination.
 
@@ -90,7 +108,7 @@ python scripts/predict_batch.py --run work/runs/baseline --manifest work/intake/
 
 Expect `20` predictions. Compare them with `work/batches/baseline/predictions.csv`: identifiers, classes and scores should agree. Accepted pixels and saved weights are unchanged.
 
-In `batch.json`, the training source identity still describes the code that trained the baseline. The inference source identity records your edited code. This distinguishes an intake change from a new learned model.
+In `batch.json`, the training source hash still identifies the code that trained the baseline. The inference source hash identifies your edited prediction code. The model hash stays the same because you reused the saved learned weights. These records let another engineer identify which part of the pipeline changed.
 
 # 6. Check the HTTP route
 
@@ -106,7 +124,7 @@ In the first terminal, send the constructed low-range input directly with `curl`
 curl --fail-with-body -sS -H "Content-Type: application/json" --data-binary @work/quality-intake/request.json http://127.0.0.1:8000/predict
 ```
 
-Expect HTTP `422`, an insufficient-contrast message and a nonzero curl exit code. The service rejected the request as intended. On Windows PowerShell, use `curl.exe`.
+Expect HTTP `422`, the response status used here for invalid input, and an insufficient-contrast message. curl returns a nonzero exit code to signal the rejected request. On Windows PowerShell, use `curl.exe`.
 
 Send the valid request you retained earlier.
 

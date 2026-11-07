@@ -1,9 +1,9 @@
 ✂️
 # Pipeline extension deliverable
 
-Morrow Market is a new catalog partner evaluating Threadline's thumbnail-classification pipeline. Its intake resembles the supplier workflow you have practiced, but its acceptance policy and files need an independent check. The partner wants a complete set of category suggestions before its morning catalog review.
+Morrow Market is a fictional catalog partner trying Threadline's image-classification pipeline. Its staff need category suggestions ready before their morning product review. They have sent a new set of thumbnails and a rule specifying which images they will accept for prediction.
 
-Use your existing saved CNN and the same local helper repository. Your task is to demonstrate an explained, tested pipeline extension and recommend a delivery pattern for this partner.
+Use your existing saved CNN, whose learned weights turn prepared thumbnails into category scores, and the same local project. Your task is to check the incoming files, adapt the taught image-validation step and demonstrate a complete prediction delivery. Explain your code change and recommend how the partner should receive predictions.
 
 # What you will work with
 
@@ -13,12 +13,12 @@ Create the constructed acceptance intake from the repository root.
 python docs/course/exercises/prepare_intake.py --output work/morrow-intake
 ```
 
-The script exports `24` identified records to `work/morrow-intake/intake.csv`. Product examples come from the independent research-image pool. Additional format/quality conditions are deliberately constructed for this exercise. Creating the intake does not verify or repair it.
+The script exports `24` identified records to `work/morrow-intake/intake.csv`. This **intake** is the group of files received for the job. Its CSV manifest pairs each image's identifier with a filename. Product examples come from the separate research-image pool. Additional format and quality conditions are deliberately constructed for this exercise. The resulting files are ready for you to inspect.
 
 | Partner requirement | Acceptance condition |
 |---|---|
 | Image format | Prepared `28×28` grayscale thumbnails using raw uint8 pixels |
-| Minimum intensity range | At least `24` on the raw `0–255` scale |
+| Minimum brightness range | Brightest minus darkest raw pixel is at least `24` on the `0–255` scale |
 | Input identity | Every original record retained in your intake decision |
 | Accepted delivery | One prediction per accepted identifier, in accepted-manifest order |
 | Rejected delivery | Separate record of rejected identifiers and observed reasons |
@@ -30,27 +30,27 @@ The partner receives a completed manifest each evening. Its review starts the ne
 
 ## Inspect and decide
 
-Inspect the input metadata and image values. Produce an intake decision record identifying which inputs meet the partner's contract and which require correction. Preserve the original manifest and files. Do not silently resize, recolor or rescale rejected inputs into apparently valid thumbnails.
+Inspect each file's metadata, including its image mode and dimensions, and the actual pixel values. Use the same Pillow and NumPy inspection you have practiced. Produce an intake decision record identifying which inputs meet the partner's contract and which require correction. Preserve the original manifest and files. Do not silently resize, recolor or rescale rejected inputs into apparently valid thumbnails.
 
 Before changing code, identify a boundary case that distinguishes this partner's policy from the previously demonstrated supplier rule. State the expected behavior on both sides of the new boundary.
 
 ## Extend and explain
 
-Implement or adapt one bounded validation stage in the ordinary application source and connect it to shared inference preparation. Keep the demonstrated function's default supplier policy available, and select this partner's threshold explicitly at the preparation boundary. Retain the source diff and record the active policy. Explain each changed line, the input/output contract and why the insertion point is appropriate.
+Implement or adapt one bounded validation stage, a function checking the incoming images against the agreed rule, in the ordinary application source. Connect it to the preparation used for prediction. Keep the demonstrated function's default supplier rule available, and explicitly select the partner's threshold where preparation calls that function. Retain the source diff, the changed lines shown by Git, and record which rule is now applied. Explain each changed line, the accepted inputs and the return or rejection it produces.
 
-Create executable checks for an accepted boundary, a rejected boundary, source preservation and integration. Show evidence of a failed check or rejected route before the relevant correction, then retain the passing evidence. A direct helper-function call alone does not establish that the batch or request route uses your stage.
+Create executable checks for an accepted boundary, a rejected boundary, source preservation and the connection to the real prediction route. Show evidence of a failed check or rejected delivery before the relevant correction, then retain the passing evidence. Exercise the stage through a batch or request so the observation includes its connection to the application.
 
 ## Deliver and verify
 
-Create an accepted manifest from your intake decisions. Run the real batch route using your saved CNN and a new output directory. Reconcile output counts, identifiers and order against that manifest. Verify the checkpoint identity and explain why retraining was unnecessary for this intake change.
+Create an accepted manifest from your intake decisions, keeping the `image_id,path` columns. Run the real batch route using your saved CNN and a new output directory. Match output counts, identifiers and order against that manifest. Compare the reported model hash, its content fingerprint, with the hash of your saved model file, or checkpoint. Explain why retraining was unnecessary for this intake change.
 
-Exercise a rejected case through an actual consumer. Verify the documented failure behavior and the absence of an apparently complete batch result. Also demonstrate that the valid route continues to work. Use the same learned weights when comparing behavior.
+Exercise a rejected case through an actual prediction script or HTTP request. Verify the documented failure behavior and the absence of an apparently complete batch result. Also demonstrate that the valid route continues to work. Use the same learned weights when comparing behavior.
 
 Recommend batch or real-time delivery for the partner. Explain latency, throughput and cost drivers using the brief and your measurements, with the timer boundaries stated.
 
 # Final check
 
-Your retained evidence should let another engineer inspect the original intake, your accepted/rejected decision, the implemented source change, active partner policy, line-by-line explanation, discriminating tests, actual delivery and inference recommendation. Label which supplier policy each boundary test exercises, and update the active integration-test expectation to match the partner brief. Keep your first attempt and any repair rather than replacing its evidence with a summary claim.
+Your retained evidence should let another engineer inspect the original files, your accepted/rejected decisions, the source change, the rule currently applied, a line-by-line explanation, boundary tests, actual predictions and delivery recommendation. Label which supplier rule each test checks, and update the prediction-route test's expected threshold to match the partner brief. Keep your first attempt and any repair so another engineer can follow what changed.
 
 <details>
 <summary>Reference feedback</summary>
@@ -71,4 +71,4 @@ Deliverable: the provided pipeline scaffold extended with at least 1 validated s
 
 ## Summary
 
-Morrow's handoff contains a validated intake boundary, explained source, actual accepted predictions and a delivery recommendation tied to its review process. Keep the original CNN and evaluation as historical baseline evidence. Before controlled model comparisons, freeze the audited source and confirm the same baseline recipe under that source so later runs have a comparable starting point.
+Morrow's handoff contains the checked incoming files, explained source, accepted predictions and a delivery recommendation tied to its review process. Keep the original CNN and evaluation as historical baseline evidence. Before comparing model improvements, retain the completed pipeline's code and confirm the same baseline training recipe with that code so later runs have a comparable starting point.

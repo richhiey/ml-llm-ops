@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="972pt" height="446.4pt" viewBox="0 0 972 446.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-07T15:07:57.346596</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 446.4
+L 972 446.4
+L 972 0
+L 0 0
+z
+" style="fill: #ecebe4"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 39.852 257.1264
+L 242.028 257.1264
+Q 253.692 257.1264 253.692 251.7696
+L 253.692 118.7424
+Q 253.692 113.3856 242.028 113.3856
+L 39.852 113.3856
+Q 28.188 113.3856 28.188 118.7424
+L 28.188 251.7696
+Q 28.188 257.1264 39.852 257.1264
+z
+" clip-path="url(#p81428119a7)" style="fill: #ffffff; stroke: #27784c; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 297.432 257.1264
+L 499.608 257.1264
+Q 511.272 257.1264 511.272 251.7696
+L 511.272 118.7424
+Q 511.272 113.3856 499.608 113.3856
+L 297.432 113.3856
+Q 285.768 113.3856 285.768 118.7424
+L 285.768 251.7696
+Q 285.768 257.1264 297.432 257.1264
+z
+" clip-path="url(#p81428119a7)" style="fill: #ffffff; stroke: #27784c; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 589.032 257.1264
+L 922.428 257.1264
+Q 934.092 257.1264 934.092 251.7696
+L 934.092 118.7424
+Q 934.092 113.3856 922.428 113.3856
+L 589.032 113.3856
+Q 577.368 113.3856 577.368 118.7424
+L 577.368 251.7696
+Q 577.368 257.1264 589.032 257.1264
+z
+" clip-path="url(#p81428119a7)" style="fill: #e8ffbb; stroke: #17482e; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 39.852 382.1184
+L 222.588 382.1184
+Q 234.252 382.1184 234.252 376.7616
+L 234.252 306.2304
+Q 234.252 300.8736 222.588 300.8736
+L 39.852 300.8736
+Q 28.188 300.8736 28.188 306.2304
+L 28.188 376.7616
+Q 28.188 382.1184 39.852 382.1184
+z
+" clip-path="url(#p81428119a7)" style="fill: #ffffff; stroke: #27784c; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 297.432 382.1184
+L 499.608 382.1184
+Q 511.272 382.1184 511.272 376.7616
+L 511.272 306.2304
+Q 511.272 300.8736 499.608 300.8736
+L 297.432 300.8736
+Q 285.768 300.8736 285.768 306.2304
+L 285.768 376.7616
+Q 285.768 382.1184 297.432 382.1184
+z
+" clip-path="url(#p81428119a7)" style="fill: #e8ffbb; stroke: #17482e; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 589.032 382.1184
+L 922.428 382.1184
+Q 934.092 382.1184 934.092 376.7616
+L 934.092 306.2304
+Q 934.092 300.8736 922.428 300.8736
+L 589.032 300.8736
+Q 577.368 300.8736 577.368 306.2304
+L 577.368 376.7616
+Q 577.368 382.1184 589.032 382.1184
+z
+" clip-path="url(#p81428119a7)" style="fill: #ffffff; stroke: #27784c; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 277.02 341.496
+L 265.356 338.8176
+L 265.356 344.1744
+z
+" clip-path="url(#p81428119a7)" style="fill: #17482e; stroke: #17482e; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 568.62 341.496
+L 556.956 338.8176
+L 556.956 344.1744
+z
+" clip-path="url(#p81428119a7)" style="fill: #17482e; stroke: #17482e; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 238.14 341.496
+L 277.02 341.496
+" clip-path="url(#p81428119a7)" style="fill: none; stroke: #17482e; stroke-width: 1.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 515.16 341.496
+L 568.62 341.496
+" clip-path="url(#p81428119a7)" style="fill: none; stroke: #17482e; stroke-width: 1.8; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 21px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #17482e" x="34.02" y="40.508719" transform="rotate(-0 34.02 40.508719)">An input check decides whether an image may reach the model</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #0a0a0a" x="34.02" y="73.846125" transform="rotate(-0 34.02 73.846125)">The exercise rule requires brightest minus darkest pixel to be at least 20.</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #17482e" x="140.94" y="147.502125" transform="rotate(-0 140.94 147.502125)">Real product thumbnail</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="140.94" y="245.52" transform="rotate(-0 140.94 245.52)">min 0 · max 255 · range 255</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #17482e" x="398.52" y="147.502125" transform="rotate(-0 398.52 147.502125)">Constructed flat image</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="398.52" y="245.52" transform="rotate(-0 398.52 245.52)">min 86 · max 86 · range 0</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #17482e" x="755.73" y="148.261969" transform="rotate(-0 755.73 148.261969)">Why the check exists</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #0a0a0a" transform="translate(622.884375 183.52725)">A constant image has no intensity variation.</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #0a0a0a" transform="translate(619.438125 199.72725)">Its format can be correct while its range fails.</text>
+    <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; fill: #0a0a0a" transform="translate(642.779063 215.92725)">The learned weights stay unchanged.</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #17482e" x="131.22" y="322.606136" transform="rotate(-0 131.22 322.606136)">Raw image</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #0a0a0a" x="131.22" y="358.191153" transform="rotate(-0 131.22 358.191153)">Brightness scale: 0–255</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #17482e" x="398.52" y="322.606136" transform="rotate(-0 398.52 322.606136)">Range check</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #0a0a0a" x="398.52" y="358.191153" transform="rotate(-0 398.52 358.191153)">Accept only range ≥ 20</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #17482e" x="755.73" y="322.606136" transform="rotate(-0 755.73 322.606136)">Accepted image → saved CNN</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #0a0a0a" x="755.73" y="358.191153" transform="rotate(-0 755.73 358.191153)">Same pixels, then fixed division by 255</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #b91c1c" x="403.38" y="417.384" transform="rotate(-0 403.38 417.384)">If the range fails: stop and return the image for correction.</text>
+   </g>
+   <g id="axes_2">
+    <g clip-path="url(#p6e528769b2)">
+     <image xlink:href="data:image/png;base64,
+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" id="image1f8172595c" transform="scale(1 -1) translate(0 -71.28)" x="105.12" y="-158.4" width="71.28" height="71.28"/>
+    </g>
+   </g>
+   <g id="axes_3">
+    <g clip-path="url(#p13cd176b96)">
+     <image xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAAGMAAABjCAYAAACPO76VAAABAElEQVR4nO3RQREAIRDAMDiR698JPE8CfSQKOtM9M2eR8L0O4GdGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWJGiBkhZoSYEWLG6rivxALHSyNqBQAAAABJRU5ErkJggg==" id="image8d95748543" transform="scale(1 -1) translate(0 -71.28)" x="362.88" y="-158.4" width="71.28" height="71.28"/>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p81428119a7">
+   <rect x="0" y="0" width="972" height="446.4"/>
+  </clipPath>
+  <clipPath id="p6e528769b2">
+   <rect x="105.228" y="158.472" width="71.424" height="71.424"/>
+  </clipPath>
+  <clipPath id="p13cd176b96">
+   <rect x="362.808" y="158.472" width="71.424" height="71.424"/>
+  </clipPath>
+ </defs>
+</svg>

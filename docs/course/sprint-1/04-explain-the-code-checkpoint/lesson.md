@@ -1,7 +1,9 @@
 ✂️
 # Explain-the-code checkpoint
 
-Threadline receives an AI-authored proposal claiming to prepare supplier thumbnails on the saved CNN's expected scale. It produces the right-looking shape for an ordinary image. Your job is to decide whether the claim survives examples chosen to distinguish it from the documented preparation.
+Threadline's catalog specialists need category suggestions they can trace to the trained image model. Before a thumbnail reaches that model, its raw brightness values are converted from `0–255` to `0–1` by dividing by `255`. Keeping that preparation consistent lets the saved weights interpret new images on the scale used during training.
+
+A coding assistant proposes a replacement preparation function. Your job is to decide whether the team should add it to the application. A correctly shaped output is only one part of the agreement. You will also test what its numbers mean.
 
 The [review candidate](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/exercises/generated_preprocessing.py) is a deliberately flawed, inactive course proposal. It is outside application source. Keep it separate while you investigate.
 
@@ -19,17 +21,19 @@ def prepare_candidate(images):
 
 # Your task
 
-Review every executable line in `prepare_candidate()` and explain the input, intermediate shape, scaling rule and returned shape. Create `work/review_candidate.py` with your own probes and retain the output.
+The incoming array has shape `(N, 28, 28)`, where `N` counts the images. The CNN expects `(N, 1, 28, 28)`, with one grayscale channel per image. Use these shapes and the fixed brightness scale as the function's input/output contract.
+
+Review every executable line in `prepare_candidate()` and explain the input, intermediate shape, scaling rule and returned shape. Create `work/review_candidate.py` with your own **probes**, small test inputs chosen to check a specific claim, and retain the output.
 
 Your evidence must address all three questions.
 
 - Does the candidate preserve the saved model's intensity scale across different thumbnails?
-- Does it always produce finite numeric values for structurally valid raw arrays?
+- Does it always produce finite numeric values, ordinary numbers the model can use, for structurally valid raw arrays?
 - What belongs at the intake boundary when an image fails Threadline's quality policy?
 
-Use the [pipeline contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) as the acceptance basis. Include at least one plausible input on which the proposal appears to work and two counterexamples that test different assumptions. Compare its output with the shared preparation where the input is accepted. State your expected result before running each probe.
+Use the [pipeline contracts](https://github.com/richhiey/ml-llm-ops/blob/main/docs/contracts.md) as the acceptance basis. Include at least one plausible input on which the proposal appears to work and two **counterexamples**, inputs exposing a claim that fails. Test different assumptions. Compare the candidate's numbers with the documented preparation where the input is accepted. State your expected result before running each probe.
 
-Finish with a merge recommendation, a precise correction and a check that would prevent this failure from returning. If an assistant helps you review, validate its claims against the actual arrays and code.
+Finish with a recommendation to accept or reject the proposed code, a precise correction and a check that would prevent the failure from returning. This is the team's merge decision, whether to incorporate the proposal into the application. If an assistant helps you review, validate its claims against the actual arrays and code.
 
 # Working with documentation
 
@@ -37,6 +41,7 @@ Finish with a merge recommendation, a precise correction and a check that would 
 |---|---|
 | Which axes are reduced and kept | [NumPy maximum](https://numpy.org/doc/stable/reference/generated/numpy.max.html) |
 | Whether every output is a usable finite value | [NumPy isfinite](https://numpy.org/doc/stable/reference/generated/numpy.isfinite.html) |
+| How `None` inserts a dimension into an array | [NumPy indexing](https://numpy.org/doc/stable/user/basics.indexing.html) |
 | How raw pixels enter the real model | [Shared preprocessing source](https://github.com/richhiey/ml-llm-ops/blob/main/src/catalog_mlops/preprocessing.py) |
 
 # Hints

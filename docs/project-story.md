@@ -1,41 +1,41 @@
-# Threadline's catalog classification service
+# Threadline's catalog classification task
 
-Threadline Retail is a fictional online fashion retailer. Its catalog team maintains a category for each product so customers and internal tools can find the right kinds of items. Fashion specialists assign category labels and a second reviewer checks their work. The ML team has been asked to investigate whether product thumbnails can support useful category suggestions for that team.
+Threadline Retail is a fictional online clothing shop. Every product needs a category, such as `Dress`, `Shirt` or `Bag`, so customers can find it through the shop's categories and filters. A wrongly categorized item can disappear from the results a shopper expects.
 
-The course uses Fashion-MNIST, a research benchmark built from front-view product images and expert-reviewed fashion categories. Its original work emphasized an accessible, compact classification benchmark that presents more visual ambiguity than handwritten digits. Threadline's service, staff, supplier incidents and operational policies are a fictional course scenario inspired by that setting. [Original dataset paper](https://arxiv.org/abs/1708.07747)
+Catalog staff inspect product images and assign those categories. The project investigates a possible aid: a model suggests a category, and a person checks it. The task is image classification—choosing one category from a fixed list based on an image. The course does not assume that every suggestion is correct or that staff review can be removed.
 
-## The first assignment
+## The real research data behind the story
 
-The catalog team has labeled examples and a list of ten supported categories. The engineers receive a working pipeline scaffold. They must show that a small CNN can learn from those examples, retain its learned weights, and assign a category to an unseen prepared thumbnail.
+Fashion-MNIST supplies real product thumbnails and known category labels. Each image is a `28×28` grayscale grid, with brightness recorded at each pixel. Its ten clothing, footwear and bag categories include visually similar items that a small model can confuse.
 
-The team needs evidence before deciding whether to trial the suggestions. A single accuracy number does not show whether shirts are repeatedly mistaken for T-shirts or pullovers. The engineers therefore retain validation predictions, inspect a confusion matrix and review per-category recall. Predictions remain suggestions for expert review. A high softmax score is a model score, not proof that the suggestion is correct.
+The original research created a compact image-classification benchmark. Threadline, its staff and supplier incidents are the fictional setting used to learn from it. [Original dataset paper](https://arxiv.org/abs/1708.07747) · [Dataset card and limits](https://github.com/richhiey/ml-llm-ops/blob/main/docs/dataset-card.md)
 
-Supplier images arrive through two workflows. A nightly import needs one identified prediction per thumbnail. A catalog specialist also needs to check a single thumbnail while reviewing an item. Students run the same saved CNN through a batch job and a local HTTP service, then explain which delivery pattern fits each workflow. The pipeline's input contract is prepared 28-by-28 grayscale thumbnails. Shape validation and a justified extension to intake protect that contract.
+## First, make one model learn and inspect its mistakes
 
-## The improvement assignment
+A machine-learning model learns from examples rather than receiving a hand-written rule for every image. Training adjusts its learned numbers, called weights, using images with known labels. This project uses a small convolutional neural network, or CNN, which learns useful patterns from small areas of the images.
 
-The first trained model is the team's baseline. Some categories work better than others. Threadline asks the engineers to improve the observed weaknesses while keeping their evidence comparable.
+Separate labeled images let the team check its predictions without updating those weights. The author's first trained reference model found only `117` of `300` actual shirts. It confused many of the others with coats or T-shirts/tops. That gives the catalog team a concrete weakness to investigate rather than treating overall accuracy as the whole result.
 
-Students declare five hypotheses before training. They investigate longer training, a smaller learning rate, weight decay, dropout and small image translations. Each experiment starts from fresh weights and changes one declared factor relative to the baseline. Every comparison uses the same training IDs, validation IDs, label order and evaluation procedure.
+Students save the model and use it for two clients: an evening file of many images awaiting suggestions, and a staff member waiting for one suggestion while reviewing an item. Incoming files must satisfy the image-format and brightness rules before prediction.
 
-The catalog brief gives each category equal importance, so validation macro F1 is the primary comparison metric. Overall accuracy, class recall, confusion matrices, loss curves and runtime explain the result. The best observed candidate must be identified by its actual MLflow run and saved artifact. A candidate that loses is retained as evidence. Students check an assistant's written recommendation against the raw run records before accepting it.
+## Then, ask which change helps
 
-## The operating assignment
+The team plans five separate changes to the training settings. Each starts a new model from the same initial values, learns on the same images and is checked in the same way. This helps distinguish the effect of one chosen setting from other changes.
 
-The catalog team is ready for a controlled local trial of the selected model. Another engineer must be able to retrieve the exact recipe and reproduce its evaluation. The active selection must point to a known approved model version. A fresh batch or service process must reveal which version and source run it actually loaded.
+MLflow keeps the settings, measurements and saved files together for each training attempt, called a run. Students compare actual runs, inspect category tradeoffs and check an assistant's written recommendation against the recorded evidence.
 
-During the trial, a prepared supplier window contains a different mix of garments. Another exercise window uses a changed thumbnail-quality recipe, such as reduced contrast or blur. These are constructed course incidents. Students compare the windows with a pinned model, investigate the input and prediction signals, and identify which conclusions require independent expert labels.
+The unfamiliar partner, Morrow Market, adds minimum recall requirements for two categories. Its decision can differ from Threadline's equal-category ranking. The partner's requirements remain part of its brief when work continues.
 
-If labels establish a quality problem, the team can evaluate a candidate on separate training and evaluation pools. Ordinary and changed-condition validation results remain visible together. A shift alert alone does not establish that retraining is appropriate. Rejecting a poor candidate preserves the existing selection but does not prove that an input-quality problem has been solved.
+## Finally, make the chosen model retrievable and recoverable
 
-A separate trial activates an unsuitable model version. Students inspect the evidence, restore a suitable approved version, execute fresh inference and retain the change event. Their audit connects the monitoring observation, decision, selected version, source run and actual predictions. The finished project explains how to repeat a result and how to recover a consumer after a bad change.
+The team needs to know which saved model should answer requests. A model registry records versions and the evidence attached to them. Students will check that a colleague can repeat a past result using its recorded images, code, settings and Python packages.
 
-## The connection across the project
+They will also distinguish two operating questions: do incoming images differ from earlier images, and, when checked labels are available, has prediction quality fallen? A changed input pattern alone does not answer the quality question. Later exercises deliberately change thumbnails to investigate this distinction.
 
-| Project stage | Threadline's question | Evidence carried forward |
-|---|---|---|
-| Sprint 1 | Can this pipeline learn and deliver useful category suggestions? | Baseline recipe, saved CNN, validation errors, tested intake, batch and HTTP predictions |
-| Sprint 2 | Which controlled change produced a better observed classifier? | Five candidate runs, baseline comparison, checked recommendation and selected artifact |
-| Sprint 3 | Can another engineer reproduce, monitor and recover the selected service? | Complete lineage, clean replay, registry selection, justified drift response and rollback with fresh inference |
+If an unsuitable replacement is selected, the team must restore a previously approved version and verify which model a newly started prediction process actually loads. The change record must connect the observation, decision, selected version and resulting predictions.
 
-The supplied lesson names remain unchanged. The catalog assignment develops inside those lessons as the engineering responsibilities grow.
+| Project stage | Question for the catalog team |
+|---|---|
+| Sprint 1 | Can one small model learn the categories, and where does it make mistakes? |
+| Sprint 2 | Which controlled change produced a better observed result for this brief? |
+| Sprint 3 | Can another engineer repeat the result, check ongoing behavior and recover from a bad selection? |

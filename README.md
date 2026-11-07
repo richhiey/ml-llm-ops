@@ -1,6 +1,6 @@
 # Catalog MLOps
 
-Train, evaluate and serve a small Fashion-MNIST CNN on a local CPU. Threadline Retail's catalog team uses it to investigate category suggestions and measurable improvements.
+Build a category-suggestion aid for Threadline Retail, the course's fictional online clothing shop. A wrongly categorized product can be missed by a shopper using category filters. Train, evaluate and use a small image model to suggest categories that catalog staff can check, then investigate measurable improvements.
 
 This is the same instruction sequence as the [pipeline walkthrough](https://github.com/richhiey/ml-llm-ops/blob/main/docs/course/sprint-1/02-reading-the-provided-pipeline-scaffold/lesson.md). Each Python command names a file you can open. Uvicorn starts the FastAPI server; curl makes the HTTP request. The project functions inside the files assemble the underlying PyTorch, NumPy and scikit-learn operations.
 
