@@ -1,0 +1,9 @@
+{
+  "estimator": "mlp",
+  "params": {
+    "hidden_layer_sizes": [128, 64, 32],
+    "max_iter": 60,
+    "tol": 0.0005
+  },
+  "seed": 426
+}

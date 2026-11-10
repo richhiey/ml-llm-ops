@@ -1,0 +1,10 @@
+{
+  "seed": 426,
+  "epochs": 8,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0,
+  "dropout": 0.0,
+  "translation_pixels": 0,
+  "cpu_threads": 2
+}

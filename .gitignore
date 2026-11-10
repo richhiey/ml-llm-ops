@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+work/
+data/
+mlruns/
+mlartifacts/
+*.db
+*.db-shm
+*.db-wal
+.DS_Store

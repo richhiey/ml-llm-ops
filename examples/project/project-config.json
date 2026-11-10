@@ -1,0 +1,6 @@
+{
+  "training_config": "configs/baseline.json",
+  "experiment": "image-classification-release",
+  "registered_model": "fashion-mnist-images",
+  "inference_mode": "batch"
+}
