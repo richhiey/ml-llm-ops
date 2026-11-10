@@ -9,5 +9,8 @@ if __name__ == "__main__":
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--report-errors", action="store_true",
+                        help="Write results.csv with a prediction or input error for every manifest row.")
     args = parser.parse_args()
-    print(json.dumps(predict_batch(args.run, args.manifest, args.output), indent=2, allow_nan=False))
+    report = predict_batch(args.run, args.manifest, args.output, report_errors=args.report_errors)
+    print(json.dumps(report, indent=2, allow_nan=False))

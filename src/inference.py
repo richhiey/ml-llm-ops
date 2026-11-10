@@ -10,6 +10,7 @@ import threading
 import time
 
 import numpy as np
+import pandas as pd
 from PIL import Image
 import torch
 
@@ -49,11 +50,38 @@ class Predictor:
             raise ValueError("Image identifiers must be nonempty strings")
         with self.model_lock:
             if self.record.get("backend") == "sklearn":
-                predicted, maximum, _ = classify(self.model, validate_intake(images))
-            else:
-                inputs = preprocess(images)
-                with torch.inference_mode():
-                    maximum, predicted = self.model(inputs).softmax(dim=1).max(dim=1)
+                images = validate_intake(images)
+            return self._predict_validated(images, image_ids)
+
+    def predict_with_errors(self, images: np.ndarray, image_ids: list[str]) -> tuple[list[dict], dict[str, str]]:
+        """Validate each decoded thumbnail, then predict on the accepted images together."""
+        if self.record.get("backend") != "sklearn":
+            return self.predict(images, image_ids), {}
+
+        accepted_images = []
+        accepted_ids = []
+        errors = {}
+        for image_id, image in zip(image_ids, images, strict=True):
+            try:
+                accepted = validate_intake(image[None, ...])
+            except ValueError as error:
+                errors[image_id] = str(error) or type(error).__name__
+                continue
+            accepted_images.append(accepted)
+            accepted_ids.append(image_id)
+
+        if not accepted_ids:
+            return [], errors
+        with self.model_lock:
+            return self._predict_validated(np.concatenate(accepted_images), accepted_ids), errors
+
+    def _predict_validated(self, images: np.ndarray, image_ids: list[str]) -> list[dict]:
+        if self.record.get("backend") == "sklearn":
+            predicted, maximum, _ = classify(self.model, images)
+        else:
+            inputs = preprocess(images)
+            with torch.inference_mode():
+                maximum, predicted = self.model(inputs).softmax(dim=1).max(dim=1)
         return [{"image_id": image_id, "class_id": int(class_id),
                  "class_name": CLASS_NAMES[int(class_id)], "top_score": float(score)}
                 for image_id, class_id, score in zip(image_ids, predicted.tolist(), maximum.tolist(), strict=True)]
@@ -71,6 +99,7 @@ def read_batch_manifest(path: Path, content: bytes) -> list[dict]:
     if len(set(ids)) != len(ids) or any(not image_id.strip() for image_id in ids):
         raise ValueError("Batch image identifiers must be nonempty and unique")
     for row in rows:
+        row["source_path"] = row["path"]
         image_path = Path(row["path"])
         if not image_path.is_absolute():
             image_path = path.parent / image_path
@@ -78,14 +107,16 @@ def read_batch_manifest(path: Path, content: bytes) -> list[dict]:
     return rows
 
 
-def predict_batch(run_directory: Path, manifest_path: Path, output: Path) -> dict:
+def predict_batch(run_directory: Path, manifest_path: Path, output: Path, *, report_errors: bool = False) -> dict:
     started = time.perf_counter()
     if output.exists():
         raise FileExistsError(f"Batch output already exists: {output}")
-    return deliver_batch(Predictor(run_directory), manifest_path, output, started)
+    return deliver_batch(Predictor(run_directory), manifest_path, output, started, report_errors=report_errors)
 
 
-def deliver_batch(predictor, manifest_path: Path, output: Path, started: float | None = None) -> dict:
+def deliver_batch(
+    predictor, manifest_path: Path, output: Path, started: float | None = None, *, report_errors: bool = False
+) -> dict:
     """Publish one complete delivery using the model pinned by its consumer."""
     if output.exists():
         raise FileExistsError(f"Batch output already exists: {output}")
@@ -94,29 +125,57 @@ def deliver_batch(predictor, manifest_path: Path, output: Path, started: float |
     manifest_bytes = manifest_path.read_bytes()
     rows = read_batch_manifest(manifest_path, manifest_bytes)
     predictions = []
+    errors = {}
     input_hashes = []
     image_observations = []
     for start in range(0, len(rows), 64):
         chunk = rows[start:start + 64]
         arrays = []
+        image_ids = []
         for row in chunk:
-            content = row["path"].read_bytes()
-            pixels = decode_thumbnail(content, row["path"].name)
+            try:
+                content = row["path"].read_bytes()
+                input_hashes.append({"image_id": row["image_id"], "sha256": bytes_digest(content)})
+                pixels = decode_thumbnail(content, row["path"].name)
+            except (OSError, ValueError, Image.DecompressionBombError) as error:
+                if not report_errors:
+                    raise
+                errors[row["image_id"]] = str(error) or type(error).__name__
+                continue
             arrays.append(pixels)
-            input_hashes.append({"image_id": row["image_id"], "sha256": bytes_digest(content)})
+            image_ids.append(row["image_id"])
             image_observations.append({"image_id": row["image_id"],
                                        "mean_brightness": float(pixels.mean() / 255.0)})
-        predictions.extend(predictor.predict(np.stack(arrays), [row["image_id"] for row in chunk]))
+        if arrays:
+            images = np.stack(arrays)
+            if report_errors:
+                accepted, rejected = predictor.predict_with_errors(images, image_ids)
+                predictions.extend(accepted)
+                errors.update(rejected)
+            else:
+                predictions.extend(predictor.predict(images, image_ids))
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = Path(tempfile.mkdtemp(prefix=f".{output.name}-", dir=output.parent))
     try:
-        with (temporary / "predictions.csv").open("w", newline="", encoding="utf-8") as stream:
-            writer = csv.DictWriter(stream, fieldnames=["image_id", "class_id", "class_name", "top_score"])
-            writer.writeheader()
-            writer.writerows(predictions)
-        report = {"created_at": datetime.now(timezone.utc).isoformat(), "count": len(predictions),
+        if report_errors:
+            result_path = temporary / "results.csv"
+            _write_batch_results(result_path, rows, predictions, errors)
+            output_evidence = {
+                "results_sha256": sha256(result_path),
+                "prediction_count": len(predictions),
+                "error_count": len(errors),
+            }
+        else:
+            result_path = temporary / "predictions.csv"
+            with result_path.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=["image_id", "class_id", "class_name", "top_score"])
+                writer.writeheader()
+                writer.writerows(predictions)
+            output_evidence = {"predictions_sha256": sha256(result_path)}
+        report = {"created_at": datetime.now(timezone.utc).isoformat(),
+                  "count": len(rows) if report_errors else len(predictions),
                   "model": predictor.identity, "manifest_sha256": bytes_digest(manifest_bytes),
-                  "inputs": input_hashes, "predictions_sha256": sha256(temporary / "predictions.csv"),
+                  "inputs": input_hashes, **output_evidence,
                   "image_observations": image_observations,
                   "elapsed_seconds": time.perf_counter() - started}
         write_json(temporary / "batch.json", report)
@@ -132,6 +191,20 @@ def deliver_batch(predictor, manifest_path: Path, output: Path, started: float |
     finally:
         if temporary.exists():
             shutil.rmtree(temporary)
+
+
+def _write_batch_results(path: Path, rows: list[dict], predictions: list[dict], errors: dict[str, str]) -> None:
+    results = pd.DataFrame({
+        "image_id": [row["image_id"] for row in rows],
+        "path": [row["source_path"] for row in rows],
+    })
+    image_ids = results["image_id"]
+    results["prediction"] = image_ids.map({row["image_id"]: row["class_name"] for row in predictions})
+    results["has_error"] = image_ids.isin(errors)
+    results["error"] = image_ids.map(errors)
+    if (results["prediction"].notna() == results["has_error"]).any():
+        raise RuntimeError("Each manifest image must have exactly one prediction or error")
+    results.to_csv(path, index=False)
 
 
 def export_samples(data_root: Path, partition: str, count: int, output: Path) -> dict:
