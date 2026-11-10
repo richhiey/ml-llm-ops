@@ -27,7 +27,9 @@ For PowerShell, activate with `.\.venv\Scripts\Activate.ps1`. Keep new runs in s
 | `tests/` | Automated tests |
 | `examples/` | Synthetic input fixtures and a release starter |
 
-Use `python scripts/track_experiment.py --help` to fit and track a configuration and `python scripts/predict_batch.py --help` to run a saved model over a manifest.
+Use `python scripts/track_experiment.py --help` to fit and track a configuration. For batch prediction, use `python scripts/predict_batch.py` with `--run` for a saved run directory or `--name` for a registered model. Use `--help` for the manifest, output and registry options.
+
+Start the HTTP service with `uvicorn scripts.api:app`. It uses `work/runs/baseline` by default. Set `MODEL_RUN_DIRECTORY` to serve a different saved run, or set `MODEL_NAME` to serve a registered model. For a registered model, `MLFLOW_STATE` defaults to `work/mlflow` and `MODEL_ALIAS` defaults to `active`. Start a fresh service to pick up a changed selection.
 
 ## Model registry
 

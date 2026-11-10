@@ -411,3 +411,6 @@ class RegistryPredictor:
 
     def predict(self, images, image_ids):
         return self.predictor.predict(images, image_ids)
+
+    def predict_with_errors(self, images, image_ids):
+        return self.predictor.predict_with_errors(images, image_ids)
