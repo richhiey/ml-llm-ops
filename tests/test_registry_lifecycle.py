@@ -329,6 +329,32 @@ def test_registration_retry_completes_tags_and_preserves_passed_validation(
     assert failed["version"] == result["version"]
 
 
+def test_ui_registered_version_can_be_approved_and_loaded(lifecycle):
+    root, original, other, evidence, _, _ = lifecycle
+    state, name = root / "state", "catalog-ui-registration"
+    client = registry_client(state)
+    client.create_registered_model(name)
+    source = client.get_logged_model(original["model_uri"].removeprefix("models:/"))
+    other_source = client.get_logged_model(other["model_uri"].removeprefix("models:/"))
+    # The Register model dialog submits an artifact location and a source run ID.
+    good = client.create_model_version(
+        name, source.artifact_location, original["run_id"]
+    )
+    wrong = client.create_model_version(
+        name, other_source.artifact_location, original["run_id"]
+    )
+    with pytest.raises(ValueError, match="Registered source differs"):
+        validate_version(state, name, wrong.version, evidence, "engineer", "Check replay")
+
+    validate_version(state, name, good.version, evidence, "engineer", "Check replay")
+    assign_alias(state, name, "active", good.version, None, evidence, "engineer", "Select fit")
+    predictor = RegistryPredictor(state, name)
+    assert predictor.identity["model_uri"] == original["model_uri"]
+    assert predictor.identity["registered_version"] == str(good.version)
+    reused = register_version(state, name, original["run_id"], "engineer", "Reuse fit")
+    assert reused["version"] == str(good.version)
+
+
 def test_alias_selection_checks_retrievable_validation_artifact(lifecycle, tmp_path):
     root, original, _, evidence, _, _ = lifecycle
     state, name = root / "state", "catalog-evidence-retention"

@@ -44,6 +44,17 @@ def alias_version(client, name, alias):
         return None
 
 
+def _matches_logged_source(client, version, model_uri: str) -> bool:
+    if version.source == model_uri:
+        return True
+    # MLflow's Register model dialog stores the logged model's artifact location.
+    logged = client.get_logged_model(model_uri.removeprefix("models:/"))
+    return (
+        logged.source_run_id == version.run_id
+        and logged.artifact_location == version.source
+    )
+
+
 def _append(state: Path, event: dict):
     state.mkdir(parents=True, exist_ok=True)
     event = {"at": datetime.now(timezone.utc).isoformat(), **event}
@@ -106,7 +117,8 @@ def register_version(
             matches = [
                 v
                 for v in existing
-                if v.run_id == run_id and v.source == run["model_uri"]
+                if v.run_id == run_id
+                and _matches_logged_source(client, v, run["model_uri"])
             ]
             if matches:
                 version = matches[0]
@@ -183,10 +195,8 @@ def validate_version(
         }
         if stable(actual) != stable(report):
             raise ValueError("Validation evidence changed since the recorded replay")
-        if (
-            client.get_run(registered.run_id).data.tags["model_uri"]
-            != registered.source
-        ):
+        model_uri = client.get_run(registered.run_id).data.tags["model_uri"]
+        if not _matches_logged_source(client, registered, model_uri):
             raise ValueError(
                 "Registered source differs from the evaluated native model"
             )
@@ -282,7 +292,7 @@ def assign_alias(
                 client, target.run_id, digest, Path(temporary) / "validation"
             )
         if (
-            target.source != run["model_uri"]
+            not _matches_logged_source(client, target, run["model_uri"])
             or target.tags.get("validated_model_sha256") != run["model_sha256"]
         ):
             raise ValueError(
@@ -367,7 +377,7 @@ class RegistryPredictor:
         ):
             version = client.get_model_version_by_alias(model_name(name), alias)
             run = inspect_tracked_run(client, version.run_id, Path(temporary))
-            if version.source != run["model_uri"]:
+            if not _matches_logged_source(client, version, run["model_uri"]):
                 raise ValueError("Registry version and evaluated model URI differ")
             recipe = Path(temporary) / version.run_id / "recipe"
             self.predictor = Predictor(recipe)
@@ -392,7 +402,7 @@ class RegistryPredictor:
             "registered_version": str(version.version),
             "alias_at_startup": alias,
             "source_run_id": version.run_id,
-            "model_uri": version.source,
+            "model_uri": run["model_uri"],
             "validation_status_at_startup": version.tags.get(
                 "validation_status", "unknown"
             ),

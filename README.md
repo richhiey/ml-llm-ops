@@ -27,4 +27,14 @@ For PowerShell, activate with `.\.venv\Scripts\Activate.ps1`. Keep new runs in s
 | `tests/` | Automated tests |
 | `examples/` | Synthetic input fixtures and a release starter |
 
-Use `scripts/track_experiment.py --help` to fit and track a configuration, `scripts/predict_batch.py --help` to run a saved model over a manifest, and `scripts/inspect_registry.py --help` to inspect a local registry.
+Use `python scripts/track_experiment.py --help` to fit and track a configuration and `python scripts/predict_batch.py --help` to run a saved model over a manifest.
+
+## Model registry
+
+After tracking a run, open the local MLflow UI from the repository root.
+
+```bash
+mlflow ui --backend-store-uri sqlite:///work/mlflow/tracking.db --host 127.0.0.1 --port 5001
+```
+
+Open the run's logged model and use **Register model** to create a version. Open that version to inspect its source run, tags and aliases. When a clean replay passes, `python scripts/assign_alias.py --help` shows how to use `--approve` to retain the replay report and select the reviewed version. Use `--rollback` with the earlier approval to restore a previously selected version. Both selections record the alias before and after the change in `work/mlflow/registry-audit.jsonl`.
